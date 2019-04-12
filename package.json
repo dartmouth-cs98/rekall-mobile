@@ -1,0 +1,16 @@
+{
+  "name": "starterpack-ashleychari1234",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "https://github.com/dartmouth-cs52-19S/starterpack-ashleychari1234.git",
+  "author": "ashleychari1234 <ashley.c.francisco.21@dartmouth.edu>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "devDependencies": {
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.3.1"
+  }
+}

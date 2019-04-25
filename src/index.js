@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import './style.scss';
 
+
 let num = 0;
 
 function counter() {

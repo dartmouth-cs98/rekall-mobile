@@ -8,10 +8,12 @@ const finalCSSLoader = (env === 'production') ? MiniCssExtractPlugin.loader : { 
 
 module.exports = {
   mode: env,
+  output: { publicPath: '/' },
   entry: ['babel-polyfill', './src'],
   devtool: 'source-map',
   devServer: {
     hot: true,
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -67,6 +69,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: './index.html',
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: './200.html',
     }),
   ],
 };

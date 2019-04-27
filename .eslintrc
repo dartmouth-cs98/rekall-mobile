@@ -33,12 +33,20 @@
         "react/jsx-filename-extension": 0,
         "jsx-a11y/click-events-have-key-events": 0,
         "jsx-a11y/no-noninteractive-element-interactions": 0,
+<<<<<<< HEAD
         "react/jsx-one-expression-per-line":0
+=======
+        "react/jsx-one-expression-per-line": 0
+>>>>>>> 73973690ab31b19350422c9ce72582b62f153cbd
     },
     "plugins": [
         "react"
     ],
+<<<<<<< HEAD
     "parserOptions": {
+=======
+    "parserOptions":{
+>>>>>>> 73973690ab31b19350422c9ce72582b62f153cbd
         "ecmaFeatures": {
             "jsx": true,
             "sourceType": "module"

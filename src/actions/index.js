@@ -1,19 +1,6 @@
-export const ActionTypes = {
-  INCREMENT: 'INCREMENT',
-  DECREMENT: 'DECREMENT',
-};
+import React from 'react';
+import ReactDOM from 'react-dom';
 
+const App = () => <div className="test">All the React are belong to us!</div>;
 
-export function increment() {
-  return {
-    type: ActionTypes.INCREMENT,
-    payload: null,
-  };
-}
-
-export function decrement() {
-  return {
-    type: ActionTypes.DECREMENT,
-    payload: null,
-  };
-}
+ReactDOM.render(<App />, document.getElementById('main'));

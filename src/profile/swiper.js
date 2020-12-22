@@ -1,73 +1,90 @@
 import * as React from 'react';
-import {
-  Text, 
-  View,
-  SafeAreaView } from 'react-native';
+import { Platform, View, ScrollView, Text, StatusBar, SafeAreaView } from 'react-native';
+import { sliderWidth, itemWidth } from './SliderEntry.style';
+import SliderEntry from './components/SliderEntry';
+import styles, { colors } from './index.style';
+import { FRIENDS }  from './static_temp/friends'
 
-import Carousel from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+
+const SLIDER_1_FIRST_ITEM = 1;
+
 
 export default class App extends React.Component {
 
- 
-    constructor(props){
+    constructor (props) {
         super(props);
         this.state = {
-          activeIndex:0,
-          carouselItems: [
-          {
-              title:"Item 1",
-              text: "Text 1",
-          },
-          {
-              title:"Item 2",
-              text: "Text 2",
-          },
-          {
-              title:"Item 3",
-              text: "Text 3",
-          },
-          {
-              title:"Item 4",
-              text: "Text 4",
-          },
-          {
-              title:"Item 5",
-              text: "Text 5",
-          },
-        ]
-      }
+            slider1ActiveSlide: SLIDER_1_FIRST_ITEM
+        };
     }
 
-    _renderItem({item,index}){
-        return (
-          <View style={{
-              backgroundColor:'floralwhite',
-              borderRadius: 5,
-              height: 250,
-              padding: 50,
-              marginLeft: 25,
-              marginRight: 25, }}>
-            <Text style={{fontSize: 30}}>{item.title}</Text>
-            <Text>{item.text}</Text>
-          </View>
-
-        )
+    _renderItem ({item, index}) {
+        return <SliderEntry data={item} even={(index + 1) % 2 === 0} />;
     }
 
-    render() {
+    mainExample (number, title) {
+        const { slider1ActiveSlide } = this.state;
+
         return (
-          <SafeAreaView style={{flex: 1, backgroundColor:'rebeccapurple', paddingTop: 50, }}>
-            <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+            <View>
                 <Carousel
-                  layout={"default"}
-                  ref={ref => this.carousel = ref}
-                  data={this.state.carouselItems}
-                  sliderWidth={300}
-                  itemWidth={300}
+                  ref={c => this._slider1Ref = c}
+                  data={FRIENDS}
                   renderItem={this._renderItem}
-                  onSnapToItem = { index => this.setState({activeIndex:index}) } />
+                  sliderWidth={sliderWidth}
+                  itemWidth={itemWidth}
+                //   hasParallaxImages={true}
+                  firstItem={SLIDER_1_FIRST_ITEM}
+                  inactiveSlideScale={0.94}
+                  inactiveSlideOpacity={0.7}
+                  // inactiveSlideShift={20}
+                //   containerCustomStyle={styles.slider}
+                //   contentContainerCustomStyle={styles.sliderContentContainer}
+                  loop={true}
+                  loopClonesPerSide={2}
+                  autoplay={true}
+                  autoplayDelay={500}
+                  autoplayInterval={3000}
+                  onSnapToItem={(index) => this.setState({ slider1ActiveSlide: index }) }
+                />
+                <Pagination
+                  dotsLength={FRIENDS.length}
+                  activeDotIndex={slider1ActiveSlide}
+                  containerStyle={styles.paginationContainer}
+                  dotColor={'rgba(255, 255, 255, 0.92)'}
+                  dotStyle={styles.paginationDot}
+                  inactiveDotColor={colors.black}
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.6}
+                  carouselRef={this._slider1Ref}
+                  tappableDots={!!this._slider1Ref}
+                />
             </View>
-          </SafeAreaView>
         );
     }
+
+    render () {
+        const example1 = this.mainExample(1, '');
+
+        return (
+            <SafeAreaView style={styles.safeArea}>
+                <View style={styles.container}>
+                    <StatusBar
+                      translucent={true}
+                      backgroundColor={'rgba(0, 0, 0, 0.3)'}
+                      barStyle={'light-content'}
+                    />
+                    { this.gradient }
+                    {/* <ScrollView
+                      style={styles.scrollview}
+                      scrollEventThrottle={200}
+                      directionalLockEnabled={true}
+                    > */}
+                        { example1 }
+                    {/* </ScrollView> */}
+                </View>
+            </SafeAreaView>
+        );
+        }
 }

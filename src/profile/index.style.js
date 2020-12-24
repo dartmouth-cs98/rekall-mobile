@@ -1,3 +1,6 @@
+// Credit for original code goes to archriss at this GitHub repo: https://github.com/archriss/react-native-snap-carousel/blob/master/example/src/index.js
+// Modified by Chris Cheng for CS98's Rekall mobile version
+
 import { StyleSheet } from 'react-native';
 
 export const colors = {

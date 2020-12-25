@@ -1,22 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {Component, useState} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import LogoScreen from './src/components/logoscreen.js';
+import WelcomeScreen from './src/components/welcomescreen.js';
+import Swiper from 'react-native-swiper';
 
 
-const App = (props) => {
+
+export default function App() {
+
   return (
-    <LogoScreen />
+    <Swiper
+    loop={false}
+    horizontal={true}>
+      <LogoScreen />
+      <WelcomeScreen />
+    </Swiper>
+    
   );
+  
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
-
-export default App;

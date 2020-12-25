@@ -98,11 +98,13 @@ const styles = StyleSheet.create({
     },
     explanation:{
         fontSize: 20,
+        fontFamily: 'AppleSDGothicNeo-Thin',
     },
     starttext: {
         paddingTop: 10,
         paddingRight: 10,
         fontSize: 20,
+        fontFamily: 'AppleSDGothicNeo-Thin',
     },
     startbutton:{
         paddingTop: 30,
@@ -117,8 +119,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     text:{
-        fontSize: 40,
+        fontFamily: 'AppleSDGothicNeo-Bold',
+        color: '#4F4F50',
+        fontSize: 53,
         paddingBottom: 5,
+        fontWeight: "bold",
+        textShadowColor: 'grey',
+        textShadowOffset: { width: 1, height: 4},
+        textShadowRadius: 5,
     }
 });
 

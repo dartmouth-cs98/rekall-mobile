@@ -7,34 +7,40 @@ import { LinearGradient } from 'expo-linear-gradient';
 class WelcomeScreen extends Component {
     render() {
       return (
-        <View style={styles.container}>
-            <View style={styles.firstcontainer}>
-                <View style={styles.textbox}>
-                    <Text style={styles.text}>RELIVE</Text>
-                    <Text style={styles.text}>DISCOVER</Text>
-                    <Text style={styles.text}>SHARE</Text>
-                    <Text style={styles.text}>EXPLORE</Text>
+        <LinearGradient
+        colors={['#FFFFFF', '#8D8D8D']}
+        style={{flex: 1}}
+        >
+            <View style={styles.container}>
+                <View style={styles.firstcontainer}>
+                    <View style={styles.textbox}>
+                        <Text style={styles.text}>RELIVE</Text>
+                        <Text style={styles.text}>DISCOVER</Text>
+                        <Text style={styles.text}>SHARE</Text>
+                        <Text style={styles.text}>EXPLORE</Text>
+                    </View>
                 </View>
-            </View>
-            <View style={styles.secondcontainer}>
-                <View style={styles.explanationBox}>
-                    <Text style={styles.explanation}>Welcome to Rekall. Take memory sharing to the next level. Experience memories that last forever.</Text>
+                <View style={styles.secondcontainer}>
+                    <View style={styles.explanationBox}>
+                        <Text style={styles.explanation}>Welcome to Rekall. Take memory sharing to the next level. Experience memories that last forever.</Text>
+                    </View>
                 </View>
-            </View>
-            <View style={styles.thirdcontainer}>
-                <Image style={styles.image}
-                    source={{ uri: '/Users/frantennis/rekall-mobile/src/assets/oculus.png'}}
-                />
-            </View>
-            <View style={styles.fourthcontainer}>
-                <View style={styles.buttonbox}>
-                    <Text style={styles.starttext}>Get Started</Text>
-                    <Button style={styles.button}  mode="outlined" onPress={() => console.log('Pressed')}>
-                        <Icon name='angle-right' type='font-awesome' color='#8D8D8D'></Icon>
-                    </Button>
+                <View style={styles.thirdcontainer}>
+                    <Image style={styles.image}
+                        source={{ uri: '/Users/frantennis/rekall-mobile/src/assets/oculus.png'}}
+                    />
                 </View>
-            </View>
-        </View> 
+                <View style={styles.fourthcontainer}>
+                    <View style={styles.buttonbox}>
+                        <Text style={styles.starttext}>Get Started</Text>
+                        <Button style={styles.button}  mode="outlined" onPress={() => console.log('Pressed')}>
+                            <Icon name='angle-right' type='font-awesome' color='#8D8D8D'></Icon>
+                        </Button>
+                    </View>
+                </View>
+            </View> 
+        </LinearGradient>
+        
       );
     }
   }

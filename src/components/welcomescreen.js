@@ -33,7 +33,7 @@ class WelcomeScreen extends Component {
                 <View style={styles.fourthcontainer}>
                     <View style={styles.buttonbox}>
                         <Text style={styles.starttext}>Get Started</Text>
-                        <Button style={styles.button}  mode="outlined" onPress={() => console.log('Pressed')}>
+                        <Button style={styles.button}  mode="contained" color='#FFFFFF' onPress={() => console.log('Pressed')}>
                             <Icon name='angle-right' type='font-awesome' color='#8D8D8D'></Icon>
                         </Button>
                     </View>

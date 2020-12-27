@@ -1,21 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {Component, useState} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import LogoScreen from './src/components/logoscreen.js';
+import WelcomeScreen from './src/components/welcomescreen.js';
+import Swiper from 'react-native-swiper';
+
+
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  return (
+    <Swiper
+    loop={false}
+    horizontal={true}>
+      <LogoScreen />
+      <WelcomeScreen />
+    </Swiper>
+    
+  );
+  
+}

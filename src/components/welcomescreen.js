@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, ImageBackground, PanResponder} from 'react-native';
+import React, {Component} from 'react';
+//import FontAwesome from 'FontAwesome';
+// import { FontAwesome } from '@expo/vector-icons';
+import { StyleSheet, View, Image, Text, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 
+
 class WelcomeScreen extends Component {
+
     render() {
       return (
         <LinearGradient
@@ -14,6 +18,7 @@ class WelcomeScreen extends Component {
             <View style={styles.container}>
                 <View style={styles.firstcontainer}>
                     <View style={styles.textbox}>
+                        
                         <Text style={styles.text}>RELIVE</Text>
                         <Text style={styles.text}>DISCOVER</Text>
                         <Text style={styles.text}>SHARE</Text>
@@ -33,7 +38,7 @@ class WelcomeScreen extends Component {
                 <View style={styles.fourthcontainer}>
                     <View style={styles.buttonbox}>
                         <Text style={styles.starttext}>Get Started</Text>
-                        <Button style={styles.button}  mode="outlined" onPress={() => console.log('Pressed')}>
+                        <Button style={styles.button}  mode="contained" onPress={() => console.log('Pressed')}>
                             <Icon name='angle-right' type='font-awesome' color='#8D8D8D'></Icon>
                         </Button>
                     </View>
@@ -91,6 +96,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         borderRadius: 10,
+        backgroundColor: 'white',
     },
     image: {
         height: 250,

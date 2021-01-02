@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, ImageBackground} from 'react-native';
+import { StyleSheet, View, Image, Button, Text, ImageBackground, Alert} from 'react-native';
 import { ScreenStackHeaderRightView } from 'react-native-screens';
 
 class LogoScreen extends Component {
@@ -10,6 +10,7 @@ class LogoScreen extends Component {
             style={styles.image}
             source={{ uri: '/Users/frantennis/rekall-mobile/src/assets/rekall-logo.png'}}
           />
+        
         </View>
       );
     }
@@ -26,6 +27,12 @@ class LogoScreen extends Component {
       resizeMode: "cover",
       justifyContent: "center"
     },
+    button: {
+      height: 40,
+      justifyContent: 'center',
+      alignContent: 'center',
+      borderRadius: 10,
+  },
 });
 
 export default LogoScreen;

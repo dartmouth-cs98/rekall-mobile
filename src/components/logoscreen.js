@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, Button, Text, ImageBackground, Alert} from 'react-native';
-import { ScreenStackHeaderRightView } from 'react-native-screens';
+
 
 class LogoScreen extends Component {
     render() {

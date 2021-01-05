@@ -5,7 +5,7 @@ import LogoScreen from './src/components/logoscreen.js';
 import WelcomeScreen from './src/components/welcomescreen.js';
 import ExploreScreen from './src/components/explorescreen.js';
 import Swiper from 'react-native-swiper';
-import NavModal from './src/components/navmodal.js';
+import NavModal from './src/navigation/navmodal.js';
 
 class App extends Component {
   constructor(props){

@@ -11,9 +11,6 @@ import {
 import ExploreScreen from '../components/explorescreen.js';
 import GalleryScreen from '../components/galleryscreen.js';
 
-
-
-
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {

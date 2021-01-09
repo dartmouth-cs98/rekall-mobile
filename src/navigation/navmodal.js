@@ -17,7 +17,22 @@ function MyDrawer() {
     const isLargeScreen = useWindowDimensions();
     return (
         <NavigationContainer>
-            <Drawer.Navigator drawerType={styles.drawer} >
+            <Drawer.Navigator 
+            drawerStyle={styles.drawer} 
+            drawerContentOptions={{
+                activeTintColor: '#3E3E3E',
+                itemStyle: {marginVertical: 15},
+                labelStyle: {justifyContent: 'center',
+                fontFamily: 'AppleSDGothicNeo-Bold',
+                color: '#2C2C2C',
+                fontSize: 26,
+                paddingBottom: 5,
+                fontWeight: "bold",
+                textShadowColor: 'grey',
+                textShadowOffset: { width: 1, height: 4},
+                textShadowRadius: 5}
+            }}
+            >
                 <Drawer.Screen name="EXPLORE" component={ExploreScreen} />
                 <Drawer.Screen name="GALLERY" component={GalleryScreen} />
                 <Drawer.Screen name="FRIENDS" component={GalleryScreen}/>
@@ -30,6 +45,7 @@ function MyDrawer() {
 const styles = StyleSheet.create({
     drawer: {
         backgroundColor: '#E5E5E5',
+        width: 430,
     },
 });
 

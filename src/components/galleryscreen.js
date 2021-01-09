@@ -22,8 +22,13 @@ class GalleryScreen extends Component {
                             <Image style={styles.image}
                                 source={require('../assets/navbutton.png')}
                             />
-                        </TouchableOpacity>
-                        
+                        </TouchableOpacity> 
+                    </View>
+                    <View style={styles.albumsContainer}>
+
+                    </View>
+                    <View style={styles.bottomContainer}>
+
                     </View>
                 </View>
             </LinearGradient>
@@ -45,6 +50,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignSelf: 'center',
     },
+    albumsContainer: {
+        height: 280,
+        //backgroundColor: 'teal',
+    },
+    bottomContainer: {
+        height:  400,
+        backgroundColor: '#838484',
+        opacity: 0.6,
+    },
     menuButton:{
         alignSelf: 'center',
     },
@@ -64,6 +78,8 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 4},
         textShadowRadius: 5,
     },
+    
+    
 
 });
 

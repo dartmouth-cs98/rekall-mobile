@@ -9,6 +9,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 class WelcomeScreen extends Component {
 
+    constructor(props){
+        super(props);
+        this.state = {
+            // toMain: false,
+        };
+        this.onMainApp = this.onMainApp.bind(this);
+    }
+
+    onMainApp(){
+        this.props.onMainApp(true)
+        //console.log(this.state)
+    }
+
     render() {
       return (
         <LinearGradient
@@ -38,14 +51,13 @@ class WelcomeScreen extends Component {
                 <View style={styles.fourthcontainer}>
                     <View style={styles.buttonbox}>
                         <Text style={styles.starttext}>Get Started</Text>
-                        <Button style={styles.button}  mode="contained" onPress={() => console.log('Pressed')}>
+                        <Button style={styles.button}  mode="contained" onPress={this.onMainApp}>
                             <Icon name='angle-right' type='font-awesome' color='#8D8D8D'></Icon>
                         </Button>
                     </View>
                 </View>
             </View> 
         </LinearGradient>
-        
       );
     }
   }

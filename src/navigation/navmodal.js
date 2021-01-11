@@ -10,6 +10,7 @@ import {
 } from '@react-navigation/drawer';
 import ExploreScreen from '../components/explorescreen.js';
 import GalleryScreen from '../components/galleryscreen.js';
+import ProfileScreen from '../components/profilescreen.js';
 
 const Drawer = createDrawerNavigator();
 
@@ -36,7 +37,7 @@ function MyDrawer() {
                 <Drawer.Screen name="EXPLORE" component={ExploreScreen} />
                 <Drawer.Screen name="GALLERY" component={GalleryScreen} />
                 <Drawer.Screen name="FRIENDS" component={GalleryScreen}/>
-                <Drawer.Screen name="MY PROFILE" component={GalleryScreen}/>
+                <Drawer.Screen name="MY PROFILE" component={ProfileScreen}/>
             </Drawer.Navigator>
         </NavigationContainer>
     )

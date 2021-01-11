@@ -3,17 +3,17 @@
 
 import * as React from 'react';
 import { Platform, View, ScrollView, Text, StatusBar, SafeAreaView } from 'react-native';
-import { sliderWidth, itemWidth } from './SliderEntry.style';
-import SliderEntry from './components/SliderEntry';
-import styles, { colors } from './index.style';
-import { FRIENDS }  from './static_temp/friends'
+import { sliderWidth, itemWidth } from '../styles/SliderEntry.style';
+import SliderEntry from './SliderEntry';
+import styles, { colors } from '../styles/index.style';
+import { FRIENDS }  from '../styles/static_temp/friends'
 
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const SLIDER_1_FIRST_ITEM = 1;
 
 
-export default class App extends React.Component {
+export default class Swiper extends React.Component {
 
     constructor (props) {
         super(props);

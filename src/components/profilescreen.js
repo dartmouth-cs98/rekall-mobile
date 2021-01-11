@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert} from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, 
+    TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
@@ -15,8 +16,9 @@ class ProfileScreen extends Component {
         super(props);
         this.state = {
             profileName: "Profile Name",
-            email: "email@dartmouth.edu",
+            email: "Enter Email",
             activeIndex:0,
+            isEditing: false,
             friendsList: [
             {
                 userName:"Item 1",
@@ -42,6 +44,23 @@ class ProfileScreen extends Component {
         };
     }
 
+    // toggleUpdateButton(){
+    //     if (this.state.isEditing) {
+    //         this.setState({ isEditing: false });
+    //     } else {
+    //         this.setState({ isEditing: true });
+    //       }
+    //     }
+    //}
+
+    // updateProfile(){
+    //     if (this.state.isEditing){
+    //         return(
+
+    //         )
+    //     }
+    // }
+
     _renderItem({item,index}){
         return (
           <View style={styles.friendContainer}>
@@ -54,6 +73,53 @@ class ProfileScreen extends Component {
           </View>
 
         )
+    }
+
+    toggleEditing(){
+        if (this.state.isEditing){
+            this.setState({isEditing: false});
+            console.log(this.state.isEditing)
+        }
+        else{
+            this.setState({isEditing: true})
+            console.log(this.state.isEditing)
+        }
+    }
+
+    renderProfileInfo(){
+        if (this.state.isEditing){
+            return(
+                <View style={styles.secondContainer}>
+                    <View style={styles.profilePicBox}>
+                        <View style={styles.profileCircle}></View>
+                    </View>
+                    <View style={styles.profileInfoBox}>
+                        <TextInput style={styles.profileName} onChangeText={(text) => {this.setState({ profileName: text});}} value={this.state.profileName} />
+                        <View style={styles.emailBox}>
+                            <TextInput style={styles.email} onChangeText={(text) => {this.setState({ email: text });}} value={this.state.email} />
+                            <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
+                        </View>
+                    </View>
+                </View>
+            )
+        }
+        else{
+            return(
+                <View style={styles.secondContainer}>
+                    <View style={styles.profilePicBox}>
+                        <View style={styles.profileCircle}></View>
+                    </View>
+                    <View style={styles.profileInfoBox}>
+                        <Text style={styles.profileName}>{this.state.profileName}</Text>
+                        <View style={styles.emailBox}>
+                            <Text style={styles.email}>{this.state.email}</Text>
+                            <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
+                        </View>
+                    </View>
+                </View>
+            )
+
+        }
     }
 
     render() {
@@ -70,18 +136,21 @@ class ProfileScreen extends Component {
                     />
                 </TouchableOpacity> 
             </View>
-            <View style={styles.secondContainer}>
+            <View>
+                {this.renderProfileInfo()}
+            </View>
+            {/* <View style={styles.secondContainer}>
                 <View style={styles.profilePicBox}>
                     <View style={styles.profileCircle}></View>
                 </View>
                 <View style={styles.profileInfoBox}>
-                    <Text style={styles.profileName}>{this.state.profileName}</Text>
+                    <TextInput style={styles.profileName}>{this.state.profileName}</TextInput>
                     <View style={styles.emailBox}>
-                        <Text style={styles.email}>{this.state.email}</Text>
+                        <TextInput style={styles.email}>{this.state.email}</TextInput>
                         <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
                     </View>
                 </View>
-            </View>
+            </View> */}
             <View style={styles.thirdContainer}>
                 <View style={styles.friendsHeaderBox}>
                     <Text style={styles.friendTitle}>Friends</Text>
@@ -100,7 +169,9 @@ class ProfileScreen extends Component {
                 </View>
             </View>
             <View style={styles.fourthContainer}>
-                <Text style={styles.updateText}>Update Profile</Text>
+                <TouchableOpacity onPress={() => this.toggleEditing()}>
+                    <Text style={styles.updateText}>Update Profile</Text>
+                </TouchableOpacity>
             </View>
         </View>
       );

@@ -13,17 +13,19 @@ class ExploreScreen extends Component {
     render(){
         return(
             <LinearGradient
-            colors={['#FFFFFF', '#D9D9D9']}
+            colors={['#FFFFFF', '#8D8D8D']}
             style={{flex: 1}}>
                 <View style={styles.container}>
-                    <View style={styles.menuBox}>
-                        <Text style={styles.headerText}>EXPLORE</Text>
-                        <TouchableOpacity style={styles.menuButton} onPress={()=> this.props.navigation.toggleDrawer()}>
-                            <Image style={styles.image}
-                                source={require('../assets/navbutton.png')}
-                            />
-                        </TouchableOpacity>
+                    <View style={styles.firstContainer}>
+                        <View style={styles.menuBox}>
+                            <Text style={styles.headerText}>EXPLORE</Text>
+                            <TouchableOpacity style={styles.menuButton} onPress={()=> this.props.navigation.toggleDrawer()}>
+                                <Image style={styles.image}
+                                    source={require('../assets/navbutton.png')}
+                                />
+                            </TouchableOpacity>
                         
+                        </View>
                     </View>
                 </View>
             </LinearGradient>
@@ -36,9 +38,16 @@ const styles = StyleSheet.create({
     container: {
       display:'flex',
     },
+    firstContainer: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        height: 150,
+        //backgroundColor: 'green',
+        alignContent: 'flex-end',
+    },
     menuBox:{
         display: 'flex',
-        height: 220,
+        height: 100,
         width: 380,
         //backgroundColor: 'red',
         flexDirection: 'row',

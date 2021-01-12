@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     friendTitle:{
-        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontFamily: 'AppleSDGothicNeo-SemiBold',
         fontSize: 20,
         paddingLeft: 15,
     },

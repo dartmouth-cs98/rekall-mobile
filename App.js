@@ -1,12 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
 import React, {Component} from 'react';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import reducer from './src/reducers';
 import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import LogoScreen from './src/components/logoscreen.js';
 import WelcomeScreen from './src/components/welcomescreen.js';
 import ExploreScreen from './src/components/explorescreen.js';
 import Swiper from 'react-native-swiper';
 //import Swiper from './src/component/swiper.js';
 import NavModal from './src/navigation/navmodal.js';
+
 
 // class App extends Component {
 //   constructor(props){
@@ -42,6 +47,10 @@ import NavModal from './src/navigation/navmodal.js';
 //   }
 // }
 
+const store = createStore(reducer, {}, compose(
+  applyMiddleware(thunk))
+);
+
 class App extends Component {
   constructor(props){
     super(props);
@@ -58,7 +67,9 @@ class App extends Component {
 
   render(){
     return(
-      <NavModal />
+      <Provider store={store}>
+        <NavModal />
+      </Provider>
       
     )
 
@@ -82,3 +93,4 @@ class App extends Component {
 }
 
 export default App;
+// registerRootComponent(App);

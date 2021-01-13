@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { fetchUserInfo } from '../actions/userActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, 
@@ -42,6 +44,10 @@ class ProfileScreen extends Component {
             },
             ]
         };
+    }
+
+    componentDidMount() {
+      this.props.fetchUserInfo('5fb47383de4e8ebf1d79d3b4');
     }
 
     // toggleUpdateButton(){
@@ -123,6 +129,8 @@ class ProfileScreen extends Component {
     }
 
     render() {
+      console.log(this.props.user.firstname);
+
       return (
         <View style={styles.container}>
           <Image
@@ -330,5 +338,11 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ProfileScreen;
 
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+};
+
+export default connect(mapStateToProps, { fetchUserInfo })(ProfileScreen);

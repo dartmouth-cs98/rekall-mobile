@@ -52,6 +52,10 @@ class GalleryScreen extends Component {
         )
     }
 
+    // addAlbums(){
+
+    // }
+
     render(){
         return(
             <LinearGradient

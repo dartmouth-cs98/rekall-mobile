@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { fetchUserInfo } from '../actions/userActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, 
@@ -17,6 +19,7 @@ class ProfileScreen extends Component {
         this.state = {
             profileName: "Profile Name",
             email: "Enter Email",
+            profilePic: "empty",
             activeIndex:0,
             isEditing: false,
             friendsList: [
@@ -43,6 +46,17 @@ class ProfileScreen extends Component {
             ]
         };
     }
+
+    componentDidMount() {
+      this.props.fetchUserInfo('5fb47383de4e8ebf1d79d3b4');
+      this.setState({
+          profileName: this.props.user.firstname,
+          email: this.props.user.email,
+          profilePic: this.props.user.profilePic,
+          friendsList: this.props.user.friends,
+      });
+    }
+
 
     // toggleUpdateButton(){
     //     if (this.state.isEditing) {
@@ -107,7 +121,7 @@ class ProfileScreen extends Component {
             return(
                 <View style={styles.secondContainer}>
                     <View style={styles.profilePicBox}>
-                        <View style={styles.profileCircle}></View>
+                        <Image source={{uri: this.state.profilePic}} style={styles.profileCircle}></Image>
                     </View>
                     <View style={styles.profileInfoBox}>
                         <Text style={styles.profileName}>{this.state.profileName}</Text>
@@ -123,6 +137,13 @@ class ProfileScreen extends Component {
     }
 
     render() {
+        console.log(this.props.user.email)
+        console.log(this.props.user.profilePic)
+        console.log("HERE")
+        console.log("RETRY")
+        console.log(this.props.user.profilePic)
+    //   console.log(this.props.user.firstname);
+
       return (
         <View style={styles.container}>
           <Image
@@ -330,5 +351,11 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ProfileScreen;
 
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+};
+
+export default connect(mapStateToProps, { fetchUserInfo })(ProfileScreen);

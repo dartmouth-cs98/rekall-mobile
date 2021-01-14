@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import reducer from './src/reducers';
+import reducers from './src/reducers';
 import { StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import LogoScreen from './src/components/logoscreen.js';
@@ -47,7 +47,7 @@ import NavModal from './src/navigation/navmodal.js';
 //   }
 // }
 
-const store = createStore(reducer, {}, compose(
+const store = createStore(reducers, {}, compose(
   applyMiddleware(thunk))
 );
 

@@ -30,7 +30,7 @@ function MyDrawer() {
                 paddingBottom: 5,
                 fontWeight: "bold",
                 textShadowColor: 'grey',
-                textShadowOffset: { width: 1, height: 4},
+                textShadowOffset: { width: 1, height: 2},
                 textShadowRadius: 5}
             }}
             >

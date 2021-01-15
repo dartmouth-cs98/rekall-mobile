@@ -101,7 +101,7 @@ class GalleryScreen extends Component {
                     </View>
                     
                     <View style={styles.bottomContainer}>
-                        <Icon style={styles.plusIcon} name='plus' size='60' type='evilicon' color='#686868'
+                        <Icon style={styles.plusIcon} name='plus' size={60} type='evilicon' color='#686868'
                         onPress={()=>console.log('Add album')}></Icon>
                     </View>
                 </View>

@@ -10,6 +10,7 @@ export const fetchUserInfo = (userID) => {
         console.log(res.data);
         console.log(res.data.email)
         console.log(res.data.friends)
+        console.log(res.data.userAlbums)
         dispatch({ type: ActionTypes.FETCH_PROFILE_INFO, payload: res.data });
       }).catch((e) => {
         console.log(`Error fetching user info: ${e}`);

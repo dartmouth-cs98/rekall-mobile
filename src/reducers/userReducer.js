@@ -6,6 +6,8 @@ const initState = {
   email: '',
   profilePic: '',
   friends: [],
+  userAlbums: [],
+  sharedAlbums: [],
 };
 
 const UserReducer = (state = initState, action) => {
@@ -17,7 +19,9 @@ const UserReducer = (state = initState, action) => {
         lastname: action.payload.lastname,
         email: action.payload.email,
         profilePic: action.payload.profilePic,
-        friends: action.payload.friends
+        friends: action.payload.friends,
+        userAlbums: action.payload.userAlbums,
+        sharedAlbums: action.payload.sharedAlbums,
       };
     default:
       return state;

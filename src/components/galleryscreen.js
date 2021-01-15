@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { fetchUserInfo } from '../actions/userActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert} from 'react-native';
@@ -13,30 +15,19 @@ class GalleryScreen extends Component {
     constructor(props){
         super(props);
         this.state={
-            myAlbums: [
-                { 
-                    albumName: "ALL"
-                },
-                {
-                    albumName: "VACATIONS"
-                },
-                {
-                    albumName: "RANDOM"
-                },
-            ],
-            sharedAlbums: [
-                { 
-                    albumName: "CABO"
-                },
-                {
-                    albumName: "21ST BDAY"
-                },
-                {
-                    albumName: "RANDOM"
-                },
-            ],
+            myAlbums: [],
+            sharedAlbums: [],
         }
     }
+
+    componentDidMount() {
+        this.props.fetchUserInfo('5fb47383de4e8ebf1d79d3b4');
+        this.setState({
+            myAlbums: this.props.user.userAlbums,
+            sharedAlbums: this.props.user.sharedAlbums,
+        });
+    }
+  
 
     renderAlbumCard({item,index}){
         return (
@@ -243,4 +234,10 @@ const styles = StyleSheet.create({
 
 });
 
-export default GalleryScreen;
+const mapStateToProps = (state) => {
+    return {
+      user: state.user,
+    }
+};
+  
+export default connect(mapStateToProps, { fetchUserInfo })(GalleryScreen);

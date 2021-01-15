@@ -142,6 +142,8 @@ class ProfileScreen extends Component {
         console.log("HERE")
         console.log("RETRY")
         console.log(this.props.user.profilePic)
+        console.log(this.props.user.friends)
+        console.log(this.props.user.userAlbums)
     //   console.log(this.props.user.firstname);
 
       return (

@@ -3,9 +3,9 @@ import { ActionTypes } from './index';
 
 const API = 'https://rekall-server.herokuapp.com';
 
-export const addUserAlbum = (userID, useralbum, sharedalbum) => {
+export const addAlbum = (userID, useralbum, sharedalbum) => {
   return (dispatch) => {
-    axios.post(`${API}/user/updateUserInfo`,
+    axios.put(`${API}/user/updateUserInfo`,
     { 
         uid: '5fb47383de4e8ebf1d79d3b4',
         newUserInfo: {

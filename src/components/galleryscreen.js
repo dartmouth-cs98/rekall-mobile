@@ -83,7 +83,7 @@ class GalleryScreen extends Component {
                             <View style={styles.modalContainer}>
                                 <View style={styles.modal}>
                                     <Text style={styles.modalText}>Create new album and select album group</Text>
-                                    <TextInput label="Enter Album Name...." mode='flat' underlineColor='blue' value={this.state.newAlbumName} onChangeText={(text) => this.setState({newAlbumName: text})}></TextInput>
+                                    <TextInput label="Enter Album Name...." mode='flat'  value={this.state.newAlbumName} onChangeText={(text) => this.setState({newAlbumName: text})}></TextInput>
                                     <View style={styles.modalButtonBox}>
                                         <Button mode='text' onPress={(e)=> this.addSharedAlbum(e)} color="#3B3B3B">Shared Albums</Button>
                                         <Button mode='text' onPress={(e)=> this.addMyAlbum(e)} color="#3B3B3B">My Albums</Button>

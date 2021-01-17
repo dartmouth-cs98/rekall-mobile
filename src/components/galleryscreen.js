@@ -4,10 +4,11 @@ import { fetchUserInfo } from '../actions/userActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
 import { LinearGradient } from 'expo-linear-gradient';
+import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -17,6 +18,8 @@ class GalleryScreen extends Component {
         this.state={
             myAlbums: [],
             sharedAlbums: [],
+            isModalVisible: false,
+            newAlbumName: "",
         }
     }
 
@@ -26,6 +29,73 @@ class GalleryScreen extends Component {
             myAlbums: this.props.user.userAlbums,
             sharedAlbums: this.props.user.sharedAlbums,
         });
+    }
+
+    toggleModal(){
+        console.log("In toggleModal")
+        if (this.state.isModalVisible){
+            this.setState({isModalVisible: false});
+            console.log(this.state.isModalVisible)
+            console.log(this.state.newAlbumName)
+        }
+        else{
+            this.setState({isModalVisible: true})
+            console.log(this.state.isModalVisible)
+            console.log(this.state.newAlbumName)
+        }
+    }
+
+    addMyAlbum(e){
+        e.preventDefault();
+        const newAlbumName = this.state.newAlbumName;
+        const obj = {'albumName': newAlbumName}
+        this.setState({
+            myAlbums: [...this.state.myAlbums, obj]
+        });
+        console.log(this.state.myAlbums)
+        this.toggleModal()
+        this.setState({
+            newAlbumName: ""
+        });
+    }
+
+    addSharedAlbum(e){
+        e.preventDefault();
+        const newAlbumName = this.state.newAlbumName;
+        const obj = {'albumName': newAlbumName}
+        this.setState({
+            sharedAlbums: [...this.state.sharedAlbums, obj]
+        });
+        console.log(this.state.sharedAlbums)
+        this.toggleModal()
+        this.setState({
+            newAlbumName: ""
+        });
+    }
+
+    renderModal(){
+        //console.log("In renderModal")
+        if (this.state.isModalVisible){
+            return(
+                <View>
+                    <Modal isVisible={this.state.isModalVisible} onSwipeComplete={()=> this.toggleModal()} swipeDirection="up">
+                        <View>
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modal}>
+                                    <Text style={styles.modalText}>Create new album and select album group</Text>
+                                    <TextInput label="Enter Album Name...." mode='flat'  value={this.state.newAlbumName} onChangeText={(text) => this.setState({newAlbumName: text})}></TextInput>
+                                    <View style={styles.modalButtonBox}>
+                                        <Button mode='text' onPress={(e)=> this.addSharedAlbum(e)} color="#3B3B3B">Shared Albums</Button>
+                                        <Button mode='text' onPress={(e)=> this.addMyAlbum(e)} color="#3B3B3B">My Albums</Button>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+            )
+        }
+        
     }
   
 
@@ -102,9 +172,10 @@ class GalleryScreen extends Component {
                     
                     <View style={styles.bottomContainer}>
                         <Icon style={styles.plusIcon} name='plus' size={60} type='evilicon' color='#686868'
-                        onPress={()=>console.log('Add album')}></Icon>
+                        onPress={()=> this.toggleModal()}></Icon>
                     </View>
                 </View>
+                <View>{this.renderModal()}</View>
             </LinearGradient>
             
         );
@@ -230,6 +301,32 @@ const styles = StyleSheet.create({
         textAlign: "left",
         fontSize: 25,
         paddingLeft: 20,
+    },
+    modalContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 400,
+        height: 800,
+    },
+    modal: {
+        borderRadius: 10,
+        justifyContent: 'space-around',
+        // alignContent: 'center',
+        backgroundColor: 'white',
+        width: 300,
+        height: 250,
+    },
+    modalButtonBox:{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
+    modalText:{
+        textAlign: 'center',
+        fontSize: 20,
+        fontFamily: 'AppleSDGothicNeo-Bold',
     },
 
 });

@@ -7,14 +7,14 @@ export const addAlbum = (userID, useralbum, sharedalbum) => {
   return (dispatch) => {
     axios.put(`${API}/user/updateUserInfo`,
     { 
-        uid: '5fb47383de4e8ebf1d79d3b4',
+        uid: userID,
         newUserInfo: {
             userAlbums: useralbum,
             sharedAlbums: sharedalbum,
         }
-    }
-      }).catch((e) => {
-        console.log(`Error posting album: ${e}`);
-      });
+    },
+    ).catch((e) => {
+        console.log(`Error putting album: ${e}`);
+    });
   };
 };

@@ -60,7 +60,7 @@ class GalleryScreen extends Component {
         const newAlbumName = this.state.newAlbumName;
         const obj = {'albumName': newAlbumName}
         this.setState({
-            myAlbums: [...this.state.myAlbums, obj]
+            myAlbums: [...this.state.myAlbums, newAlbumName]
         });
         console.log(this.state.myAlbums)
         this.toggleModal()
@@ -75,7 +75,7 @@ class GalleryScreen extends Component {
         const newAlbumName = this.state.newAlbumName;
         const obj = {'albumName': newAlbumName}
         this.setState({
-            sharedAlbums: [...this.state.sharedAlbums, obj]
+            sharedAlbums: [...this.state.sharedAlbums, newAlbumName]
         });
         console.log(this.state.sharedAlbums)
         this.toggleModal()

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { fetchUserInfo } from '../actions/userActions';
-import { addAlbum } from '../actions/albumActions';
+import { addUserAlbum, addSharedAlbum } from '../actions/albumActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert, ActionSheetIOS} from 'react-native';
@@ -13,7 +13,7 @@ import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 
-const uid = '5fb47383de4e8ebf1d79d3b4'
+const uid = "5fb47383de4e8ebf1d79d3b4"
 
 class GalleryScreen extends Component {
     constructor(props){
@@ -67,7 +67,7 @@ class GalleryScreen extends Component {
         this.setState({
             newAlbumName: ""
         });
-        this.props.UpdateAlbums(uid, this.state.myAlbums, this.state.sharedAlbums);
+        this.props.UpdateUserAlbums(uid, newAlbumName);
     }
 
     addSharedAlbum(e){
@@ -82,7 +82,7 @@ class GalleryScreen extends Component {
         this.setState({
             newAlbumName: ""
         });
-        this.props.UpdateAlbums(uid, this.state.myAlbums, this.state.sharedAlbums);
+        this.props.UpdateSharedAlbums(uid, newAlbumName);
     }
 
     renderModal(){
@@ -119,7 +119,7 @@ class GalleryScreen extends Component {
             </View>
             {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
             <Text>{item.text}</Text> */}
-            <Text style={styles.friendNameText}>{item.albumName}</Text>
+            <Text style={styles.friendNameText}>{item}</Text>
           </View>
 
         )
@@ -351,7 +351,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        UpdateAlbums: (user, useralbum, sharedalbum) => dispatch(addAlbum(user, useralbum, sharedalbum)),
+        UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
+        UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
         fetchUserInfo: fetchUserInfo
     };
 };

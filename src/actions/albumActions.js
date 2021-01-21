@@ -3,27 +3,31 @@ import { ActionTypes } from './index';
 
 const API = 'https://rekall-server.herokuapp.com';
 
-export const addUserAlbum = (userID, useralbum) => {
+export const addUserAlbum = (userID, albumName) => {
   return (dispatch) => {
     axios.post(`${API}/album/addUserAlbum`,
     { 
         "uid": userID,
-        "userAlbums": useralbum
+        "userAlbums": albumName
     },
-    ).catch((e) => {
+    ).then((res) => {
+      dispatch({ type: ActionTypes.ADD_USER_ALBUM, payload: albumName});
+    }).catch((e) => {
         console.log(`Error putting user album: ${e}`);
     });
   };
 };
 
-export const addSharedAlbum = (userID, sharedalbum) => {
+export const addSharedAlbum = (userID, albumName) => {
   return (dispatch) => {
     axios.post(`${API}/album/addSharedAlbum`,
     { 
         "uid": userID,
-        "sharedAlbums": sharedalbum
+        "sharedAlbums": albumName
     },
-    ).catch((e) => {
+    ).then((res) => {
+      dispatch({ type: ActionTypes.ADD_SHARED_ALBUM, payload: albumName});
+    }).catch((e) => {
         console.log(`Error putting shared album: ${e}`);
     });
   };

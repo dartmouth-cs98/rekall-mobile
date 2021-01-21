@@ -22,39 +22,20 @@ class ProfileScreen extends Component {
             profilePic: "empty",
             activeIndex:0,
             isEditing: false,
-            friendsList: [
-            {
-                userName:"Item 1",
-                text: "Text 1",
-            },
-            {
-                userName:"Item 2",
-                text: "Text 2",
-            },
-            {
-                userName:"Item 3",
-                text: "Text 3",
-            },
-            {
-                userName:"Item 4",
-                text: "Text 4",
-            },
-            {
-                userName:"Item 5",
-                text: "Text 5",
-            },
-            ]
+            friendsList: []
         };
     }
 
     componentDidMount() {
-      this.props.fetchUserInfo('5fb47383de4e8ebf1d79d3b4');
-      this.setState({
+      this.props.fetchUserInfo('5fb47383de4e8ebf1d79d3b4').then(() => {
+        this.setState({
           profileName: this.props.user.firstname,
           email: this.props.user.email,
           profilePic: this.props.user.profilePic,
           friendsList: this.props.user.friends,
+        });
       });
+
     }
 
 
@@ -83,7 +64,7 @@ class ProfileScreen extends Component {
             </View>
             {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
             <Text>{item.text}</Text> */}
-            <Text style={styles.friendNameText}>{item.userName}</Text>
+            <Text style={styles.friendNameText}>{item}</Text>
           </View>
 
         )
@@ -136,14 +117,36 @@ class ProfileScreen extends Component {
         }
     }
 
+    getFriendsCarousel() {
+      return (
+        <View style={styles.thirdContainer}>
+            <View style={styles.friendsHeaderBox}>
+                <Text style={styles.friendTitle}>Friends</Text>
+            </View>
+            <View style={styles.friendsListBox}>
+                <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+                    <Carousel
+                    layout={"default"}
+                    ref={ref => this.carousel = ref}
+                    data={this.state.friendsList}
+                    sliderWidth={300}
+                    itemWidth={250}
+                    renderItem={this._renderItem}
+                    onSnapToItem = { index => this.setState({activeIndex:index}) } />
+                </View>
+            </View>
+        </View>
+      );
+    }
+
     render() {
-        console.log(this.props.user.email)
-        console.log(this.props.user.profilePic)
-        console.log("HERE")
-        console.log("RETRY")
-        console.log(this.props.user.profilePic)
-        console.log(this.props.user.friends)
-        console.log(this.props.user.userAlbums)
+        // console.log(this.props.user.email)
+        // console.log(this.props.user.profilePic)
+        // console.log("HERE")
+        // console.log("RETRY")
+        // console.log(this.props.user.profilePic)
+        // console.log(this.props.user.friends)
+        // console.log(this.props.user.userAlbums)
     //   console.log(this.props.user.firstname);
 
       return (
@@ -174,23 +177,7 @@ class ProfileScreen extends Component {
                     </View>
                 </View>
             </View> */}
-            <View style={styles.thirdContainer}>
-                <View style={styles.friendsHeaderBox}>
-                    <Text style={styles.friendTitle}>Friends</Text>
-                </View>
-                <View style={styles.friendsListBox}>
-                    <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
-                        <Carousel
-                        layout={"default"}
-                        ref={ref => this.carousel = ref}
-                        data={this.state.friendsList}
-                        sliderWidth={300}
-                        itemWidth={250}
-                        renderItem={this._renderItem}
-                        onSnapToItem = { index => this.setState({activeIndex:index}) } />
-                    </View>
-                </View>
-            </View>
+            { this.getFriendsCarousel() }
             <View style={styles.fourthContainer}>
                 <TouchableOpacity onPress={() => this.toggleEditing()}>
                     <Text style={styles.updateText}>Update Profile</Text>

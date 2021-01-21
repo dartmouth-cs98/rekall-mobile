@@ -48,9 +48,8 @@ class GalleryScreen extends Component {
     addMyAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
-        const obj = {'albumName': newAlbumName}
         this.setState({
-            myAlbums: [...this.state.myAlbums, obj]
+            myAlbums: [...this.state.myAlbums, newAlbumName]
         });
         console.log(this.state.myAlbums)
         this.toggleModal()
@@ -62,9 +61,8 @@ class GalleryScreen extends Component {
     addSharedAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
-        const obj = {'albumName': newAlbumName}
         this.setState({
-            sharedAlbums: [...this.state.sharedAlbums, obj]
+            sharedAlbums: [...this.state.sharedAlbums, newAlbumName]
         });
         console.log(this.state.sharedAlbums)
         this.toggleModal()
@@ -100,6 +98,7 @@ class GalleryScreen extends Component {
   
 
     renderAlbumCard({item,index}){
+      if (item.albumName !== null){
         return (
           <View style={styles.friendContainer}>
             <View style={styles.friendImage}>
@@ -110,12 +109,68 @@ class GalleryScreen extends Component {
             <Text style={styles.friendNameText}>{item.albumName}</Text>
           </View>
 
-        )
+        );
+      }
     }
 
-    // addAlbums(){
+    getAlbums() {
+      const albums = this.state.myAlbums.map((name) => {
+        return { 
+          albumName: name,
+          text: "MyAlbum"
+        };
+      });
+      return (
+        <View style={styles.myAlbumsContainer}>
+            <View style={styles.albumHeaderBox}>
+                <Text style={styles.albumTitle}>My Albums</Text>
+            </View>
+            <View style={styles.albumsContainer}>
+                <View style={styles.friendsListBox}>
+                  <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+                      <Carousel
+                      layout={"default"}
+                      ref={ref => this.carousel = ref}
+                      data={albums}
+                      sliderWidth={300}
+                      itemWidth={250}
+                      renderItem={this.renderAlbumCard}
+                      onSnapToItem = { index => this.setState({activeIndex:index}) } />
+                  </View>
+                </View>
+            </View>        
+        </View>
 
-    // }
+      );
+    }
+
+    getSharedAlbums() {
+      const sharedAlbums = this.state.sharedAlbums.map((name) => {
+        return { 
+          albumName: name,
+          text: "Shared"
+        };
+      });
+      return (
+        <View style={styles.sharedAlbumsContainer}>
+            <View style={styles.albumHeaderBox}>
+                <Text style={styles.albumTitle}>Shared Albums</Text>
+            </View>
+            <View style={styles.friendsListBox}>
+                <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+                    <Carousel
+                        layout={"default"}
+                        ref={ref => this.carousel = ref}
+                        data={sharedAlbums}
+                        sliderWidth={300}
+                        itemWidth={250}
+                        renderItem={this.renderAlbumCard}
+                        onSnapToItem = { index => this.setState({activeIndex:index}) } />
+                </View>
+            </View>
+        </View>
+      );
+    }
 
     render(){
         return(
@@ -133,43 +188,8 @@ class GalleryScreen extends Component {
                             </TouchableOpacity> 
                         </View>
                     </View>
-                    <View style={styles.myAlbumsContainer}>
-                        <View style={styles.albumHeaderBox}>
-                            <Text style={styles.albumTitle}>My Albums</Text>
-                        </View>
-                        <View style={styles.albumsContainer}>
-                            <View style={styles.friendsListBox}>
-                                <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
-                                    <Carousel
-                                    layout={"default"}
-                                    ref={ref => this.carousel = ref}
-                                    data={this.state.myAlbums}
-                                    sliderWidth={300}
-                                    itemWidth={250}
-                                    renderItem={this.renderAlbumCard}
-                                    onSnapToItem = { index => this.setState({activeIndex:index}) } />
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.sharedAlbumsContainer}>
-                        <View style={styles.albumHeaderBox}>
-                            <Text style={styles.albumTitle}>Shared Albums</Text>
-                        </View>
-                        <View style={styles.friendsListBox}>
-                            <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
-                                <Carousel
-                                    layout={"default"}
-                                    ref={ref => this.carousel = ref}
-                                    data={this.state.sharedAlbums}
-                                    sliderWidth={300}
-                                    itemWidth={250}
-                                    renderItem={this.renderAlbumCard}
-                                    onSnapToItem = { index => this.setState({activeIndex:index}) } />
-                            </View>
-                        </View>
-                    </View>
-                    
+                    { this.getAlbums() }
+                    {this.getSharedAlbums()}
                     <View style={styles.bottomContainer}>
                         <Icon style={styles.plusIcon} name='plus' size={60} type='evilicon' color='#686868'
                         onPress={()=> this.toggleModal()}></Icon>

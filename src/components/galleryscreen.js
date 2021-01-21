@@ -34,12 +34,12 @@ class GalleryScreen extends Component {
         });
     }
 
-    componentWillMount = () => {
-        this.setState({
-            myAlbums: this.props.user.userAlbums,
-            sharedAlbums: this.props.user.sharedAlbums,
-        });
-    }
+    // componentWillMount = () => {
+    //     this.setState({
+    //         myAlbums: this.props.user.userAlbums,
+    //         sharedAlbums: this.props.user.sharedAlbums,
+    //     });
+    // }
 
     toggleModal(){
         console.log("In toggleModal")
@@ -64,9 +64,9 @@ class GalleryScreen extends Component {
         });
         console.log(this.state.myAlbums)
         this.toggleModal()
-        this.setState({
-            newAlbumName: ""
-        });
+        // this.setState({
+        //     newAlbumName: ""
+        // });
         this.props.UpdateUserAlbums(uid, newAlbumName);
     }
 
@@ -79,9 +79,9 @@ class GalleryScreen extends Component {
         });
         console.log(this.state.sharedAlbums)
         this.toggleModal()
-        this.setState({
-            newAlbumName: ""
-        });
+        // this.setState({
+        //     newAlbumName: ""
+        // });
         this.props.UpdateSharedAlbums(uid, newAlbumName);
     }
 
@@ -348,6 +348,7 @@ const mapStateToProps = (state) => {
       user: state.user,
     }
 };
+
 
 const mapDispatchToProps = (dispatch) => {
     return {

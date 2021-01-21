@@ -118,7 +118,7 @@ class GalleryScreen extends Component {
             </View>
             {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
             <Text>{item.text}</Text> */}
-            <Text style={styles.friendNameText}>{item}</Text>
+            <Text style={styles.friendNameText}>{item.albumName}</Text>
           </View>
 
         );
@@ -127,10 +127,12 @@ class GalleryScreen extends Component {
 
     getAlbums() {
       const albums = this.state.myAlbums.map((name) => {
-        return { 
-          albumName: name,
-          text: "MyAlbum"
-        };
+        if (name !== null || name !== ''){
+          return { 
+            albumName: name,
+            text: "MyAlbum"
+          };
+        }
       });
       return (
         <View style={styles.myAlbumsContainer}>
@@ -158,10 +160,12 @@ class GalleryScreen extends Component {
 
     getSharedAlbums() {
       const sharedAlbums = this.state.sharedAlbums.map((name) => {
-        return { 
-          albumName: name,
-          text: "Shared"
-        };
+        if (name !== null || name !== ''){
+          return { 
+            albumName: name,
+            text: "Shared"
+          };
+        }
       });
       return (
         <View style={styles.sharedAlbumsContainer}>

@@ -23,6 +23,16 @@ const UserReducer = (state = initState, action) => {
         userAlbums: action.payload.userAlbums,
         sharedAlbums: action.payload.sharedAlbums,
       };
+    case ActionTypes.ADD_USER_ALBUM:
+      return {
+        ...state,
+        userAlbums: [...state.userAlbums, action.payload],
+      };
+    case ActionTypes.ADD_SHARED_ALBUM:
+      return {
+        ...state,
+        sharedAlbums: [...state.sharedAlbums, action.payload],
+      }  
     default:
       return state;
   }

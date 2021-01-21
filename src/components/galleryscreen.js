@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { fetchUserInfo } from '../actions/userActions';
+import { addUserAlbum, addSharedAlbum } from '../actions/albumActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert} from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert, ActionSheetIOS} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
@@ -11,6 +12,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
+
+const uid = "5fb47383de4e8ebf1d79d3b4"
 
 class GalleryScreen extends Component {
     constructor(props){
@@ -24,7 +27,14 @@ class GalleryScreen extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchUserInfo('5fb47383de4e8ebf1d79d3b4');
+        this.props.fetchUserInfo(uid);
+        this.setState({
+            myAlbums: this.props.user.userAlbums,
+            sharedAlbums: this.props.user.sharedAlbums,
+        });
+    }
+
+    componentWillMount = () => {
         this.setState({
             myAlbums: this.props.user.userAlbums,
             sharedAlbums: this.props.user.sharedAlbums,
@@ -56,6 +66,7 @@ class GalleryScreen extends Component {
         this.setState({
             newAlbumName: ""
         });
+        this.props.UpdateUserAlbums(uid, newAlbumName);
     }
 
     addSharedAlbum(e){
@@ -69,6 +80,7 @@ class GalleryScreen extends Component {
         this.setState({
             newAlbumName: ""
         });
+        this.props.UpdateSharedAlbums(uid, newAlbumName);
     }
 
     renderModal(){
@@ -106,7 +118,7 @@ class GalleryScreen extends Component {
             </View>
             {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
             <Text>{item.text}</Text> */}
-            <Text style={styles.friendNameText}>{item.albumName}</Text>
+            <Text style={styles.friendNameText}>{item}</Text>
           </View>
 
         );
@@ -356,5 +368,13 @@ const mapStateToProps = (state) => {
       user: state.user,
     }
 };
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
+        UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
+        fetchUserInfo: fetchUserInfo
+    };
+};
   
-export default connect(mapStateToProps, { fetchUserInfo })(GalleryScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(GalleryScreen);

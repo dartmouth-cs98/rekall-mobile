@@ -102,7 +102,7 @@ class ProfileScreen extends Component {
             return(
                 <View style={styles.secondContainer}>
                     <View style={styles.profilePicBox}>
-                        <Image source={{uri: this.state.profilePic}} style={styles.profileCircle}></Image>
+                        <Image source={this.state.profilePic ? {uri: this.state.profilePic} : null} style={styles.profileCircle}></Image>
                     </View>
                     <View style={styles.profileInfoBox}>
                         <Text style={styles.profileName}>{this.state.profileName}</Text>

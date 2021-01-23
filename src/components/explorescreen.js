@@ -13,7 +13,7 @@ class ExploreScreen extends Component {
     render(){
         return(
             <LinearGradient
-            colors={['#FFFFFF', '#8D8D8D']}
+            colors={['#FFFFFF', '#D9D9D9']}
             style={{flex: 1}}>
                 <View style={styles.container}>
                     <View style={styles.firstContainer}>

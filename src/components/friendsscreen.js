@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Image, Text, TouchableOpacity, 
+import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions,
     TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
+import { TabView, SceneMap } from 'react-native-tab-view';
+import TabViewExample from './friendsTabs';
+ 
+
 
 class FriendsScreen extends Component{
     constructor(props){
@@ -13,11 +17,12 @@ class FriendsScreen extends Component{
 
         }
     }
+    
 
     render(){
         return(
             <LinearGradient
-            colors={['#FFFFFF', '#8D8D8D']}
+            colors={['#FFFFFF', '#D9D9D9']}
             style={{flex: 1}}>
                 <View style={styles.container}>
                     <View style={styles.firstContainer}>
@@ -28,8 +33,15 @@ class FriendsScreen extends Component{
                                     source={require('../assets/navbutton.png')}
                                 />
                             </TouchableOpacity>
-                        
                         </View>
+                    </View>
+                    <View style={styles.addFriendContainer}>
+                        <Icon style={styles.addFriendIcon} name='plus' size={50} type='feather' color='#838484' 
+                        onPress={()=> console.log('Add Friend Pressed')}>
+                        </Icon>
+                    </View>
+                    <View style={styles.secondContainer}>
+                        <TabViewExample />
                     </View>
                 </View>
             </LinearGradient>
@@ -76,7 +88,22 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 4},
         textShadowRadius: 5,
     },
-
+    addFriendContainer: {
+        height: 50,
+        //backgroundColor: 'green',
+    },
+    scene:{
+        flex: 1,
+    },
+    addFriendIcon:{
+        alignSelf: 'flex-end',
+        paddingRight: 10,
+    },
+    secondContainer: {
+        paddingTop: 30,
+        height: 730,
+        //backgroundColor: 'red',
+    },
 });
 
 

@@ -3,6 +3,8 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { LinearGradient } from 'expo-linear-gradient';
 import FriendRequestScreen from './friendRequests';
+import FollowersScreen from './followersScreen';
+import FollowingScreen from './followingScreen';
 
 
 const FirstRoute = () => (
@@ -47,8 +49,8 @@ const TabViewExample =() => {
  
   const renderScene = SceneMap({
     first: FriendRequestScreen,
-    second: SecondRoute,
-    third: ThirdRoute,
+    second: FollowersScreen,
+    third: FollowingScreen,
   });
  
   return (

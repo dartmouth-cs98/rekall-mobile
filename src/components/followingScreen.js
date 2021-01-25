@@ -8,7 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
 
-class FriendRequests extends Component{
+class FollowingScreen extends Component{
     constructor(props){
         super(props);
         this.state={
@@ -36,24 +36,20 @@ class FriendRequests extends Component{
                             <View style={styles.profilePicBox}>
                                 <Image style={styles.profileCircle}></Image>
                             </View>
-                            <View style={styles.friendNameBox}>
-                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Friend pressed")}>
+                            <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Friend pressed")}>
+                                <View style={styles.friendNameBox}>
                                     <Text style={styles.friendName}>Ash Fran</Text>
-                                </TouchableHighlight>
-                            </View>
-                            <View style={styles.buttonBox}>
-                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Rejected request")}>
-                                    <View style={styles.buttonBackground}>
-                                        <Text style={styles.buttonText}>Decline</Text>
-                                    </View>
-                                </TouchableHighlight>
-                                <TouchableHighlight underlayColor="#ffffff0"  onPress={() => console.log("Accepted request")}>
-                                    <View style={styles.buttonBackground}>
-                                        <Text style={styles.buttonText}>Accept</Text>
+                                </View>
+                            </TouchableHighlight>
+                            <View style={styles.removeButtonBox}>
+                                <TouchableHighlight underlayColor="#ffffff0"  onPress={() => console.log("Friend removed")}>
+                                    <View style={styles.removeButton}>
+                                        <Text style={styles.removeLabel}>Following</Text>
                                     </View>
                                 </TouchableHighlight>
                             </View>
                         </View>
+                        {/* <View style={styles.separator} /> */}
                     </View>
             );
         }
@@ -81,7 +77,7 @@ const styles = StyleSheet.create({
         //marginVertical: 10,
     }, 
     friendNameBox: {
-        width: 150,
+        width: 230,
         //backgroundColor: 'grey',
         height: 80,
         justifyContent: 'center',
@@ -93,6 +89,31 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         color: '#4F4F4F',
         //color: '#6A6A6A',
+    },
+    buttonBox:{
+        width: 200,
+        height: 100,
+        //backgroundColor: 'green',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        flexDirection: 'row',
+        alignContent: 'space-between',
+        paddingRight: 15,
+    },
+    buttonBackground:{
+        width: 50,
+        height: 60,
+        backgroundColor: '#BABABB',
+        borderRadius: 20,
+        shadowOffset:{  height: 1},
+        shadowColor: 'black',
+        shadowOpacity: 0.8,
+        justifyContent: 'center',
+    },
+    separator: {
+        height: 1,
+        backgroundColor: 'darkgrey',
+        opacity: 2,
     },
     profilePicBox: {
         display: 'flex',
@@ -110,15 +131,14 @@ const styles = StyleSheet.create({
         borderWidth: 0.3,
         alignSelf: 'center',
     },
-    buttonBox: {
-        width: 200,
+    removeButtonBox: {
+        //paddingTop: 5,
+        width: 100,
         height: 80,
         //backgroundColor: 'lightgreen',
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
+        justifyContent: 'center',
     },
-    buttonBackground: {
+    removeButton: {
         width: 80,
         height: 40,
         //backgroundColor: 'white',
@@ -132,16 +152,11 @@ const styles = StyleSheet.create({
         //borderColor: 'darkgrey',
         //borderWidth: 2,
     },
-    buttonText: {
+    removeLabel: {
         textAlign: 'center',
         fontFamily: 'AppleSDGothicNeo-Bold',
-    },
-    separator: {
-        height: 1,
-        backgroundColor: 'darkgrey',
-        opacity: 2,
     },
 });
 
 
-export default FriendRequests;
+export default FollowingScreen;

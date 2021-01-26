@@ -56,9 +56,9 @@ class GalleryScreen extends Component {
         });
         console.log(this.state.myAlbums)
         this.toggleModal()
-        this.setState({
-            newAlbumName: ""
-        });
+        // this.setState({
+        //     newAlbumName: ""
+        // });
         this.props.UpdateUserAlbums(uid, newAlbumName);
     }
 
@@ -70,9 +70,9 @@ class GalleryScreen extends Component {
         });
         console.log(this.state.sharedAlbums)
         this.toggleModal()
-        this.setState({
-            newAlbumName: ""
-        });
+        // this.setState({
+        //     newAlbumName: ""
+        // });
         this.props.UpdateSharedAlbums(uid, newAlbumName);
     }
 
@@ -365,6 +365,7 @@ const mapStateToProps = (state) => {
       user: state.user,
     }
 };
+
 
 const mapDispatchToProps = (dispatch) => {
     return {

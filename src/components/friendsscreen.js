@@ -1,14 +1,23 @@
 import React, {Component} from 'react';
-//import FontAwesome from 'FontAwesome';
-// import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert} from 'react-native';
-import {Button} from 'react-native-paper';
+import { connect } from 'react-redux';
+import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions,
+    TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
+import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
-import { LinearTextGradient } from 'react-native-text-gradient';
-import { NavigationContainer } from '@react-navigation/native';
+import { TabView, SceneMap } from 'react-native-tab-view';
+import TabViewExample from './friendsTabs';
+ 
 
-class ExploreScreen extends Component {
+
+class FriendsScreen extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+
+        }
+    }
+    
 
     render(){
         return(
@@ -18,18 +27,24 @@ class ExploreScreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.firstContainer}>
                         <View style={styles.menuBox}>
-                            <Text style={styles.headerText}>EXPLORE</Text>
+                            <Text style={styles.headerText}>FRIENDS</Text>
                             <TouchableOpacity style={styles.menuButton} onPress={()=> this.props.navigation.toggleDrawer()}>
                                 <Image style={styles.image}
                                     source={require('../assets/navbutton.png')}
                                 />
                             </TouchableOpacity>
-                        
                         </View>
+                    </View>
+                    <View style={styles.addFriendContainer}>
+                        <Icon style={styles.addFriendIcon} name='plus' size={50} type='feather' color='#838484' 
+                        onPress={()=> console.log('Add Friend Pressed')}>
+                        </Icon>
+                    </View>
+                    <View style={styles.secondContainer}>
+                        <TabViewExample />
                     </View>
                 </View>
             </LinearGradient>
-            
         );
     }
 }
@@ -73,7 +88,24 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 4},
         textShadowRadius: 5,
     },
-
+    addFriendContainer: {
+        height: 50,
+        //backgroundColor: 'green',
+    },
+    scene:{
+        flex: 1,
+    },
+    addFriendIcon:{
+        alignSelf: 'flex-end',
+        paddingRight: 10,
+    },
+    secondContainer: {
+        paddingTop: 30,
+        height: 730,
+        //backgroundColor: 'red',
+    },
 });
 
-export default ExploreScreen;
+
+
+export default FriendsScreen;

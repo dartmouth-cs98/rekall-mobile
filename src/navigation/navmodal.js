@@ -11,6 +11,7 @@ import {
 import ExploreScreen from '../components/explorescreen.js';
 import GalleryScreen from '../components/galleryscreen.js';
 import ProfileScreen from '../components/profilescreen.js';
+import FriendsScreen from '../components/friendsscreen.js';
 
 const Drawer = createDrawerNavigator();
 
@@ -36,7 +37,7 @@ function MyDrawer() {
             >
                 <Drawer.Screen name="EXPLORE" component={ExploreScreen} />
                 <Drawer.Screen name="GALLERY" component={GalleryScreen} />
-                <Drawer.Screen name="FRIENDS" component={GalleryScreen}/>
+                <Drawer.Screen name="FRIENDS" component={FriendsScreen}/>
                 <Drawer.Screen name="MY PROFILE" component={ProfileScreen}/>
             </Drawer.Navigator>
         </NavigationContainer>

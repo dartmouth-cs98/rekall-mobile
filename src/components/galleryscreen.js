@@ -34,13 +34,6 @@ class GalleryScreen extends Component {
         });
     }
 
-    componentWillMount = () => {
-        this.setState({
-            myAlbums: this.props.user.userAlbums,
-            sharedAlbums: this.props.user.sharedAlbums,
-        });
-    }
-
     toggleModal(){
         console.log("In toggleModal")
         if (this.state.isModalVisible){

@@ -32,7 +32,12 @@ const UserReducer = (state = initState, action) => {
       return {
         ...state,
         sharedAlbums: [...state.sharedAlbums, action.payload],
-      }  
+      };
+    case ActionTypes.ADD_FRIEND:
+        return {
+          ...state,
+          friends: [...state.friends, action.payload],
+        };
     default:
       return state;
   }

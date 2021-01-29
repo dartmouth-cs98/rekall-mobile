@@ -12,6 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 
+const uid = "6010a60b2903ce360163ca10"
 
 class ProfileScreen extends Component {
     constructor(props){
@@ -27,7 +28,7 @@ class ProfileScreen extends Component {
     }
 
     componentDidMount() {
-      this.props.fetchUserInfo('5fb47383de4e8ebf1d79d3b4').then(() => {
+      this.props.fetchUserInfo(uid).then(() => {
         this.setState({
           profileName: this.props.user.firstname,
           email: this.props.user.email,

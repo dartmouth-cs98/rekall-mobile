@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { ActionTypes } from './index';
 
-const API = 'https://rekall-server.herokuapp.com';
+// const API = 'https://rekall-server.herokuapp.com';
+const API = 'http://localhost:9090';
 
 export const fetchUserInfo = (userID) => {
   return (dispatch) => {

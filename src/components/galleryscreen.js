@@ -121,10 +121,10 @@ class GalleryScreen extends Component {
     getAlbums() {
       const albums = this.state.myAlbums.map((name) => {
         if (name !== null || name !== ''){
-          return { 
-            albumName: name,
-            text: "MyAlbum"
-          };
+          return name;
+            // albumName: name,
+            // text: "MyAlbum"
+        //   };
         }
       });
       return (
@@ -154,10 +154,10 @@ class GalleryScreen extends Component {
     getSharedAlbums() {
       const sharedAlbums = this.state.sharedAlbums.map((name) => {
         if (name !== null || name !== ''){
-          return { 
-            albumName: name,
-            text: "Shared"
-          };
+          return name;
+        //     albumName: name,
+        //     text: "Shared"
+        //   };
         }
       });
       return (

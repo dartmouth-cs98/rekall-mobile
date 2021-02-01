@@ -6,30 +6,47 @@ import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { fetchUserInfo } from '../actions/userActions';
 
+const uid = "6010a60b2903ce360163ca10"
 
 class FollowersScreen extends Component{
     constructor(props){
         super(props);
         this.state={
-            testRows: [
-                {
-                  id: '1',
-                  title: 'First Item',
-                },
-                {
-                  id: '2',
-                  title: 'Second Item',
-                },
-                {
-                  id: '3',
-                  title: 'Third Item',
-                }
-              ],
-            } 
-        }   
+            testRows: [],
+                // {
+                //   id: '1',
+                //   title: 'First Item',
+                // },
+                // {
+                //   id: '2',
+                //   title: 'Second Item',
+                // },
+                // {
+                //   id: '3',
+                //   title: 'Third Item',
+                // }
+            }
+        }  
+        
+        componentDidMount() {
+            this.props.fetchUserInfo(uid);
+            var friends = [];
 
-        renderFriendRequest(){
+            for (var i = 0; i < this.props.user.friends.length; i++) {
+                friends.push({
+                    id: i.toString(),
+                    title: this.props.user.friends[i]
+                });
+            }
+            this.setState({
+                testRows: friends,
+            });
+            console.log(friends)
+        }
+
+        renderFriendRequest( {item} ){
             return(
                     <View>
                         <View style={styles.rowContainer}>
@@ -38,7 +55,7 @@ class FollowersScreen extends Component{
                             </View>
                             <TouchableHighlight underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
                                 <View style={styles.friendNameBox}>
-                                    <Text style={styles.friendName}>Ash Fran</Text>
+                                    <Text style={styles.friendName}>{item.title}</Text>
                                 </View>
                             </TouchableHighlight>
                             <View style={styles.removeButtonBox}>
@@ -58,7 +75,7 @@ class FollowersScreen extends Component{
             return(
                 <FlatList
                 data={this.state.testRows}
-                renderItem={this.renderFriendRequest}
+                renderItem={({item}) => this.renderFriendRequest({item})}
                 keyExtractor={item => item.id}
                 ></FlatList>
             )
@@ -158,5 +175,19 @@ const styles = StyleSheet.create({
     },
 });
 
+const mapStateToProps = (state) => {
+    return {
+      user: state.user,
+    }
+};
 
-export default FollowersScreen;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        // UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
+        // UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
+        fetchUserInfo: fetchUserInfo,
+        // addFriend: addFriend
+    };
+};
+  
+export default connect(mapStateToProps, mapDispatchToProps)(FollowersScreen);

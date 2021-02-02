@@ -29,11 +29,18 @@ class ProfileScreen extends Component {
 
     componentDidMount() {
       this.props.fetchUserInfo(uid).then(() => {
+
+        var friends = [];
+
+        for (var i = 0; i < this.props.user.friends.length; i++) {
+            friends.push(this.props.user.friends[i].firstname + ' ' + this.props.user.friends[i].lastname)
+        }
+
         this.setState({
           profileName: this.props.user.firstname,
           email: this.props.user.email,
           profilePic: this.props.user.profilePic,
-          friendsList: this.props.user.friends,
+          friendsList: friends,
         });
       });
 

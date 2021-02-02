@@ -37,7 +37,8 @@ class FollowersScreen extends Component{
             for (var i = 0; i < this.props.user.friends.length; i++) {
                 friends.push({
                     id: i.toString(),
-                    title: this.props.user.friends[i]
+                    title: this.props.user.friends[i].firstname + ' ' + this.props.user.friends[i].lastname,
+                    email: this.props.user.friends[i].email
                 });
             }
             this.setState({

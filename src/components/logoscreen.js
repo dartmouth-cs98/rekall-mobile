@@ -8,7 +8,7 @@ class LogoScreen extends Component {
         <View style={styles.container}>
           <ImageBackground
             style={styles.image}
-            source={{ uri: '/Users/frantennis/rekall-mobile/src/assets/rekall-logo.png'}}
+            source={require('../assets/rekall-logo.png')}
           />
         
         </View>

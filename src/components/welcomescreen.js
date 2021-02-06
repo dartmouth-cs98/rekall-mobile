@@ -45,7 +45,7 @@ class WelcomeScreen extends Component {
                 </View>
                 <View style={styles.thirdcontainer}>
                     <Image style={styles.image}
-                        source={{ uri: '/Users/frantennis/rekall-mobile/src/assets/oculus.png'}}
+                        source={require('../assets/oculus.png')}
                     />
                 </View>
                 <View style={styles.fourthcontainer}>

@@ -71,7 +71,7 @@ class LoginScreen extends Component {
   labelText1: {
     fontFamily: 'AppleSDGothicNeo-Regular',
     color: 'white',
-    fontSize: 25,
+    fontSize: 20,
     textAlign: 'center',
   },
   labelText2: {

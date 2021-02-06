@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import LogoScreen from './src/components/logoscreen.js';
 import WelcomeScreen from './src/components/welcomescreen.js';
 import ExploreScreen from './src/components/explorescreen.js';
+import LoginScreen from './src/components/loginScreen.js';
 import Swiper from 'react-native-swiper';
 //import Swiper from './src/component/swiper.js';
 import NavModal from './src/navigation/navmodal.js';
@@ -68,7 +69,8 @@ class App extends Component {
   render(){
     return(
       <Provider store={store}>
-        <NavModal />
+        <LoginScreen />
+        {/* <NavModal /> */}
       </Provider>
       
     )

@@ -13,7 +13,7 @@ import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 
-const uid = "5fb47383de4e8ebf1d79d3b4"
+const uid = "6010a60b2903ce360163ca10"
 
 class GalleryScreen extends Component {
     constructor(props){

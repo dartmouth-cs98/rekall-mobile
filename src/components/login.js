@@ -85,11 +85,15 @@ export default class Login extends Component {
           style={styles.loginText}
           onPress={() => this.props.navigation.navigate('Signup')}>
           Don't have account? Click here to signup
+<<<<<<< HEAD
         </Text>
 
         <View style = {styles.error}>
         <Text>{this.state.errorMessage}</Text>
         </View>
+=======
+        </Text>                          
+>>>>>>> 12ae8476f53b7144220cebdb2e7e9a88fe6a3a93
       </View>
     );
   }
@@ -117,11 +121,14 @@ const styles = StyleSheet.create({
     marginTop: 25,
     textAlign: 'center'
   },
+<<<<<<< HEAD
   error: {
     color: '#ff0000',
     marginTop: 25,
     textAlign: 'center'
   },
+=======
+>>>>>>> 12ae8476f53b7144220cebdb2e7e9a88fe6a3a93
   preloader: {
     left: 0,
     right: 0,

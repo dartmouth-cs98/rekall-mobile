@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, Text, ImageBackground, Alert} from 'react-native';
 import { Button } from 'react-native-paper';
-
+import { useNavigation } from '@react-navigation/native';
 
 class LoginScreen extends Component {
+    constructor(props) {
+      super(props);
+    }
+    
+    openPage = (page) => {
+      const {navigation} = this.props;
+      navigation.navigate(page);
+    }
+
     render() {
       return (
         <View style={styles.container}>
@@ -16,8 +25,8 @@ class LoginScreen extends Component {
               <Text style={styles.mainText}>Reality.</Text>
           </View>
           <View style={styles.buttonBox}>
-              <Button uppercase={false} labelStyle={styles.labelText1} style={styles.loginButton} color='#60B572' mode='contained' onPress={()=> console.log('Login pressed')}>Login</Button>
-              <Button uppercase={false} labelStyle={styles.labelText2} style={styles.newAccountButton} color='white' mode='contained' onPress={()=> console.log('Create new account pressed')}>Create new account</Button>
+              <Button uppercase={false} labelStyle={styles.labelText1} style={styles.loginButton} color='#60B572' mode='contained' onPress={()=> this.openPage('Login')}>Login</Button>
+              <Button uppercase={false} labelStyle={styles.labelText2} style={styles.newAccountButton} color='white' mode='contained' onPress={()=> this.openPage('Signup')}>Create new account</Button>
           </View>
           </ImageBackground >
         </View>

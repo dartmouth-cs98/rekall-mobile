@@ -13,6 +13,7 @@ export default class Signup extends Component {
       displayName: '',
       email: '', 
       password: '',
+      errorMessage: '',
       isLoading: false
     }
   }
@@ -45,9 +46,15 @@ export default class Signup extends Component {
           email: '', 
           password: ''
         })
-        this.props.navigation.navigate('LOGIN')
+        this.props.navigation.navigate('Login')
       })
-      .catch(error => console.log(error.message))      
+      .catch(error => this.setState({ 
+        errorMessage: error.message,
+        isLoading: false,
+        displayName: '',
+        email: '', 
+        password: ''
+      }))      
     }
   }
 
@@ -89,9 +96,13 @@ export default class Signup extends Component {
 
         <Text 
           style={styles.loginText}
-          onPress={() => this.props.navigation.navigate('LOGIN')}>
+          onPress={() => this.props.navigation.navigate('Login')}>
           Already Registered? Click here to login
-        </Text>                          
+        </Text>    
+
+        <View style = {styles.error}>
+        <Text>{this.state.errorMessage}</Text>
+        </View>                      
       </View>
     );
   }
@@ -116,6 +127,11 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: '#3740FE',
+    marginTop: 25,
+    textAlign: 'center'
+  },
+  error: {
+    color: '#ff0000',
     marginTop: 25,
     textAlign: 'center'
   },

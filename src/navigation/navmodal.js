@@ -13,6 +13,7 @@ import ExploreScreen from '../components/explorescreen.js';
 import GalleryScreen from '../components/galleryscreen.js';
 import ProfileScreen from '../components/profilescreen.js';
 import FriendsScreen from '../components/friendsscreen.js';
+import LoginScreen from '../components/loginScreen.js';
 import Signup from '../components/signup.js';
 import Login from '../components/login.js';
 
@@ -51,6 +52,7 @@ function MyNav() {
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name="Entry" component={LoginScreen} />
                 <Stack.Screen name="Drawer" component={MyDrawer} />
                 <Stack.Screen name="Signup" component={Signup} />
                 <Stack.Screen name="Login" component={Login} />

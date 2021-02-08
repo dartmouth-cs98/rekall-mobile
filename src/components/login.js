@@ -40,9 +40,14 @@ export default class Login extends Component {
           email: '', 
           password: ''
         })
-        this.props.navigation.navigate('EXPLORE')
+        this.props.navigation.navigate('Drawer', { screen: 'EXPLORE' })
       })
-      .catch(error => this.setState({ errorMessage: error.message }))
+      .catch(error => this.setState({ 
+        errorMessage: error.message,
+        isLoading: false,
+        email: '', 
+        password: ''
+      }))
     }
   }
 
@@ -80,7 +85,11 @@ export default class Login extends Component {
           style={styles.loginText}
           onPress={() => this.props.navigation.navigate('Signup')}>
           Don't have account? Click here to signup
-        </Text>                          
+        </Text>
+
+        <View style = {styles.error}>
+        <Text>{this.state.errorMessage}</Text>
+        </View>
       </View>
     );
   }
@@ -105,6 +114,11 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: '#3740FE',
+    marginTop: 25,
+    textAlign: 'center'
+  },
+  error: {
+    color: '#ff0000',
     marginTop: 25,
     textAlign: 'center'
   },

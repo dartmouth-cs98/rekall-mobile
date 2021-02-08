@@ -8,7 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import LogoScreen from './src/components/logoscreen.js';
 import WelcomeScreen from './src/components/welcomescreen.js';
 import ExploreScreen from './src/components/explorescreen.js';
-import LoginScreen from './src/components/loginScreen.js';
+import LoginScreen from './src/components/entryScreen.js';
 import Swiper from 'react-native-swiper';
 import NavModal from './src/navigation/navmodal.js';
 

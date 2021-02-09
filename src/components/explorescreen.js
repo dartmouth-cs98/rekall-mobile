@@ -71,7 +71,11 @@ class ExploreScreen extends Component {
               </View>
               {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
               <Text>{item.text}</Text> */}
-              <Text style={styles.videoNameText}>{item.videoName}</Text>
+              <View style={styles.videoCardBottom} >
+                <Text style={styles.videoNameText}>{item.videoName}</Text>
+                <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
+                        onPress={()=> console.log("Item added to Gallery")}></Icon>
+              </View>
             </View>
   
           );
@@ -143,7 +147,7 @@ class ExploreScreen extends Component {
                     {this.get360Pictures()}
                     <View style={styles.bottomContainer}>
                         <View style={styles.searchCircle}>
-                            <Icon style={styles.plusIcon} name='search' size={50} type='material-icons' color='#686868'
+                            <Icon style={styles.searchIcon} name='search' size={50} type='material-icons' color='#686868'
                             onPress={()=> console.log("Search Clicked")}></Icon>
                         </View>
                     </View>
@@ -244,6 +248,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#BABABB',
         borderRadius: 2,
     },
+    videoCardBottom:{
+        height: 50,
+        flexDirection: 'row',
+        //backgroundColor :'red',
+        justifyContent: 'space-between',
+    },
     videoNameText:{
         fontFamily: 'AppleSDGothicNeo-Regular',
         color: '#4F4F4F',
@@ -271,11 +281,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    plusIcon:{
+    searchIcon:{
         height: 50,
         width: 60,
         alignSelf: 'flex-end',
         //backgroundColor: 'red',
+    },
+    
+    plusIcon: {
+        alignSelf: 'center',
+        paddingLeft: 20,
+        paddingTop: 10,
     },
 
 });

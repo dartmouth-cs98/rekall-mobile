@@ -6,6 +6,14 @@ import firebase from '../services/firebase';
 import { createUser } from '../actions/userActions';
 import { connect } from 'react-redux';
 
+var database = firebase.database();
+
+function writeUserData(userId, uid) {
+  firebase.database().ref('users/' + userId).set({
+    id: uid
+  });
+}
+
 class Signup extends Component {
   
   constructor() {
@@ -43,6 +51,8 @@ class Signup extends Component {
           displayName: this.state.firstName + ' ' + this.state.lastName
         })
         this.props.createUser(this.state.firstName, this.state.lastName, this.state.email);
+        console.log('uid: ' + res.user.uid)
+        writeUserData(res.user.uid, this.props.user.uid)
         console.log('User registered successfully!');
         this.setState({
           isLoading: false,

@@ -8,7 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { fetchUserInfo } from '../actions/userActions';
 
-const uid = "6010a60b2903ce360163ca10"
+// const uid = "6010a60b2903ce360163ca10"
 
 class FollowersScreen extends Component{
     constructor(props){
@@ -31,7 +31,7 @@ class FollowersScreen extends Component{
         }  
         
         componentDidMount() {
-            this.props.fetchUserInfo(uid);
+            this.props.fetchUserInfo(this.props.user.uid);
             var friends = [];
 
             for (var i = 0; i < this.props.user.friends.length; i++) {

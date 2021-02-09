@@ -33,7 +33,9 @@ export const createUser = (first, last, email) => {
         "email": email
       })
       .then((res) => {
+        console.log(res.data)
         dispatch({ type: ActionTypes.CREATE_USER, payload: res.data });
+        console.log("Successfully created user!")
       }).catch((e) => {
         console.log(`Error creating user: ${e}`);
       });

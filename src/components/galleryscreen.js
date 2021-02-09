@@ -13,7 +13,7 @@ import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 
-const uid = "6010a60b2903ce360163ca10"
+// const uid = "6010a60b2903ce360163ca10"
 
 class GalleryScreen extends Component {
     constructor(props){
@@ -27,7 +27,7 @@ class GalleryScreen extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchUserInfo(uid);
+        this.props.fetchUserInfo(this.props.user.uid);
         this.setState({
             myAlbums: this.props.user.userAlbums,
             sharedAlbums: this.props.user.sharedAlbums,
@@ -59,7 +59,7 @@ class GalleryScreen extends Component {
         // this.setState({
         //     newAlbumName: ""
         // });
-        this.props.UpdateUserAlbums(uid, newAlbumName);
+        this.props.UpdateUserAlbums(this.props.user.uid, newAlbumName);
     }
 
     addSharedAlbum(e){
@@ -73,7 +73,7 @@ class GalleryScreen extends Component {
         // this.setState({
         //     newAlbumName: ""
         // });
-        this.props.UpdateSharedAlbums(uid, newAlbumName);
+        this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName);
     }
 
     renderModal(){

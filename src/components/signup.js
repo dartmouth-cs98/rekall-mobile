@@ -43,7 +43,6 @@ class Signup extends Component {
           displayName: this.state.firstName + ' ' + this.state.lastName
         })
         this.props.createUser(this.state.firstName, this.state.lastName, this.state.email);
-        console.log(this.state.firstName + ' ' + this.state.lastName + ' ' + this.state.email)
         console.log('User registered successfully!');
         this.setState({
           isLoading: false,

@@ -1,6 +1,7 @@
 import { ActionTypes } from '../actions';
 
 const initState = {
+  uid: '',
   firstname: '',
   lastname: '',
   email: '',
@@ -15,6 +16,7 @@ const UserReducer = (state = initState, action) => {
     case ActionTypes.FETCH_PROFILE_INFO:
       return {
         ...state,
+        uid: action.payload._id,
         firstname: action.payload.firstname,
         lastname: action.payload.lastname,
         email: action.payload.email,
@@ -23,9 +25,10 @@ const UserReducer = (state = initState, action) => {
         userAlbums: action.payload.userAlbums,
         sharedAlbums: action.payload.sharedAlbums,
       };
-    case ActionTypes.ADD_USER_ALBUM:
+    case ActionTypes.CREATE_USER:
       return {
         ...state,
+        uid: action.payload._id,
         firstname: action.payload.firstname,
         lastname: action.payload.lastname,
         email: action.payload.email,

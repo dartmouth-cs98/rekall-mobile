@@ -12,7 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 
-const uid = "6010a60b2903ce360163ca10"
+// const uid = "6010a60b2903ce360163ca10"
 
 class ProfileScreen extends Component {
     constructor(props){
@@ -28,7 +28,7 @@ class ProfileScreen extends Component {
     }
 
     componentDidMount() {
-      this.props.fetchUserInfo(uid).then(() => {
+      this.props.fetchUserInfo(this.props.user.uid).then(() => {
 
         var friends = [];
 
@@ -37,7 +37,7 @@ class ProfileScreen extends Component {
         }
 
         this.setState({
-          profileName: this.props.user.firstname,
+          profileName: this.props.user.firstname + ' ' + this.props.user.lastname,
           email: this.props.user.email,
           profilePic: this.props.user.profilePic,
           friendsList: friends,

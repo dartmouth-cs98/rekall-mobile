@@ -3,14 +3,17 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
 import firebase from '../services/firebase';
+import { createUser } from '../actions/userActions';
+import { connect } from 'react-redux';
 
-
-export default class Signup extends Component {
+class Signup extends Component {
   
   constructor() {
     super();
     this.state = { 
       displayName: '',
+      firstName: '',
+      lastName: '',
       email: '', 
       password: '',
       errorMessage: '',
@@ -35,11 +38,13 @@ export default class Signup extends Component {
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
-        console.log(res)
+        console.log(res);
         res.user.updateProfile({
-          displayName: this.state.displayName
+          displayName: this.state.firstName + ' ' + this.state.lastName
         })
-        console.log('User registered successfully!')
+        this.props.createUser(this.state.firstName, this.state.lastName, this.state.email);
+        console.log(this.state.firstName + ' ' + this.state.lastName + ' ' + this.state.email)
+        console.log('User registered successfully!');
         this.setState({
           isLoading: false,
           displayName: '',
@@ -70,10 +75,16 @@ export default class Signup extends Component {
       <View style={styles.container}>  
         <TextInput
           style={styles.inputStyle}
-          placeholder="Name"
-          value={this.state.displayName}
-          onChangeText={(val) => this.updateInputVal(val, 'displayName')}
+          placeholder="First name"
+          value={this.state.firstName}
+          onChangeText={(val) => this.updateInputVal(val, 'firstName')}
         />      
+        <TextInput
+          style={styles.inputStyle}
+          placeholder="Last name"
+          value={this.state.lastName}
+          onChangeText={(val) => this.updateInputVal(val, 'lastName')}
+        />  
         <TextInput
           style={styles.inputStyle}
           placeholder="Email"
@@ -146,3 +157,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   }
 });
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+};
+
+export default connect(mapStateToProps, { createUser })(Signup);

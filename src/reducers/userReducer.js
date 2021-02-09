@@ -26,6 +26,13 @@ const UserReducer = (state = initState, action) => {
     case ActionTypes.ADD_USER_ALBUM:
       return {
         ...state,
+        firstname: action.payload.firstname,
+        lastname: action.payload.lastname,
+        email: action.payload.email,
+      };
+    case ActionTypes.ADD_USER_ALBUM:
+      return {
+        ...state,
         userAlbums: [...state.userAlbums, action.payload],
       };
     case ActionTypes.ADD_SHARED_ALBUM:

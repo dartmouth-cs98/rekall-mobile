@@ -24,3 +24,22 @@ export const fetchUserInfo = (userID) => {
   };
 };
 
+export const createUser = (first, last, email) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/user/createUser`, {
+        "firstname": first,
+        "lastname": last,
+        "email": email
+      })
+      .then((res) => {
+        dispatch({ type: ActionTypes.CREATE_USER, payload: res.data });
+      }).catch((e) => {
+        console.log(`Error creating user: ${e}`);
+      });
+
+      resolve();
+    });
+
+  };
+};

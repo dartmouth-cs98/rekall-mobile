@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { fetchUserInfo } from '../actions/userActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, 
+import { StyleSheet, View, Image, Text, TextInput, ActivityIndicator, TouchableOpacity, 
     TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
@@ -18,32 +18,33 @@ class ProfileScreen extends Component {
     constructor(props){
         super(props);
         this.state = {
-            profileName: "Profile Name",
-            email: "Enter Email",
-            profilePic: "empty",
+            profileName: null,
+            email: "",
+            profilePic: "",
             activeIndex:0,
             isEditing: false,
-            friendsList: []
+            // friendsList: [],
+            uid: this.props.user.uid,
         };
     }
 
     componentDidMount() {
-      this.props.fetchUserInfo(this.props.user.uid).then(() => {
+        this.loadData();
+    }
 
-        var friends = [];
+    async loadData() {
+        await this.props.fetchUserInfo(this.props.user.uid).then(() => {
 
-        for (var i = 0; i < this.props.user.friends.length; i++) {
-            friends.push(this.props.user.friends[i].firstname + ' ' + this.props.user.friends[i].lastname)
-        }
+            // let friends = this.props.user.friends.map(a => a.title);
 
-        this.setState({
-          profileName: this.props.user.firstname + ' ' + this.props.user.lastname,
-          email: this.props.user.email,
-          profilePic: this.props.user.profilePic,
-          friendsList: friends,
+            this.setState({
+                uid: this.props.user.uid,
+                profileName: this.props.user.firstname + ' ' + this.props.user.lastname,
+                email: this.props.user.email,
+                profilePic: this.props.user.profilePic,
+                // friendsList: friends,
+            });
         });
-      });
-
     }
 
 
@@ -126,6 +127,9 @@ class ProfileScreen extends Component {
     }
 
     getFriendsCarousel() {
+
+        let friends = this.props.user.friends.map(a => a.title);
+        
       return (
         <View style={styles.thirdContainer}>
             <View style={styles.friendsHeaderBox}>
@@ -136,7 +140,7 @@ class ProfileScreen extends Component {
                     <Carousel
                     layout={"default"}
                     ref={ref => this.carousel = ref}
-                    data={this.state.friendsList}
+                    data={friends}
                     sliderWidth={300}
                     itemWidth={250}
                     renderItem={this._renderItem}
@@ -156,43 +160,50 @@ class ProfileScreen extends Component {
         // console.log(this.props.user.friends)
         // console.log(this.props.user.userAlbums)
     //   console.log(this.props.user.firstname);
+        if (this.state.profileName == null) {
+            return(
+                <View style={styles.preloader}>
+                  <ActivityIndicator size="large" color="#9E9E9E"/>
+                </View>
+            )
+        }
 
-      return (
-        <View style={styles.container}>
-          <Image
-            style={styles.image}
-            source={require('../assets/acc_bg.png')} />
-            <View style={styles.menuBox}>
-                <Text style={styles.headerText}>REKALL</Text>
-                <TouchableOpacity style={styles.menuButton} onPress={()=> this.props.navigation.toggleDrawer()}>
-                    <Image style={styles.navimage}
-                        source={require('../assets/navbutton.png')}
-                    />
-                </TouchableOpacity> 
-            </View>
-            <View>
-                {this.renderProfileInfo()}
-            </View>
-            {/* <View style={styles.secondContainer}>
-                <View style={styles.profilePicBox}>
-                    <View style={styles.profileCircle}></View>
+        return (
+            <View style={styles.container}>
+                <Image
+                style={styles.image}
+                source={require('../assets/acc_bg.png')} />
+                <View style={styles.menuBox}>
+                    <Text style={styles.headerText}>REKALL</Text>
+                    <TouchableOpacity style={styles.menuButton} onPress={()=> this.props.navigation.toggleDrawer()}>
+                        <Image style={styles.navimage}
+                            source={require('../assets/navbutton.png')}
+                        />
+                    </TouchableOpacity> 
                 </View>
-                <View style={styles.profileInfoBox}>
-                    <TextInput style={styles.profileName}>{this.state.profileName}</TextInput>
-                    <View style={styles.emailBox}>
-                        <TextInput style={styles.email}>{this.state.email}</TextInput>
-                        <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
+                <View>
+                    {this.renderProfileInfo()}
+                </View>
+                {/* <View style={styles.secondContainer}>
+                    <View style={styles.profilePicBox}>
+                        <View style={styles.profileCircle}></View>
                     </View>
+                    <View style={styles.profileInfoBox}>
+                        <TextInput style={styles.profileName}>{this.state.profileName}</TextInput>
+                        <View style={styles.emailBox}>
+                            <TextInput style={styles.email}>{this.state.email}</TextInput>
+                            <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
+                        </View>
+                    </View>
+                </View> */}
+                { this.getFriendsCarousel() }
+                <View style={styles.fourthContainer}>
+                    <TouchableOpacity onPress={() => this.toggleEditing()}>
+                        <Text style={styles.updateText}>Update Profile</Text>
+                    </TouchableOpacity>
                 </View>
-            </View> */}
-            { this.getFriendsCarousel() }
-            <View style={styles.fourthContainer}>
-                <TouchableOpacity onPress={() => this.toggleEditing()}>
-                    <Text style={styles.updateText}>Update Profile</Text>
-                </TouchableOpacity>
             </View>
-        </View>
-      );
+        );
     }
   }
 
@@ -345,7 +356,17 @@ const styles = StyleSheet.create({
         color: '#4F4F4F',
         textAlign: 'center',
         fontSize: 25,
-    }
+    },
+    preloader: {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff'
+      }
 });
 
 
@@ -355,4 +376,10 @@ const mapStateToProps = (state) => {
   }
 };
 
-export default connect(mapStateToProps, { fetchUserInfo })(ProfileScreen);
+const mapDispatchToProps = (dispatch) => {
+    return {
+      fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID))
+    };
+  };
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

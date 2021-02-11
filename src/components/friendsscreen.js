@@ -11,7 +11,7 @@ import { addFriend } from '../actions/friendActions';
 import { fetchUserInfo } from '../actions/userActions';
 import Modal from 'react-native-modal';
 
-const uid = "6010a60b2903ce360163ca10"
+// const uid = "6010a60b2903ce360163ca10"
 
 class FriendsScreen extends Component{
     constructor(props){
@@ -24,7 +24,7 @@ class FriendsScreen extends Component{
     }
 
     componentDidMount() {
-        this.props.fetchUserInfo(uid);
+        this.props.fetchUserInfo(this.props.user.uid);
         this.setState({
             friends: this.props.user.friends,
         });
@@ -51,9 +51,13 @@ class FriendsScreen extends Component{
         // this.setState({
         //     friends: [...this.state.friends, newAlbumName]
         // });
-        console.log(this.state.friendEmail)
+        // console.log(this.state.friendEmail)
         this.toggleModal()
-        this.props.addFriend(uid, friendEmail);
+        this.props.addFriend(this.props.user.uid, friendEmail).then(() => {
+            this.setState({
+                friendEmail: ""
+            })
+        });
     }
 
     renderModal(){
@@ -203,10 +207,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
-        // UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
-        fetchUserInfo: fetchUserInfo,
-        addFriend: addFriend
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+        addFriend: (uid, friendEmail) => dispatch(addFriend(uid, friendEmail))
     };
 };
   

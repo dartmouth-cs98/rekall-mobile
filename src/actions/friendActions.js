@@ -6,15 +6,19 @@ const API = 'https://rekall-server.herokuapp.com';
 
 export const addFriend = (userID, email) => {
   return (dispatch) => {
-    axios.post(`${API}/friend/addFriend`,
-    { 
-        "uid": userID,
-        "friendEmail": email
-    },
-    ).then((res) => {
-      dispatch({ type: ActionTypes.ADD_FRIEND, payload: email});
-    }).catch((e) => {
-        console.log(`Error putting friend: ${e}`);
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/addFriend`,
+      { 
+          "uid": userID,
+          "friendEmail": email
+      },
+      ).then((res) => {
+        dispatch({ type: ActionTypes.ADD_FRIEND, payload: email});
+        resolve();
+      }).catch((e) => {
+          console.log(`Error putting friend: ${e}`);
+          reject(e);
+      });
     });
   };
 };

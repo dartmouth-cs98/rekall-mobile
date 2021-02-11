@@ -32,19 +32,18 @@ class FollowersScreen extends Component{
         
         componentDidMount() {
             this.props.fetchUserInfo(this.props.user.uid);
-            var friends = [];
+            // var friends = [];
 
-            for (var i = 0; i < this.props.user.friends.length; i++) {
-                friends.push({
-                    id: i.toString(),
-                    title: this.props.user.friends[i].firstname + ' ' + this.props.user.friends[i].lastname,
-                    email: this.props.user.friends[i].email
-                });
-            }
+            // for (var i = 0; i < this.props.user.friends.length; i++) {
+            //     friends.push({
+            //         id: i.toString(),
+            //         title: this.props.user.friends[i].firstname + ' ' + this.props.user.friends[i].lastname,
+            //         email: this.props.user.friends[i].email
+            //     });
+            // }
             this.setState({
-                testRows: friends,
+                testRows: this.props.user.friends,
             });
-            console.log(friends)
         }
 
         renderFriendRequest( {item} ){

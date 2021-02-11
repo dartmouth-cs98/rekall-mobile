@@ -371,7 +371,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
         UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
-        fetchUserInfo: fetchUserInfo
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID))
     };
 };
   

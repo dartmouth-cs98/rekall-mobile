@@ -50,17 +50,18 @@ class Signup extends Component {
         res.user.updateProfile({
           displayName: this.state.firstName + ' ' + this.state.lastName
         })
-        this.props.createUser(this.state.firstName, this.state.lastName, this.state.email);
-        console.log('uid: ' + res.user.uid)
-        writeUserData(res.user.uid, this.props.user.uid)
-        console.log('User registered successfully!');
-        this.setState({
-          isLoading: false,
-          displayName: '',
-          email: '', 
-          password: ''
-        })
-        this.props.navigation.navigate('Login')
+        this.props.createUser(this.state.firstName, this.state.lastName, this.state.email).then(() => {
+          console.log('uid: ' + res.user.uid)
+          writeUserData(res.user.uid, this.props.user.uid)
+          console.log('User registered successfully!');
+          this.setState({
+            isLoading: false,
+            displayName: '',
+            email: '', 
+            password: ''
+          })
+          this.props.navigation.navigate('Drawer', { screen: 'EXPLORE' })
+        });
       })
       .catch(error => this.setState({ 
         errorMessage: error.message,

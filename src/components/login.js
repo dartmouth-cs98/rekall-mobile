@@ -3,17 +3,18 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
 import firebase from '../services/firebase';
+import { connect } from 'react-redux';
+import { logIn } from '../actions/userActions';
 
-
-export default class Login extends Component {
+class Login extends Component {
   
   constructor() {
     super();
-    this.state = { 
+    this.state = {
       email: '', 
       password: '',
       isLoading: false
-    }
+    };
   }
 
   updateInputVal = (val, prop) => {
@@ -33,7 +34,7 @@ export default class Login extends Component {
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
-        console.log(res)
+        this.props.logIn(res.user.uid);
         console.log('User logged-in successfully!')
         this.setState({
           isLoading: false,
@@ -133,3 +134,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   }
 });
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logIn: (userId) => dispatch(logIn(userId))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

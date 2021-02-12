@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList,
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, ActivityIndicator,
     TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
@@ -14,7 +14,7 @@ class FollowersScreen extends Component{
     constructor(props){
         super(props);
         this.state={
-            testRows: [],
+            testRows: null,
                 // {
                 //   id: '1',
                 //   title: 'First Item',
@@ -72,6 +72,14 @@ class FollowersScreen extends Component{
         }
 
         render() {
+            if (this.state.testRows == null) {
+                return(
+                    <View style={styles.preloader}>
+                      <ActivityIndicator size="large" color="#9E9E9E"/>
+                    </View>
+                )
+            }
+
             return(
                 <FlatList
                 data={this.state.testRows}

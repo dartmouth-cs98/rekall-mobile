@@ -4,7 +4,8 @@ import { fetchUserInfo } from '../actions/userActions';
 import { addUserAlbum, addSharedAlbum } from '../actions/albumActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert, ActionSheetIOS} from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, ActivityIndicator,
+    PanResponder, Alert, ActionSheetIOS} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
@@ -19,7 +20,7 @@ class GalleryScreen extends Component {
     constructor(props){
         super(props);
         this.state={
-            myAlbums: [],
+            myAlbums: null,
             sharedAlbums: [],
             isModalVisible: false,
             newAlbumName: "",
@@ -27,10 +28,15 @@ class GalleryScreen extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchUserInfo(this.props.user.uid);
-        this.setState({
-            myAlbums: this.props.user.userAlbums,
-            sharedAlbums: this.props.user.sharedAlbums,
+        this.loadData();
+    }
+
+    async loadData() {
+        await this.props.fetchUserInfo(this.props.user.uid).then(() => {
+            this.setState({
+                myAlbums: this.props.user.userAlbums,
+                sharedAlbums: this.props.user.sharedAlbums,
+            });
         });
     }
 
@@ -48,7 +54,7 @@ class GalleryScreen extends Component {
         }
     }
 
-    addMyAlbum(e){
+    async addMyAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
         this.setState({
@@ -59,10 +65,10 @@ class GalleryScreen extends Component {
         // this.setState({
         //     newAlbumName: ""
         // });
-        this.props.UpdateUserAlbums(this.props.user.uid, newAlbumName);
+        await this.props.UpdateUserAlbums(this.props.user.uid, newAlbumName);
     }
 
-    addSharedAlbum(e){
+    async addSharedAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
         this.setState({
@@ -73,7 +79,7 @@ class GalleryScreen extends Component {
         // this.setState({
         //     newAlbumName: ""
         // });
-        this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, []);
+        await this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, []);
     }
 
     renderModal(){
@@ -182,6 +188,14 @@ class GalleryScreen extends Component {
     }
 
     render(){
+        if (this.state.myAlbums == null) {
+            return(
+                <View style={styles.preloader}>
+                  <ActivityIndicator size="large" color="#9E9E9E"/>
+                </View>
+            )
+        }
+
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}

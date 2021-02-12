@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions,
+import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions, ActivityIndicator,
     TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
@@ -17,18 +17,22 @@ class FriendsScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
-            friends: [],
+            friends: null,
             isModalVisible: false,
             friendEmail: ""
         }
     }
 
     componentDidMount() {
-        this.props.fetchUserInfo(this.props.user.uid);
-        this.setState({
-            friends: this.props.user.friends,
+        this.loadData();
+    }
+
+    async loadData() {
+        await this.props.fetchUserInfo(this.props.user.uid).then(() => {
+            this.setState({
+                friends: this.props.user.friends,
+            });
         });
-        console.log(this.props.user.friends)
     }
 
     toggleModal(){
@@ -45,18 +49,19 @@ class FriendsScreen extends Component{
         }
     }
 
-    addFriend(e){
+    async addFriend(e){
         e.preventDefault();
-        const friendEmail = this.state.friendEmail;
+        const friendEmail = this.state.friendEmail.toLowerCase();
         // this.setState({
         //     friends: [...this.state.friends, newAlbumName]
         // });
         // console.log(this.state.friendEmail)
         this.toggleModal()
-        this.props.addFriend(this.props.user.uid, friendEmail).then(() => {
+        await this.props.addFriend(this.props.user.uid, friendEmail).then(() => {
+            this.props.fetchUserInfo(this.props.user.uid);
             this.setState({
                 friendEmail: ""
-            })
+            });
         });
     }
 
@@ -85,6 +90,14 @@ class FriendsScreen extends Component{
     }
 
     render(){
+        if (this.state.friends == null) {
+            return(
+                <View style={styles.preloader}>
+                  <ActivityIndicator size="large" color="#9E9E9E"/>
+                </View>
+            )
+        }
+
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}

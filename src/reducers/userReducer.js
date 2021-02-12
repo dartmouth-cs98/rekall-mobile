@@ -63,7 +63,7 @@ const UserReducer = (state = initState, action) => {
     case ActionTypes.ADD_FRIEND:
         return {
           ...state,
-          friends: [...state.friends, action.payload],
+          friends: [...state.friends],
         };
     default:
       return state;

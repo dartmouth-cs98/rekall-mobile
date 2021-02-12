@@ -73,7 +73,7 @@ class GalleryScreen extends Component {
         // this.setState({
         //     newAlbumName: ""
         // });
-        this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName);
+        this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, []);
     }
 
     renderModal(){
@@ -370,7 +370,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
-        UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
+        UpdateSharedAlbums: (user, sharedalbum, sharedwith) => dispatch(addSharedAlbum(user, sharedalbum, sharedwith)),
         fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID))
     };
 };

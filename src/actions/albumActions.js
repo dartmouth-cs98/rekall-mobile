@@ -6,7 +6,7 @@ const API = 'https://rekall-server.herokuapp.com';
 export const addUserAlbum = (userID, albumName) => {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      axios.post(`${API}/album/createAlbum`,
+      axios.put(`${API}/album/createAlbum`,
       { 
           "_id": userID,
           "albumName": albumName
@@ -25,7 +25,7 @@ export const addUserAlbum = (userID, albumName) => {
 export const addSharedAlbum = (userID, albumName, sharedWith) => {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      axios.post(`${API}/album/addSharedAlbum`,
+      axios.put(`${API}/album/createSharedAlbum`,
       { 
           "user": {
             "_id": userID

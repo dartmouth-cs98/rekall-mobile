@@ -7,6 +7,7 @@ import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { fetchUserInfo } from '../actions/userActions';
+import { removeFriend } from '../actions/friendActions';
 
 // const uid = "6010a60b2903ce360163ca10"
 
@@ -48,7 +49,13 @@ class FollowersScreen extends Component{
                                 </View>
                             </TouchableHighlight>
                             <View style={styles.removeButtonBox}>
-                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Friend removed")}>
+                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => this.props.removeFriend(this.props.user.uid, item.email).then(() => {
+                                    this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                                        this.setState({
+                                            testRows: this.props.user.friends
+                                        });
+                                    });
+                                })}>
                                     <View style={styles.removeButton}>
                                         <Text style={styles.removeLabel}>Remove</Text>
                                     </View>
@@ -181,6 +188,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+        removeFriend: (userID, email) => dispatch(removeFriend(userID, email))
     };
 };
   

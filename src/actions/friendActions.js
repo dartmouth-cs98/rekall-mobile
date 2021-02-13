@@ -23,6 +23,25 @@ export const addFriend = (userID, email) => {
   };
 };
 
+export const removeFriend = (userID, email) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/removeFriend`,
+      { 
+          "uid": userID,
+          "friendEmail": email
+      },
+      ).then((res) => {
+        console.log(res)
+        resolve();
+      }).catch((e) => {
+          console.log(`Error putting friend: ${e}`);
+          reject(e);
+      });
+    });
+  };
+};
+
 // export const getFriends = (userID) => {
 //     return (dispatch) => {
 //       axios.post(`${API}/friend/getFriends/${userID}`)

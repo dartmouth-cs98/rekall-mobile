@@ -57,15 +57,21 @@ class GalleryScreen extends Component {
     async addMyAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
-        this.setState({
-            myAlbums: [...this.state.myAlbums, newAlbumName]
-        });
+        // this.setState({
+        //     myAlbums: [...this.state.myAlbums, newAlbumName]
+        // });
         console.log(this.state.myAlbums)
         this.toggleModal()
         // this.setState({
         //     newAlbumName: ""
         // });
-        await this.props.UpdateUserAlbums(this.props.user.uid, newAlbumName);
+        await this.props.UpdateUserAlbums(this.props.user.uid, newAlbumName).then(() => {
+            this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                this.setState({
+                    myAlbums: this.props.user.userAlbums,
+                });
+            });
+        });
     }
 
     async addSharedAlbum(e){
@@ -79,7 +85,13 @@ class GalleryScreen extends Component {
         // this.setState({
         //     newAlbumName: ""
         // });
-        await this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, []);
+        await this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, []).then(() => {
+            this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                this.setState({
+                    sharedAlbums: this.props.user.sharedAlbums,
+                });
+            });
+        });
     }
 
     renderModal(){
@@ -148,7 +160,8 @@ class GalleryScreen extends Component {
                       sliderWidth={300}
                       itemWidth={250}
                       renderItem={this.renderAlbumCard}
-                      onSnapToItem = { index => this.setState({activeIndex:index}) } />
+                      onSnapToItem = { index => this.setState({activeIndex:index}) }
+                      key = {this.state.myAlbums} />
                   </View>
                 </View>
             </View>        
@@ -180,7 +193,8 @@ class GalleryScreen extends Component {
                         sliderWidth={300}
                         itemWidth={250}
                         renderItem={this.renderAlbumCard}
-                        onSnapToItem = { index => this.setState({activeIndex:index}) } />
+                        onSnapToItem = { index => this.setState({activeIndex:index}) } 
+                        key = {this.state.sharedAlbums} />
                 </View>
             </View>
         </View>

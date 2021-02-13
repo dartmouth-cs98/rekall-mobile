@@ -60,7 +60,7 @@ class Signup extends Component {
             email: '', 
             password: ''
           })
-          this.props.navigation.navigate('Drawer', { screen: 'EXPLORE' })
+          this.props.navigation.navigate('Login');
         });
       })
       .catch(error => this.setState({ 

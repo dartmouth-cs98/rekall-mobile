@@ -52,15 +52,14 @@ class FriendsScreen extends Component{
     async addFriend(e){
         e.preventDefault();
         const friendEmail = this.state.friendEmail.toLowerCase();
-        // this.setState({
-        //     friends: [...this.state.friends, newAlbumName]
-        // });
-        // console.log(this.state.friendEmail)
+
         this.toggleModal()
         await this.props.addFriend(this.props.user.uid, friendEmail).then(() => {
-            this.props.fetchUserInfo(this.props.user.uid);
-            this.setState({
-                friendEmail: ""
+            this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                this.setState({
+                    friends: this.props.user.friends,
+                    friendEmail: ""
+                });
             });
         });
     }
@@ -120,7 +119,7 @@ class FriendsScreen extends Component{
                     </View>
                     <View>{this.renderModal()}</View>
                     <View style={styles.secondContainer}>
-                        <TabViewExample />
+                        <TabViewExample key={this.state.friends} />
                     </View>
                 </View>
             </LinearGradient>

@@ -16,7 +16,7 @@ const UserReducer = (state = initState, action) => {
     case ActionTypes.FETCH_PROFILE_INFO:
 
       var friends = [];
-      console.log(action)
+
       for (var i = 0; i < action.payload.friends.length; i++) {
           // friends.push(action.payload.friends[i].firstname + ' ' + action.payload.friends[i].lastname)
           friends.push({

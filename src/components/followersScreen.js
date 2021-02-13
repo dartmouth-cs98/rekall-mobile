@@ -14,19 +14,7 @@ class FollowersScreen extends Component{
     constructor(props){
         super(props);
         this.state={
-            testRows: null,
-                // {
-                //   id: '1',
-                //   title: 'First Item',
-                // },
-                // {
-                //   id: '2',
-                //   title: 'Second Item',
-                // },
-                // {
-                //   id: '3',
-                //   title: 'Third Item',
-                // }
+            testRows: null
             }
         }  
         
@@ -44,6 +32,7 @@ class FollowersScreen extends Component{
             this.setState({
                 testRows: this.props.user.friends,
             });
+            console.log(this.props.user.friends)
         }
 
         renderFriendRequest( {item} ){
@@ -191,10 +180,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
-        // UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
-        fetchUserInfo: fetchUserInfo,
-        // addFriend: addFriend
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
     };
 };
   

@@ -60,19 +60,23 @@ class ExploreScreen extends Component {
                 ]
 
         }
+        this.renderVideoCard = this.renderVideoCard.bind(this);
     }
 
-    renderVideoCard({item,index}){
-        if (item.videoName !== null){
+    renderVideoCard({video,index}){
+        if (video.snippet.title !== null){
           return (
             <View style={styles.videoContainer}>
               <View style={styles.videoImage}>
-  
+                <Image
+                    source={{ uri: video.snippet.thumbnails.default.url }}
+                    style={styles.videoImage}
+                />
               </View>
               {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
               <Text>{item.text}</Text> */}
               <View style={styles.videoCardBottom} >
-                <Text style={styles.videoNameText}>{item.videoName}</Text>
+                <Text style={styles.videoNameText}>{video.snippet.title}</Text>
                 <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
                         onPress={()=> console.log("Item added to Gallery")}></Icon>
               </View>

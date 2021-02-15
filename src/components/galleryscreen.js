@@ -4,7 +4,8 @@ import { fetchUserInfo } from '../actions/userActions';
 import { addUserAlbum, addSharedAlbum } from '../actions/albumActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert, ActionSheetIOS} from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, ActivityIndicator,
+    PanResponder, Alert, ActionSheetIOS} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
@@ -13,13 +14,13 @@ import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 
-const uid = "5fb47383de4e8ebf1d79d3b4"
+// const uid = "6010a60b2903ce360163ca10"
 
 class GalleryScreen extends Component {
     constructor(props){
         super(props);
         this.state={
-            myAlbums: [],
+            myAlbums: null,
             sharedAlbums: [],
             isModalVisible: false,
             newAlbumName: "",
@@ -27,10 +28,15 @@ class GalleryScreen extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchUserInfo(uid);
-        this.setState({
-            myAlbums: this.props.user.userAlbums,
-            sharedAlbums: this.props.user.sharedAlbums,
+        this.loadData();
+    }
+
+    async loadData() {
+        await this.props.fetchUserInfo(this.props.user.uid).then(() => {
+            this.setState({
+                myAlbums: this.props.user.userAlbums,
+                sharedAlbums: this.props.user.sharedAlbums,
+            });
         });
     }
 
@@ -48,21 +54,27 @@ class GalleryScreen extends Component {
         }
     }
 
-    addMyAlbum(e){
+    async addMyAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
-        this.setState({
-            myAlbums: [...this.state.myAlbums, newAlbumName]
-        });
+        // this.setState({
+        //     myAlbums: [...this.state.myAlbums, newAlbumName]
+        // });
         console.log(this.state.myAlbums)
         this.toggleModal()
         // this.setState({
         //     newAlbumName: ""
         // });
-        this.props.UpdateUserAlbums(uid, newAlbumName);
+        await this.props.UpdateUserAlbums(this.props.user.uid, newAlbumName).then(() => {
+            this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                this.setState({
+                    myAlbums: this.props.user.userAlbums,
+                });
+            });
+        });
     }
 
-    addSharedAlbum(e){
+    async addSharedAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
         this.setState({
@@ -73,7 +85,13 @@ class GalleryScreen extends Component {
         // this.setState({
         //     newAlbumName: ""
         // });
-        this.props.UpdateSharedAlbums(uid, newAlbumName);
+        await this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, []).then(() => {
+            this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                this.setState({
+                    sharedAlbums: this.props.user.sharedAlbums,
+                });
+            });
+        });
     }
 
     renderModal(){
@@ -142,7 +160,8 @@ class GalleryScreen extends Component {
                       sliderWidth={300}
                       itemWidth={250}
                       renderItem={this.renderAlbumCard}
-                      onSnapToItem = { index => this.setState({activeIndex:index}) } />
+                      onSnapToItem = { index => this.setState({activeIndex:index}) }
+                      key = {this.state.myAlbums} />
                   </View>
                 </View>
             </View>        
@@ -174,7 +193,8 @@ class GalleryScreen extends Component {
                         sliderWidth={300}
                         itemWidth={250}
                         renderItem={this.renderAlbumCard}
-                        onSnapToItem = { index => this.setState({activeIndex:index}) } />
+                        onSnapToItem = { index => this.setState({activeIndex:index}) } 
+                        key = {this.state.sharedAlbums} />
                 </View>
             </View>
         </View>
@@ -182,6 +202,14 @@ class GalleryScreen extends Component {
     }
 
     render(){
+        if (this.state.myAlbums == null) {
+            return(
+                <View style={styles.preloader}>
+                  <ActivityIndicator size="large" color="#9E9E9E"/>
+                </View>
+            )
+        }
+
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}
@@ -370,8 +398,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
-        UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
-        fetchUserInfo: fetchUserInfo
+        UpdateSharedAlbums: (user, sharedalbum, sharedwith) => dispatch(addSharedAlbum(user, sharedalbum, sharedwith)),
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID))
     };
 };
   

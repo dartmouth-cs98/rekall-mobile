@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions,
+import { StyleSheet, View, Image, Text, TouchableOpacity, Dimensions, ActivityIndicator,
     TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
@@ -11,24 +11,28 @@ import { addFriend } from '../actions/friendActions';
 import { fetchUserInfo } from '../actions/userActions';
 import Modal from 'react-native-modal';
 
-const uid = "6010a60b2903ce360163ca10"
+// const uid = "6010a60b2903ce360163ca10"
 
 class FriendsScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
-            friends: [],
+            friends: null,
             isModalVisible: false,
             friendEmail: ""
         }
     }
 
     componentDidMount() {
-        this.props.fetchUserInfo(uid);
-        this.setState({
-            friends: this.props.user.friends,
+        this.loadData();
+    }
+
+    async loadData() {
+        await this.props.fetchUserInfo(this.props.user.uid).then(() => {
+            this.setState({
+                friends: this.props.user.friends,
+            });
         });
-        console.log(this.props.user.friends)
     }
 
     toggleModal(){
@@ -45,15 +49,19 @@ class FriendsScreen extends Component{
         }
     }
 
-    addFriend(e){
+    async addFriend(e){
         e.preventDefault();
-        const friendEmail = this.state.friendEmail;
-        // this.setState({
-        //     friends: [...this.state.friends, newAlbumName]
-        // });
-        console.log(this.state.friendEmail)
+        const friendEmail = this.state.friendEmail.toLowerCase();
+
         this.toggleModal()
-        this.props.addFriend(uid, friendEmail);
+        await this.props.addFriend(this.props.user.uid, friendEmail).then(() => {
+            this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                this.setState({
+                    friends: this.props.user.friends,
+                    friendEmail: ""
+                });
+            });
+        });
     }
 
     renderModal(){
@@ -81,6 +89,14 @@ class FriendsScreen extends Component{
     }
 
     render(){
+        if (this.state.friends == null) {
+            return(
+                <View style={styles.preloader}>
+                  <ActivityIndicator size="large" color="#9E9E9E"/>
+                </View>
+            )
+        }
+
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}
@@ -103,7 +119,7 @@ class FriendsScreen extends Component{
                     </View>
                     <View>{this.renderModal()}</View>
                     <View style={styles.secondContainer}>
-                        <TabViewExample />
+                        <TabViewExample key={this.state.friends} />
                     </View>
                 </View>
             </LinearGradient>
@@ -203,10 +219,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
-        // UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
-        fetchUserInfo: fetchUserInfo,
-        addFriend: addFriend
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+        addFriend: (uid, friendEmail) => dispatch(addFriend(uid, friendEmail))
     };
 };
   

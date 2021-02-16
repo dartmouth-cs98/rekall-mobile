@@ -44,13 +44,13 @@ class Signup extends Component {
       });
       firebase
       .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .createUserWithEmailAndPassword(this.state.email.toLowerCase(), this.state.password)
       .then((res) => {
         console.log(res);
         res.user.updateProfile({
           displayName: this.state.firstName + ' ' + this.state.lastName
         })
-        this.props.createUser(this.state.firstName, this.state.lastName, this.state.email).then(() => {
+        this.props.createUser(this.state.firstName, this.state.lastName, this.state.email.toLowerCase()).then(() => {
           console.log('uid: ' + res.user.uid)
           writeUserData(res.user.uid, this.props.user.uid)
           console.log('User registered successfully!');

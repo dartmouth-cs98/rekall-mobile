@@ -8,6 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { fetchUserInfo } from '../actions/userActions';
 import { addFriend, declineRequest } from '../actions/friendActions';
+import { useFocusEffect } from '@react-navigation/native';
 
 class FriendRequests extends Component{
     constructor(props){
@@ -34,7 +35,7 @@ class FriendRequests extends Component{
                     <View>
                         <View style={styles.rowContainer}>
                             <View style={styles.profilePicBox}>
-                                <Image style={styles.profileCircle}></Image>
+                                <Image style={styles.profileCircle} uri={item.profilePic}></Image>
                             </View>
                             <View style={styles.friendNameBox}>
                                 <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Friend pressed")}>
@@ -81,7 +82,7 @@ class FriendRequests extends Component{
 
             return(
                 <FlatList
-                data={this.state.testRows}
+                data={this.props.user.requests}
                 renderItem={({item}) => this.renderFriendRequest({item})}
                 keyExtractor={item => item.id}
                 ></FlatList>

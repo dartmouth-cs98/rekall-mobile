@@ -119,7 +119,7 @@ class FriendsScreen extends Component{
                     </View>
                     <View>{this.renderModal()}</View>
                     <View style={styles.secondContainer}>
-                        <TabViewExample key={this.state.friends} />
+                        <TabViewExample key={this.state.friends} navigation={this.props.navigation} />
                     </View>
                 </View>
             </LinearGradient>

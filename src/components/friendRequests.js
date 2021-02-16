@@ -1,35 +1,35 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList,
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, ActivityIndicator,
     TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-
+import { fetchUserInfo } from '../actions/userActions';
+import { addFriend, declineRequest } from '../actions/friendActions';
 
 class FriendRequests extends Component{
     constructor(props){
         super(props);
         this.state={
-            testRows: [
-                {
-                  id: '1',
-                  title: 'First Item',
-                },
-                {
-                  id: '2',
-                  title: 'Second Item',
-                },
-                {
-                  id: '3',
-                  title: 'Third Item',
-                }
-              ],
+            testRows: null
             } 
-        }   
+        }
 
-        renderFriendRequest(){
+        componentDidMount() {
+            this.loadData();
+        }
+
+        async loadData() {
+            await this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                this.setState({
+                    testRows: this.props.user.requests,
+                });
+            });
+        }
+
+        renderFriendRequest( {item} ){
             return(
                     <View>
                         <View style={styles.rowContainer}>
@@ -38,16 +38,28 @@ class FriendRequests extends Component{
                             </View>
                             <View style={styles.friendNameBox}>
                                 <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Friend pressed")}>
-                                    <Text style={styles.friendName}>Ash Fran</Text>
+                                    <Text style={styles.friendName}>{item.title}</Text>
                                 </TouchableHighlight>
                             </View>
                             <View style={styles.buttonBox}>
-                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Rejected request")}>
+                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => this.props.declineRequest(this.props.user.uid, item.email).then(() => {
+                                    this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                                        this.setState({
+                                            testRows: this.props.user.requests
+                                        });
+                                    });
+                                })}>
                                     <View style={styles.buttonBackground}>
                                         <Text style={styles.buttonText}>Decline</Text>
                                     </View>
                                 </TouchableHighlight>
-                                <TouchableHighlight underlayColor="#ffffff0"  onPress={() => console.log("Accepted request")}>
+                                <TouchableHighlight underlayColor="#ffffff0"  onPress={() => this.props.addFriend(this.props.user.uid, item.email).then(() => {
+                                    this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                                        this.setState({
+                                            testRows: this.props.user.requests
+                                        });
+                                    });
+                                })}>
                                     <View style={styles.buttonBackground}>
                                         <Text style={styles.buttonText}>Accept</Text>
                                     </View>
@@ -59,10 +71,18 @@ class FriendRequests extends Component{
         }
 
         render() {
+            if (this.state.testRows == null) {
+                return(
+                    <View style={styles.preloader}>
+                      <ActivityIndicator size="large" color="#9E9E9E"/>
+                    </View>
+                )
+            }
+
             return(
                 <FlatList
                 data={this.state.testRows}
-                renderItem={this.renderFriendRequest}
+                renderItem={({item}) => this.renderFriendRequest({item})}
                 keyExtractor={item => item.id}
                 ></FlatList>
             )
@@ -143,5 +163,18 @@ const styles = StyleSheet.create({
     },
 });
 
+const mapStateToProps = (state) => {
+    return {
+      user: state.user,
+    }
+};
 
-export default FriendRequests;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+        addFriend: (userID, email) => dispatch(addFriend(userID, email)),
+        declineRequest: (userID, email) => dispatch(declineRequest(userID, email))
+    };
+};
+  
+export default connect(mapStateToProps, mapDispatchToProps)(FriendRequests);

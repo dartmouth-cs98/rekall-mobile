@@ -13,10 +13,48 @@ export const addFriend = (userID, email) => {
           "friendEmail": email
       },
       ).then((res) => {
-        dispatch({ type: ActionTypes.ADD_FRIEND, payload: email});
+        dispatch({ type: ActionTypes.FRIEND_SHENANIGANS, payload: email});
         resolve();
       }).catch((e) => {
           console.log(`Error putting friend: ${e}`);
+          reject(e);
+      });
+    });
+  };
+};
+
+export const requestFriend = (userID, email) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/requestFriend`,
+      { 
+          "uid": userID,
+          "friendEmail": email
+      },
+      ).then((res) => {
+        dispatch({ type: ActionTypes.FRIEND_SHENANIGANS, payload: email});
+        resolve();
+      }).catch((e) => {
+          console.log(`Error sending request: ${e}`);
+          reject(e);
+      });
+    });
+  };
+};
+
+export const declineRequest = (userID, email) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/declineRequest`,
+      { 
+          "uid": userID,
+          "friendEmail": email
+      },
+      ).then((res) => {
+        dispatch({ type: ActionTypes.FRIEND_SHENANIGANS, payload: email});
+        resolve();
+      }).catch((e) => {
+          console.log(`Error sending request: ${e}`);
           reject(e);
       });
     });

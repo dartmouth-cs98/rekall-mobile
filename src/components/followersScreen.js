@@ -41,7 +41,7 @@ class FollowersScreen extends Component{
                     <View>
                         <View style={styles.rowContainer}>
                             <View style={styles.profilePicBox}>
-                                <Image style={styles.profileCircle}></Image>
+                                <Image style={styles.profileCircle} uri={item.profilePic}></Image>
                             </View>
                             <TouchableHighlight underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
                                 <View style={styles.friendNameBox}>
@@ -78,7 +78,7 @@ class FollowersScreen extends Component{
 
             return(
                 <FlatList
-                data={this.state.testRows}
+                data={this.props.user.friends}
                 renderItem={({item}) => this.renderFriendRequest({item})}
                 keyExtractor={item => item.id}
                 ></FlatList>

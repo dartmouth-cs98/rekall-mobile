@@ -1,84 +1,133 @@
 import React, {Component} from 'react';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert} from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, ActivityIndicator, ImageBackground, FlatList, PanResponder, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
 import { LinearGradient } from 'expo-linear-gradient';
+import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
+import youtubeSearch from './youtube_api.js';
 
 class ExploreScreen extends Component {
     constructor(props){
         super(props);
         this.state={
+            videoQuery: '360 videos',
+            picQuery: '360 pictures',
+            isLoading: false,
+            modalVisible: false,
             activeIndex:0,
-            videoItems: [
-            {
-                videoName:"Video 1",
-                text: "Text 1",
-            },
-            {
-                videoName:"Video 2",
-                text: "Text 2",
-            },
-            {
-                videoName:"Video 3",
-                text: "Text 3",
-            },
-            {
-                videoName:"Video 4",
-                text: "Text 4",
-            },
-            {
-                videoName:"Video 5",
-                text: "Text 5",
-            },
-            ],
-            picItems: [
-                {
-                    videoName:"Pic 1",
-                    text: "Text 1",
-                },
-                {
-                    videoName:"Pic 2",
-                    text: "Text 2",
-                },
-                {
-                    videoName:"Pic 3",
-                    text: "Text 3",
-                },
-                {
-                    videoName:"Pic 4",
-                    text: "Text 4",
-                },
-                {
-                    videoName:"Pic 5",
-                    text: "Text 5",
-                },
-                ]
-
+            videos: [],
+            pics: [],
         }
         this.renderVideoCard = this.renderVideoCard.bind(this);
     }
 
-    renderVideoCard({video,index}){
-        if (video.snippet.title !== null){
+    fetchVideoData() {
+        youtubeSearch(this.state.videoQuery)
+          .then((responseData) => {
+            this.setState({
+              videos: responseData,
+              isLoading: false,
+            });
+          }).catch((error) => {
+            console.log(error);
+          });
+          console.log(this.state.videos)
+    }
+
+    fetchPictureData() {
+        youtubeSearch(this.state.picQuery)
+          .then((responseData) => {
+            this.setState({
+              pics: responseData,
+              isLoading: false,
+            });
+          }).catch((error) => {
+            console.log(error);
+          });
+          console.log(this.state.pics)
+    }
+
+    componentDidMount(){
+        //this.fetchVideoData();
+        //this.fetchPictureData();
+        console.log(this.state.videos)
+    }
+
+    renderLoadingView() {
+        return (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        );
+    }
+
+    toggleSearch(){
+        console.log("In toggleSearch")
+        console.log(this.state.modalVisible);
+        if (this.state.modalVisible){
+            this.setState({modalVisible: false});
+            // console.log(this.state.isModalVisible)
+            // console.log(this.state.newAlbumName)
+        }
+        else{
+            this.setState({modalVisible: true})
+            // console.log(this.state.isModalVisible)
+            // console.log(this.state.newAlbumName)
+        }
+    }
+
+    renderModal(){
+        //console.log("In renderModal")
+        if (this.state.modalVisible){
+            return(
+                <View>
+                    <Modal isVisible={this.state.modalVisible} onSwipeComplete={()=> this.toggleSearch()} swipeDirection="up">
+                        <View>
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modal}>
+                                    <Text style={styles.modalText}>Search 360 videos or pictures</Text>
+                                    <TextInput label="Search..." mode='flat'  value={this.state.newAlbumName} onChangeText={(text) => this.setState({newAlbumName: text})}>Search...</TextInput>
+                                    <View style={styles.modalButtonBox}>
+                                        <Button mode='text' onPress={()=> console.log("Picture query")} color="#3B3B3B">Pictures</Button>
+                                        <Button mode='text' onPress={()=> console.log("Video query")} color="#3B3B3B">Videos</Button>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+            )
+        }
+        
+    }
+
+    renderVideoCard({item,index}){
+        console.log(index);
+        console.log(item);
+        if (item.title !== null){
           return (
             <View style={styles.videoContainer}>
               <View style={styles.videoImage}>
                 <Image
-                    source={{ uri: video.snippet.thumbnails.default.url }}
+                    source={{ uri: item.snippet.thumbnails.high.url }}
                     style={styles.videoImage}
                 />
               </View>
               {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
               <Text>{item.text}</Text> */}
               <View style={styles.videoCardBottom} >
-                <Text style={styles.videoNameText}>{video.snippet.title}</Text>
-                <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
+                <View style={styles.videoTextBox}>
+                    <Text style={styles.videoNameText}>{item.snippet.title}</Text>
+                </View>
+                <View style={styles.plusIconBox}>
+                    <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
                         onPress={()=> console.log("Item added to Gallery")}></Icon>
+                </View>
               </View>
             </View>
   
@@ -98,7 +147,7 @@ class ExploreScreen extends Component {
                         <Carousel
                             layout={"default"}
                             ref={ref => this.carousel = ref}
-                            data={this.state.picItems}
+                            data={this.state.pics}
                             sliderWidth={300}
                             itemWidth={250}
                             renderItem={this.renderVideoCard}
@@ -120,7 +169,7 @@ class ExploreScreen extends Component {
                         <Carousel
                             layout={"default"}
                             ref={ref => this.carousel = ref}
-                            data={this.state.videoItems}
+                            data={this.state.videos}
                             sliderWidth={300}
                             itemWidth={250}
                             renderItem={this.renderVideoCard}
@@ -132,6 +181,9 @@ class ExploreScreen extends Component {
     }
 
     render(){
+        if (this.state.isLoading) {
+            return this.renderLoadingView();
+        }
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}
@@ -152,10 +204,11 @@ class ExploreScreen extends Component {
                     <View style={styles.bottomContainer}>
                         <View style={styles.searchCircle}>
                             <Icon style={styles.searchIcon} name='search' size={50} type='material-icons' color='#686868'
-                            onPress={()=> console.log("Search Clicked")}></Icon>
+                            onPress={() => this.toggleSearch()}></Icon>
                         </View>
                     </View>
                 </View>
+                <View>{this.renderModal()}</View>
             </LinearGradient>
         );
     }
@@ -163,7 +216,7 @@ class ExploreScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      display:'flex',
+      flex: 1,
     },
     firstContainer: {
         display: 'flex',
@@ -204,7 +257,7 @@ const styles = StyleSheet.create({
     //     paddingTop: 20,
     //     height: 350,
     //     //backgroundColor: 'teal',
-    // },
+    // }, 
     video360HeaderBox:{
         height: 50,
         //backgroundColor: 'lightblue',
@@ -216,7 +269,7 @@ const styles = StyleSheet.create({
     // },
     videoTitle:{
         fontFamily: 'AppleSDGothicNeo-SemiBold',
-        fontSize: 20,
+        fontSize: 15,
         paddingLeft: 15,
     },
     video360Container:{
@@ -248,12 +301,12 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
     },
     videoImage:{
-        height: 200,
+        height: 180,
         backgroundColor: '#BABABB',
         borderRadius: 2,
     },
     videoCardBottom:{
-        height: 50,
+        height: 70,
         flexDirection: 'row',
         //backgroundColor :'red',
         justifyContent: 'space-between',
@@ -261,9 +314,10 @@ const styles = StyleSheet.create({
     videoNameText:{
         fontFamily: 'AppleSDGothicNeo-Regular',
         color: '#4F4F4F',
-        textAlign: "left",
-        fontSize: 25,
-        paddingLeft: 20,
+        //textAlign: "left",
+        fontSize: 15,
+        justifyContent: 'flex-end',
+        paddingLeft: 5,
         paddingTop: 10,
     },
     bottomContainer: {
@@ -291,13 +345,48 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         //backgroundColor: 'red',
     },
-    
     plusIcon: {
-        alignSelf: 'center',
-        paddingLeft: 20,
-        paddingTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
     },
-
+    plusIconBox:{
+        //backgroundColor: 'green',
+        justifyContent: 'center',
+    },
+    loading: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    videoTextBox:{
+        width: 200,
+    },
+    modalContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 400,
+        height: 800,
+    },
+    modal: {
+        borderRadius: 10,
+        justifyContent: 'space-around',
+        // alignContent: 'center',
+        backgroundColor: 'white',
+        width: 300,
+        height: 250,
+    },
+    modalButtonBox:{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
+    modalText:{
+        textAlign: 'center',
+        fontSize: 20,
+        fontFamily: 'AppleSDGothicNeo-Bold',
+    },
 });
 
 export default ExploreScreen;

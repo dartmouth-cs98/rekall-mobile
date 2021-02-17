@@ -42,6 +42,7 @@ const MyDrawer = () => {
             <Drawer.Screen name="GALLERY" component={GalleryScreen} />
             <Drawer.Screen name="FRIENDS" component={FriendsScreen}/>
             <Drawer.Screen name="MY PROFILE" component={ProfileScreen}/>
+            <Drawer.Screen name="LOGOUT" component={Login} />
         </Drawer.Navigator>
     );
   }

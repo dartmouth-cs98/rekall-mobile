@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ActionTypes } from './index';
+// import 
 import firebase from '../services/firebase';
 
 const API = 'https://rekall-server.herokuapp.com';
@@ -27,11 +28,13 @@ export const fetchUserInfo = (userID) => {
 
 export const createUser = (first, last, email) => {
   return (dispatch) => {
+    const randCode = generateRandCode();
     return new Promise((resolve, reject) => {
       axios.post(`${API}/user/createUser`, {
         "firstname": first,
         "lastname": last,
-        "email": email
+        "email": email,
+        "vrcode": randCode
       })
       .then((res) => {
         console.log(res.data)
@@ -63,3 +66,27 @@ export const logIn = (userId) => {
 
   };
 };
+
+export const newVRCode = (userId) => {
+  const randCode = generateRandCode();
+  return new Promise((resolve, reject) => {
+    axios.post(`${API}/user/updateUserInfo`, {
+      "uid": userId,
+      "newUserInfo": {
+        "vrcode": randCode
+      }
+    })
+    .then((res) => {
+      resolve();
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+  })
+}
+
+const generateRandCode = () => {
+  const max = 9999;
+  const min = 1000;
+  return Math.floor(Math.random()*(max-min+1)+min);
+}

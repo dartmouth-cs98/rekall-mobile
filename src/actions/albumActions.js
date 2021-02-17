@@ -5,30 +5,43 @@ const API = 'https://rekall-server.herokuapp.com';
 
 export const addUserAlbum = (userID, albumName) => {
   return (dispatch) => {
-    axios.post(`${API}/album/addUserAlbum`,
-    { 
-        "uid": userID,
-        "userAlbums": albumName
-    },
-    ).then((res) => {
-      dispatch({ type: ActionTypes.ADD_USER_ALBUM, payload: albumName});
-    }).catch((e) => {
-        console.log(`Error putting user album: ${e}`);
+    return new Promise((resolve, reject) => {
+      axios.put(`${API}/album/createAlbum`,
+      { 
+          "_id": userID,
+          "albumName": albumName
+      },
+      ).then((res) => {
+        dispatch({ type: ActionTypes.ADD_USER_ALBUM, payload: albumName});
+        resolve();
+      }).catch((e) => {
+          console.log(`Error putting user album: ${e}`);
+          reject(e);
+      });
     });
   };
 };
 
-export const addSharedAlbum = (userID, albumName) => {
+export const addSharedAlbum = (userID, albumName, sharedWith) => {
   return (dispatch) => {
-    axios.post(`${API}/album/addSharedAlbum`,
-    { 
-        "uid": userID,
-        "sharedAlbums": albumName
-    },
-    ).then((res) => {
-      dispatch({ type: ActionTypes.ADD_SHARED_ALBUM, payload: albumName});
-    }).catch((e) => {
-        console.log(`Error putting shared album: ${e}`);
+    return new Promise((resolve, reject) => {
+      axios.put(`${API}/album/createSharedAlbum`,
+      { 
+          "user": {
+            "_id": userID
+          },
+          "album": {
+            "name": albumName,
+            "sharedWith": sharedWith
+          }
+      },
+      ).then((res) => {
+        dispatch({ type: ActionTypes.ADD_SHARED_ALBUM, payload: albumName});
+        resolve();
+      }).catch((e) => {
+          console.log(`Error putting shared album: ${e}`);
+          reject(e);
+      });
     });
   };
 };

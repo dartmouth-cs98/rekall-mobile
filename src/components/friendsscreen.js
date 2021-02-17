@@ -7,7 +7,7 @@ import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import TabViewExample from './friendsTabs';
-import { addFriend } from '../actions/friendActions';
+import { requestFriend } from '../actions/friendActions';
 import { fetchUserInfo } from '../actions/userActions';
 import Modal from 'react-native-modal';
 
@@ -54,7 +54,7 @@ class FriendsScreen extends Component{
         const friendEmail = this.state.friendEmail.toLowerCase();
 
         this.toggleModal()
-        await this.props.addFriend(this.props.user.uid, friendEmail).then(() => {
+        await this.props.requestFriend(this.props.user.uid, friendEmail).then(() => {
             this.props.fetchUserInfo(this.props.user.uid).then(() => {
                 this.setState({
                     friends: this.props.user.friends,
@@ -119,7 +119,7 @@ class FriendsScreen extends Component{
                     </View>
                     <View>{this.renderModal()}</View>
                     <View style={styles.secondContainer}>
-                        <TabViewExample key={this.state.friends} />
+                        <TabViewExample key={this.state.friends} navigation={this.props.navigation} />
                     </View>
                 </View>
             </LinearGradient>
@@ -220,7 +220,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
-        addFriend: (uid, friendEmail) => dispatch(addFriend(uid, friendEmail))
+        requestFriend: (uid, friendEmail) => dispatch(requestFriend(uid, friendEmail))
     };
 };
   

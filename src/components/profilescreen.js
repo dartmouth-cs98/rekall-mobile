@@ -68,12 +68,12 @@ class ProfileScreen extends Component {
     _renderItem({item,index}){
         return (
           <View style={styles.friendContainer}>
-            <View style={styles.friendImage}>
-
-            </View>
+            {/* <View style={styles.friendImage}> */}
+            <Image style={styles.friendImage} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
+            {/* </View> */}
             {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
             <Text>{item.text}</Text> */}
-            <Text style={styles.friendNameText}>{item}</Text>
+            <Text style={styles.friendNameText}>{item.title}</Text>
           </View>
 
         )
@@ -128,7 +128,7 @@ class ProfileScreen extends Component {
 
     getFriendsCarousel() {
 
-        let friends = this.props.user.friends.map(a => a.title);
+        // let friends = this.props.user.friends.map(a => a.title);
         
       return (
         <View style={styles.thirdContainer}>
@@ -140,7 +140,7 @@ class ProfileScreen extends Component {
                     <Carousel
                     layout={"default"}
                     ref={ref => this.carousel = ref}
-                    data={friends}
+                    data={this.props.user.friends}
                     sliderWidth={300}
                     itemWidth={250}
                     renderItem={this._renderItem}

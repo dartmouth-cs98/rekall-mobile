@@ -1,50 +1,39 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList,
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, ActivityIndicator,
     TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { fetchUserInfo } from '../actions/userActions';
+import { removeFriend } from '../actions/friendActions';
 
-const uid = "6010a60b2903ce360163ca10"
+// const uid = "6010a60b2903ce360163ca10"
 
 class FollowersScreen extends Component{
     constructor(props){
         super(props);
         this.state={
-            testRows: [],
-                // {
-                //   id: '1',
-                //   title: 'First Item',
-                // },
-                // {
-                //   id: '2',
-                //   title: 'Second Item',
-                // },
-                // {
-                //   id: '3',
-                //   title: 'Third Item',
-                // }
+            testRows: null
             }
         }  
         
         componentDidMount() {
-            this.props.fetchUserInfo(uid);
-            var friends = [];
+            this.props.fetchUserInfo(this.props.user.uid);
+            // var friends = [];
 
-            for (var i = 0; i < this.props.user.friends.length; i++) {
-                friends.push({
-                    id: i.toString(),
-                    title: this.props.user.friends[i].firstname + ' ' + this.props.user.friends[i].lastname,
-                    email: this.props.user.friends[i].email
-                });
-            }
+            // for (var i = 0; i < this.props.user.friends.length; i++) {
+            //     friends.push({
+            //         id: i.toString(),
+            //         title: this.props.user.friends[i].firstname + ' ' + this.props.user.friends[i].lastname,
+            //         email: this.props.user.friends[i].email
+            //     });
+            // }
             this.setState({
-                testRows: friends,
+                testRows: this.props.user.friends,
             });
-            console.log(friends)
+            console.log(this.props.user.friends)
         }
 
         renderFriendRequest( {item} ){
@@ -52,7 +41,7 @@ class FollowersScreen extends Component{
                     <View>
                         <View style={styles.rowContainer}>
                             <View style={styles.profilePicBox}>
-                                <Image style={styles.profileCircle}></Image>
+                                <Image style={styles.profileCircle} uri={item.profilePic}></Image>
                             </View>
                             <TouchableHighlight underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
                                 <View style={styles.friendNameBox}>
@@ -60,7 +49,13 @@ class FollowersScreen extends Component{
                                 </View>
                             </TouchableHighlight>
                             <View style={styles.removeButtonBox}>
-                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Friend removed")}>
+                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => this.props.removeFriend(this.props.user.uid, item.email).then(() => {
+                                    this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                                        this.setState({
+                                            testRows: this.props.user.friends
+                                        });
+                                    });
+                                })}>
                                     <View style={styles.removeButton}>
                                         <Text style={styles.removeLabel}>Remove</Text>
                                     </View>
@@ -73,9 +68,17 @@ class FollowersScreen extends Component{
         }
 
         render() {
+            if (this.state.testRows == null) {
+                return(
+                    <View style={styles.preloader}>
+                      <ActivityIndicator size="large" color="#9E9E9E"/>
+                    </View>
+                )
+            }
+
             return(
                 <FlatList
-                data={this.state.testRows}
+                data={this.props.user.friends}
                 renderItem={({item}) => this.renderFriendRequest({item})}
                 keyExtractor={item => item.id}
                 ></FlatList>
@@ -184,10 +187,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        // UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
-        // UpdateSharedAlbums: (user, sharedalbum) => dispatch(addSharedAlbum(user, sharedalbum)),
-        fetchUserInfo: fetchUserInfo,
-        // addFriend: addFriend
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+        removeFriend: (userID, email) => dispatch(removeFriend(userID, email))
     };
 };
   

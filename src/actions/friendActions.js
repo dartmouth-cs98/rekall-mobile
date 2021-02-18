@@ -6,15 +6,76 @@ const API = 'https://rekall-server.herokuapp.com';
 
 export const addFriend = (userID, email) => {
   return (dispatch) => {
-    axios.post(`${API}/friend/addFriend`,
-    { 
-        "uid": userID,
-        "friendEmail": email
-    },
-    ).then((res) => {
-      dispatch({ type: ActionTypes.ADD_FRIEND, payload: email});
-    }).catch((e) => {
-        console.log(`Error putting friend: ${e}`);
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/addFriend`,
+      { 
+          "uid": userID,
+          "friendEmail": email
+      },
+      ).then((res) => {
+        dispatch({ type: ActionTypes.FRIEND_SHENANIGANS, payload: email});
+        resolve();
+      }).catch((e) => {
+          console.log(`Error putting friend: ${e}`);
+          reject(e);
+      });
+    });
+  };
+};
+
+export const requestFriend = (userID, email) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/requestFriend`,
+      { 
+          "uid": userID,
+          "friendEmail": email
+      },
+      ).then((res) => {
+        dispatch({ type: ActionTypes.FRIEND_SHENANIGANS, payload: email});
+        resolve();
+      }).catch((e) => {
+          console.log(`Error sending request: ${e}`);
+          reject(e);
+      });
+    });
+  };
+};
+
+export const declineRequest = (userID, email) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/declineRequest`,
+      { 
+          "uid": userID,
+          "friendEmail": email
+      },
+      ).then((res) => {
+        dispatch({ type: ActionTypes.FRIEND_SHENANIGANS, payload: email});
+        resolve();
+      }).catch((e) => {
+          console.log(`Error sending request: ${e}`);
+          reject(e);
+      });
+    });
+  };
+};
+
+export const removeFriend = (userID, email) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/removeFriend`,
+      { 
+          "uid": userID,
+          "friendEmail": email
+      },
+      ).then((res) => {
+        console.log(res)
+        resolve();
+      }).catch((e) => {
+          console.log(`Error putting friend: ${e}`);
+          reject(e);
+      });
     });
   };
 };

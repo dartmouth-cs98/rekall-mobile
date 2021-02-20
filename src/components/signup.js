@@ -13,7 +13,7 @@ function writeUserData(userId, uid) {
   firebase.database().ref('users/' + userId).set({
     id: uid
   });
-}
+}   
 
 class Signup extends Component {
   

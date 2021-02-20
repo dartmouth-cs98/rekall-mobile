@@ -15,9 +15,7 @@ class ExploreScreen extends Component {
     constructor(props){
         super(props);
         this.state={
-            videoQuery: '360 videos',
-            picQuery: '360 pictures',
-            querySearch: '',
+            querySearch: " ",
             isLoading: false,
             modalVisible: false,
             activeIndex:0,
@@ -27,8 +25,8 @@ class ExploreScreen extends Component {
         this.renderVideoCard = this.renderVideoCard.bind(this);
     }
 
-    fetchVideoData() {
-        youtubeSearch(this.state.videoQuery)
+    fetchVideoData(query) {
+        youtubeSearch(query)
           .then((responseData) => {
             this.setState({
               videos: responseData,
@@ -37,11 +35,11 @@ class ExploreScreen extends Component {
           }).catch((error) => {
             console.log(error);
           });
-          console.log(this.state.videos)
+          //console.log(this.state.videos)
     }
 
-    fetchPictureData() {
-        youtubeSearch(this.state.picQuery)
+    fetchPictureData(query) {
+        youtubeSearch(query)
           .then((responseData) => {
             this.setState({
               pics: responseData,
@@ -50,13 +48,11 @@ class ExploreScreen extends Component {
           }).catch((error) => {
             console.log(error);
           });
-          console.log(this.state.pics)
     }
 
     componentDidMount(){
-        this.fetchVideoData();
-        this.fetchPictureData();
-        console.log(this.state.videos)
+        this.fetchVideoData("360 Video");
+        this.fetchPictureData("360 Picture");
     }
 
     renderLoadingView() {
@@ -68,38 +64,34 @@ class ExploreScreen extends Component {
     }
 
     toggleSearch(){
-        console.log("In toggleSearch")
-        console.log(this.state.modalVisible);
         if (this.state.modalVisible){
             this.setState({modalVisible: false});
-            // console.log(this.state.isModalVisible)
-            // console.log(this.state.newAlbumName)
+            this.setState({querySearch: " "});
         }
         else{
             this.setState({modalVisible: true})
-            // console.log(this.state.isModalVisible)
-            // console.log(this.state.newAlbumName)
+            this.setState({querySearch: " "});
         }
     }
 
     searchVideos(){
-        if (this.state.querySearch !== ''){
+        if (this.state.querySearch !== " "){
             var search = this.state.querySearch;
-            var finalQuery = search.concat(this.state.videoQuery);
-            this.setState({videoQuery: finalQuery});
+            var finalQuery = search.concat("360 Video");
+
+            this.fetchVideoData(finalQuery);
+            this.toggleSearch();
         }
-        this.fetchVideoData();
-        this.toggleSearch();
     }
 
     searchPictures(){
-        if (this.state.querySearch !== ''){
+        if (this.state.querySearch !== " "){
             var search = this.state.querySearch;
-            var finalQuery = search.concat(this.state.picQuery);
-            this.setState({picQuery: finalQuery});
+            var finalQuery = search.concat("360 Picture");
+            
+            this.fetchPictureData(finalQuery);
+            this.toggleSearch();
         }
-        this.fetchPictureData();
-        this.toggleSearch();
     }
 
     renderModal(){
@@ -112,7 +104,7 @@ class ExploreScreen extends Component {
                             <View style={styles.modalContainer}>
                                 <View style={styles.modal}>
                                     <Text style={styles.modalText}>Search 360 videos or pictures</Text>
-                                    <TextInput style={styles.searchBox} label="Search..." mode='outline' value={this.state.querySearch} onChangeText={(text) => this.setState({querySearch: text})}></TextInput>
+                                    <TextInput style={styles.searchBox} label="Search..." mode='outline' value={this.state.querySearch} onChangeText={(text) => this.setState({ querySearch: text})}></TextInput>
                                     <View style={styles.modalButtonBox}>
                                         <Button mode='text' onPress={() => this.searchPictures()} color="#3B3B3B">Pictures</Button>
                                         <Button mode='text' onPress={() => this.searchVideos()} color="#3B3B3B">Videos</Button>

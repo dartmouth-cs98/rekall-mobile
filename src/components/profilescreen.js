@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import dotenv from 'dotenv';
 import { fetchUserInfo, newProfilePic } from '../actions/userActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
@@ -15,6 +16,12 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { RNS3 } from 'react-native-aws3';
+
+// initialize
+dotenv.config();
+// DB Setup
+const accessKey = process.env.AWS_ACCESS_KEY_ID;
+const secretKey = process.env.AWS_SECRET_ACCESS_KEY;
 
 // const uid = "6010a60b2903ce360163ca10"
 
@@ -96,8 +103,8 @@ class ProfileScreen extends Component {
                 keyPrefix: this.props.user.uid + "/media/",
                 bucket: "rekall-storage",
                 region: "us-east-1",
-                accessKey: "AKIAQWWJHNTC6ZC2JFH3",
-                secretKey: "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",
+                accessKey: accessKey,
+                secretKey: secretKey,
                 successActionStatus: 201
             };
             return RNS3.put(file, options)
@@ -172,7 +179,7 @@ class ProfileScreen extends Component {
             return(
                 <View style={styles.secondContainer}>
                     <View style={styles.profilePicBox}>
-                        <Image source={this.state.profilePic ? {uri: this.state.profilePic} : null} style={styles.profileCircle}></Image>
+                        <Image source={this.props.user.profilePic ? {uri: this.props.user.profilePic} : null} style={styles.profileCircle}></Image>
                     </View>
                     <View style={styles.profileInfoBox}>
                         <Text style={styles.profileName}>{this.state.profileName}</Text>

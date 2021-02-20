@@ -1,7 +1,8 @@
 // components/signup.js
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, Image, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import firebase from '../services/firebase';
 import { createUser } from '../actions/userActions';
 import { connect } from 'react-redux';
@@ -81,50 +82,65 @@ class Signup extends Component {
         </View>
       )
     }    
+    
     return (
-      <View style={styles.container}>  
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="First name"
-          value={this.state.firstName}
-          onChangeText={(val) => this.updateInputVal(val, 'firstName')}
-        />      
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Last name"
-          value={this.state.lastName}
-          onChangeText={(val) => this.updateInputVal(val, 'lastName')}
-        />  
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Email"
-          value={this.state.email}
-          onChangeText={(val) => this.updateInputVal(val, 'email')}
-        />
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Password"
-          value={this.state.password}
-          onChangeText={(val) => this.updateInputVal(val, 'password')}
-          maxLength={15}
-          secureTextEntry={true}
-        />   
-        <Button
-          color="#3740FE"
-          title="Signup"
-          onPress={() => this.registerUser()}
-        />
+      <LinearGradient colors={['#FFFFFF', '#D9D9D9', '#9C9C9C']} style={{flex: 1}}>
+        <View style={styles.thirdcontainer}>
+            <Image style={styles.image}
+                  source={require('../assets/REKALL_header.png')}
+            />
+        </View>
+        <View style={styles.container}>  
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="First name"
+                placeholderTextColor="#FFFFFF"
+                value={this.state.firstName}
+                onChangeText={(val) => this.updateInputVal(val, 'firstName')}
+              />      
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Last name"
+                placeholderTextColor="#FFFFFF"
+                value={this.state.lastName}
+                onChangeText={(val) => this.updateInputVal(val, 'lastName')}
+              />  
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Email"
+                placeholderTextColor="#FFFFFF"
+                value={this.state.email}
+                onChangeText={(val) => this.updateInputVal(val, 'email')}
+              />
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Password"
+                placeholderTextColor="#FFFFFF"
+                value={this.state.password}
+                onChangeText={(val) => this.updateInputVal(val, 'password')}
+                maxLength={15}
+                secureTextEntry={true}
+              />   
+              <View style={styles.signUpContainer}> 
+                <Button
+                  color="#3740FE"
+                  title="Signup"
+                  onPress={() => this.registerUser()}
+                />
+                <Text 
+                  style={styles.loginText}
+                  onPress={() => this.props.navigation.navigate('Login')}>
+                  Already Registered? Click here to login
+                </Text>  
+              </View>
+              
 
-        <Text 
-          style={styles.loginText}
-          onPress={() => this.props.navigation.navigate('Login')}>
-          Already Registered? Click here to login
-        </Text>    
-
-        <View style = {styles.error}>
-        <Text>{this.state.errorMessage}</Text>
-        </View>                      
-      </View>
+              <View style = {styles.error}>
+                <Text>{this.state.errorMessage}</Text>
+              </View>                      
+        </View>
+      </LinearGradient>
+      
     );
   }
 }
@@ -136,18 +152,26 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     padding: 35,
-    backgroundColor: '#fff'
+    //backgroundColor: '#fff'
   },
   inputStyle: {
     width: '100%',
-    marginBottom: 15,
+    height: 50,
+    marginBottom: 30,
     paddingBottom: 15,
     alignSelf: "center",
-    borderColor: "#ccc",
-    borderBottomWidth: 1
+    borderColor: "#9C9C9C",
+    borderBottomWidth: 1,
+    backgroundColor: '#9C9C9C',
+    shadowOffset:{  height: 0.2},
+    shadowColor: 'black',
+    shadowOpacity: 0.3,
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontFamily: 'AppleSDGothicNeo-Light',
   },
   loginText: {
-    color: '#3740FE',
+    color: '#000000',
     marginTop: 25,
     textAlign: 'center'
   },
@@ -165,7 +189,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff'
-  }
+  },
+  thirdcontainer: {
+    //backgroundColor: 'pink',
+    justifyContent: 'flex-end',
+    alignSelf: 'center',
+    height: 215,
+  },
+  signUpContainer: {
+    backgroundColor: 'green',
+    height: 250,
+    justifyContent: 'center',
+  },
 });
 
 const mapStateToProps = (state) => {

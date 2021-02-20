@@ -7374,6 +7374,11 @@ simple-plist@^1.0.0, simple-plist@^1.1.0:
     bplist-parser "0.2.0"
     plist "^3.0.1"
 
+simple-random-number-generator@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/simple-random-number-generator/-/simple-random-number-generator-1.2.0.tgz#4aa6e03889d1903b21cb0818aeb74122f6bf88bf"
+  integrity sha512-CDW3gRJOATHLeVeB7QTGc5xcjk1a7Ev1/2V2ZDNWGemZX0XRYCNN6CdW4cq+fdh+z4+9VvZ5A9Hqnv3RuEfk2Q==
+
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"

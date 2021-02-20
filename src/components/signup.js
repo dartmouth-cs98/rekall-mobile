@@ -1,7 +1,7 @@
 // components/signup.js
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, Image, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, Image, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import firebase from '../services/firebase';
 import { createUser } from '../actions/userActions';
@@ -13,7 +13,7 @@ function writeUserData(userId, uid) {
   firebase.database().ref('users/' + userId).set({
     id: uid
   });
-}
+}   
 
 class Signup extends Component {
   
@@ -122,11 +122,17 @@ class Signup extends Component {
                 secureTextEntry={true}
               />   
               <View style={styles.signUpContainer}> 
-                <Button
+                <TouchableOpacity onPress={() => this.registerUser()}>
+                  <View style={styles.buttonBox}>
+                    <Text style={styles.signUpLabel}>Sign Up</Text>
+                  </View>
+                </TouchableOpacity>
+                
+                {/* <Button
                   color="#3740FE"
                   title="Signup"
                   onPress={() => this.registerUser()}
-                />
+                /> */}
                 <Text 
                   style={styles.loginText}
                   onPress={() => this.props.navigation.navigate('Login')}>
@@ -197,9 +203,23 @@ const styles = StyleSheet.create({
     height: 215,
   },
   signUpContainer: {
-    backgroundColor: 'green',
+    //backgroundColor: 'green',
     height: 250,
     justifyContent: 'center',
+  },
+  buttonBox:{
+    backgroundColor: "#FFFFFF",
+    width: 180,
+    height: 70,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  signUpLabel:{
+    textAlign: 'center',
+    color: '#8D8D8D',
+    fontFamily: 'AppleSDGothicNeo-Light',
+    fontSize: 30,
   },
 });
 

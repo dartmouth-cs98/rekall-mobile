@@ -79,6 +79,11 @@ const UserReducer = (state = initState, action) => {
           friends: [...state.friends],
           requests: [...state.requests],
         };
+    case ActionTypes.NEW_PROFILE_PIC:
+        return {
+          ...state,
+          profilePic: action.payload.profilePic,
+        };
     default:
       return state;
   }

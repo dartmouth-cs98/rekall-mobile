@@ -10,6 +10,7 @@ const initState = {
   requests: [],
   userAlbums: [],
   sharedAlbums: [],
+  vrcode: [],
 };
 
 const UserReducer = (state = initState, action) => {
@@ -49,6 +50,7 @@ const UserReducer = (state = initState, action) => {
         requests: requests,
         userAlbums: action.payload.userAlbums,
         sharedAlbums: action.payload.sharedAlbums,
+        vrcode: action.payload.vrcode,
       };
     case ActionTypes.CREATE_USER:
       return {
@@ -57,6 +59,7 @@ const UserReducer = (state = initState, action) => {
         firstname: action.payload.firstname,
         lastname: action.payload.lastname,
         email: action.payload.email,
+        vrcode: action.payload.vrcode,
       };
     case ActionTypes.LOGIN:
       return {

@@ -31,6 +31,7 @@ class ProfileScreen extends Component {
             // friendsList: [],
             uid: this.props.user.uid,
             image: null,
+            vrcode: null,
         };
     }
 
@@ -51,6 +52,7 @@ class ProfileScreen extends Component {
                 profileName: this.props.user.firstname + ' ' + this.props.user.lastname,
                 email: this.props.user.email,
                 profilePic: this.props.user.profilePic,
+                vrcode: this.props.user.vrcode
                 // friendsList: friends,
             });
         });

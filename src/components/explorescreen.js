@@ -120,8 +120,8 @@ class ExploreScreen extends Component {
     }
 
     renderVideoCard({item,index}){
-        console.log(index);
-        console.log(item);
+        // console.log(index);
+        // console.log(item);
         if (item.title !== null){
           return (
             <View style={styles.videoContainer}>

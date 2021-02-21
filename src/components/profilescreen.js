@@ -15,6 +15,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { RNS3 } from 'react-native-aws3';
+// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
 // const uid = "6010a60b2903ce360163ca10"
 
@@ -98,6 +99,8 @@ class ProfileScreen extends Component {
                 region: "us-east-1",
                 accessKey: "AKIAQWWJHNTC6ZC2JFH3",
                 secretKey: "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",
+                // accessKey: AWS_ACCESS_KEY_ID,
+                // secretKey: AWS_SECRET_ACCESS_KEY,
                 successActionStatus: 201
             };
             return RNS3.put(file, options)

@@ -110,7 +110,10 @@ class ProfileScreen extends Component {
                     "Successfully uploaded image to s3. s3 bucket url: ",
                     response.body.postResponse.location
                 );
-                this.props.newProfilePic(this.props.user.uid, response.body.postResponse.location);
+                this.props.newProfilePic(this.props.user.uid, response.body.postResponse.location)
+                .then(() => {
+                    this.loadData();
+                });
                 }
             })
             .catch(error => {

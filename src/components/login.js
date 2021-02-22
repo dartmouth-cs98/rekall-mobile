@@ -1,7 +1,7 @@
 // components/login.js
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import firebase from '../services/firebase';
 import { connect } from 'react-redux';
 import { logIn, newVRCode } from '../actions/userActions';
@@ -65,31 +65,46 @@ class Login extends Component {
     }    
     return (
       <View style={styles.container}>  
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Email"
-          value={this.state.email}
-          onChangeText={(val) => this.updateInputVal(val, 'email')}
-        />
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Password"
-          value={this.state.password}
-          onChangeText={(val) => this.updateInputVal(val, 'password')}
-          maxLength={15}
-          secureTextEntry={true}
-        />   
-        <Button
-          color="#3740FE"
-          title="Signin"
-          onPress={() => this.userLogin()}
-        />   
-
-        <Text 
-          style={styles.loginText}
-          onPress={() => this.props.navigation.navigate('Signup')}>
-          Don't have account? Click here to signup
-        </Text>
+         <Image
+            style={styles.image}
+            source={require('../assets/background.jpg')} />
+        <View style={styles.thirdcontainer}>
+            <Image style={styles.image2}
+                  source={require('../assets/REKALL_header.png')}
+            />
+        </View>
+        <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Email"
+              placeholderTextColor="#8D8D8D"
+              value={this.state.email}
+              onChangeText={(val) => this.updateInputVal(val, 'email')}
+            />
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Password"
+              placeholderTextColor="#8D8D8D"
+              value={this.state.password}
+              onChangeText={(val) => this.updateInputVal(val, 'password')}
+              maxLength={15}
+              secureTextEntry={true}
+            /> 
+          </View>
+          <View style={styles.signUpContainer}> 
+            <TouchableOpacity onPress={() => this.userLogin()}>
+              <View style={styles.buttonBox}>
+                  <Text style={styles.loginLabel}>Login</Text>
+              </View> 
+            </TouchableOpacity>
+            <Text 
+              style={styles.loginText}
+              onPress={() => this.props.navigation.navigate('Signup')}>
+              Don't have account? Click here to signup
+            </Text>
+          </View>
+        
+        
 
         <View style = {styles.error}>
         <Text>{this.state.errorMessage}</Text>
@@ -102,22 +117,74 @@ class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    padding: 35,
-    backgroundColor: '#fff'
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  image: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 10,
+      //opacity: 0.3,
+      width: '100%',
+      height: '100%',
+  },
+  thirdcontainer: {
+    //backgroundColor: 'pink',
+    justifyContent: 'flex-end',
+    alignSelf: 'center',
+    height: 100,
+  },
+  
+  // container: {
+  //   flex: 1,
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   justifyContent: "center",
+  //   padding: 35,
+  //   backgroundColor: '#fff'
+  // },
+  inputContainer: {
+    height: 250,
+    //backgroundColor: 'blue',
+    justifyContent: 'flex-end',
+    
   },
   inputStyle: {
-    width: '100%',
+    width: '80%',
     marginBottom: 15,
     paddingBottom: 15,
     alignSelf: "center",
     borderColor: "#ccc",
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    color: '#8D8D8D',
+  },
+  signUpContainer: {
+    display: 'flex',
+    //backgroundColor: 'green',
+    height: 150,
+    justifyContent: 'center',
+  },
+  buttonBox:{
+    backgroundColor: "#FFFFFF",
+    width: 180,
+    height: 60,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    shadowOffset:{ width: 1, height: 3},
+    shadowColor: 'black',
+    shadowOpacity: 0.3,
+  },
+  loginLabel:{
+    textAlign: 'center',
+    color: '#8D8D8D',
+    fontFamily: 'AppleSDGothicNeo-Light',
+    fontSize: 30,
   },
   loginText: {
-    color: '#3740FE',
+    color: '#8D8D8D',
     marginTop: 25,
     textAlign: 'center'
   },

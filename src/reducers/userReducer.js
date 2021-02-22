@@ -87,6 +87,16 @@ const UserReducer = (state = initState, action) => {
           ...state,
           profilePic: action.payload.profilePic,
         };
+    case ActionTypes.GET_ALBUMS:      
+      return {
+          ...state,
+          userAlbums: action.payload.albums
+      };
+    case ActionTypes.GET_SHARED_ALBUMS:      
+      return {
+          ...state,
+          sharedAlbums: action.payload.albums
+      };
     default:
       return state;
   }

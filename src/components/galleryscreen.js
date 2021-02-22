@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { fetchUserInfo } from '../actions/userActions';
-import { addUserAlbum, addSharedAlbum } from '../actions/albumActions';
+import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../actions/albumActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, ActivityIndicator,
@@ -32,9 +32,14 @@ class GalleryScreen extends Component {
     }
 
     async loadData() {
-        await this.props.fetchUserInfo(this.props.user.uid).then(() => {
+        await this.props.getAlbums(this.props.user.uid).then(() => {
             this.setState({
                 myAlbums: this.props.user.userAlbums,
+            });
+        });
+
+        await this.props.getSharedAlbums(this.props.user.uid).then(() => {
+            this.setState({
                 sharedAlbums: this.props.user.sharedAlbums,
             });
         });
@@ -122,13 +127,14 @@ class GalleryScreen extends Component {
 
     renderAlbumCard({item,index}){
       if (item.albumName !== null){
+        console.log(item)
+        const video = item.albumMedia[0].s3Key.split('/', 5);
+        const thumbnail = 'https://rekall-storage.s3.amazonaws.com/' + video[0] + '/Thumbnails/' + video[2].slice(0, -4) + '.png';
+        console.log(thumbnail)
+
         return (
           <View style={styles.friendContainer}>
-            <View style={styles.friendImage}>
-
-            </View>
-            {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
-            <Text>{item.text}</Text> */}
+            <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
             <Text style={styles.friendNameText}>{item.albumName}</Text>
           </View>
 
@@ -209,7 +215,7 @@ class GalleryScreen extends Component {
                 </View>
             )
         }
-
+        console.log(this.state.myAlbums)
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}
@@ -399,7 +405,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
         UpdateSharedAlbums: (user, sharedalbum, sharedwith) => dispatch(addSharedAlbum(user, sharedalbum, sharedwith)),
-        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID))
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+        getAlbums: (userID) => dispatch(getAlbums(userID)),
+        getSharedAlbums: (userID) => dispatch(getSharedAlbums(userID))
     };
 };
   

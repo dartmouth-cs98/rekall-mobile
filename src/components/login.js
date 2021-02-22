@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import firebase from '../services/firebase';
 import { connect } from 'react-redux';
-import { logIn } from '../actions/userActions';
+import { logIn, newVRCode } from '../actions/userActions';
 
 class Login extends Component {
   
@@ -42,6 +42,9 @@ class Login extends Component {
           password: ''
         })
         this.props.navigation.navigate('Drawer', { screen: 'EXPLORE' })
+      })
+      .then(() => {
+        newVRCode(this.props.user.uid);
       })
       .catch(error => this.setState({ 
         errorMessage: error.message,

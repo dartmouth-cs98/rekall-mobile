@@ -85,6 +85,40 @@ export const newVRCode = (userId) => {
   })
 }
 
+export const newProfilePic = (userId, url) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/user/updateProfilePic`, {
+        "uid": userId,
+        "profilePic": url
+      })
+      .then((res) => {
+        console.log(res.data)
+        dispatch({ type: ActionTypes.NEW_PROFILE_PIC, payload: res.data });
+        resolve();
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+    })
+  }
+}
+
+export const updateUserInfo = (userId, userinfo) => {
+  return new Promise((resolve, reject) => {
+    axios.post(`${API}/user/updateUserInfo`, {
+      "uid": userId,
+      "newUserInfo": userinfo
+    })
+    .then((res) => {
+      resolve();
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+  })
+}
+
 const generateRandCode = () => {
   const max = 9999;
   const min = 1000;

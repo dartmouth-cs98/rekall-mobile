@@ -35,7 +35,7 @@ class FriendRequests extends Component{
                     <View>
                         <View style={styles.rowContainer}>
                             <View style={styles.profilePicBox}>
-                                <Image style={styles.profileCircle} uri={item.profilePic}></Image>
+                                <Image style={styles.profileCircle} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
                             </View>
                             <View style={styles.friendNameBox}>
                                 <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Friend pressed")}>

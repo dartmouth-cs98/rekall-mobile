@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { fetchUserInfo } from '../actions/userActions';
+import { fetchUserInfo, newProfilePic } from '../actions/userActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, Image, Text, TextInput, ActivityIndicator, TouchableOpacity, 
@@ -11,6 +11,11 @@ import Carousel from 'react-native-snap-carousel';
 import { LinearGradient } from 'expo-linear-gradient';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
+import { RNS3 } from 'react-native-aws3';
+// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
 // const uid = "6010a60b2903ce360163ca10"
 
@@ -25,11 +30,16 @@ class ProfileScreen extends Component {
             isEditing: false,
             // friendsList: [],
             uid: this.props.user.uid,
+            image: null,
+            vrcode: null,
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.loadData();
+
+        // Ask for album access when first using app
+        await Permissions.askAsync(Permissions.CAMERA_ROLL);
     }
 
     async loadData() {
@@ -42,6 +52,7 @@ class ProfileScreen extends Component {
                 profileName: this.props.user.firstname + ' ' + this.props.user.lastname,
                 email: this.props.user.email,
                 profilePic: this.props.user.profilePic,
+                vrcode: this.props.user.vrcode
                 // friendsList: friends,
             });
         });
@@ -65,15 +76,71 @@ class ProfileScreen extends Component {
     //     }
     // }
 
+    /*
+    Function to allow picking an image from camera roll and holding it in base64
+    */
+    _pickImage = async () => {
+        try {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+            base64: true
+        });
+        if (!result.cancelled) {
+            const file = {
+                uri: result.uri,
+                name: `profile${new Date().getTime()}.jpg`,
+                type: "image/jpg"
+              };
+            const options = {
+                // keyPrefix: this.props.user.uid + "/media/",
+                keyPrefix: this.props.user.uid + "/media/",
+                bucket: "rekall-storage",
+                region: "us-east-1",
+                accessKey: "AKIAQWWJHNTC6ZC2JFH3",
+                secretKey: "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",
+                // accessKey: AWS_ACCESS_KEY_ID,
+                // secretKey: AWS_SECRET_ACCESS_KEY,
+                successActionStatus: 201
+            };
+            return RNS3.put(file, options)
+            .then(response => {
+                if (response.status !== 201) {
+                    throw new Error("Failed to upload image to S3");
+                }
+                else {
+                console.log(
+                    "Successfully uploaded image to s3. s3 bucket url: ",
+                    response.body.postResponse.location
+                );
+                this.props.newProfilePic(this.props.user.uid, response.body.postResponse.location)
+                .then(() => {
+                    this.loadData();
+                });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+
+        console.log(result);
+        } catch (E) {
+        console.log(E);
+        }
+    };
+
     _renderItem({item,index}){
         return (
           <View style={styles.friendContainer}>
-            <View style={styles.friendImage}>
-
-            </View>
+            {/* <View style={styles.friendImage}> */}
+            <Image style={styles.friendImage} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
+            {/* </View> */}
             {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
             <Text>{item.text}</Text> */}
-            <Text style={styles.friendNameText}>{item}</Text>
+            <Text style={styles.friendNameText}>{item.title}</Text>
           </View>
 
         )
@@ -95,7 +162,9 @@ class ProfileScreen extends Component {
             return(
                 <View style={styles.secondContainer}>
                     <View style={styles.profilePicBox}>
-                        <View style={styles.profileCircle}></View>
+                        <View style={styles.profileCircle}>
+
+                        </View>
                     </View>
                     <View style={styles.profileInfoBox}>
                         <TextInput style={styles.profileName} onChangeText={(text) => {this.setState({ profileName: text});}} value={this.state.profileName} />
@@ -128,7 +197,7 @@ class ProfileScreen extends Component {
 
     getFriendsCarousel() {
 
-        let friends = this.props.user.friends.map(a => a.title);
+        // let friends = this.props.user.friends.map(a => a.title);
         
       return (
         <View style={styles.thirdContainer}>
@@ -140,7 +209,7 @@ class ProfileScreen extends Component {
                     <Carousel
                     layout={"default"}
                     ref={ref => this.carousel = ref}
-                    data={friends}
+                    data={this.props.user.friends}
                     sliderWidth={300}
                     itemWidth={250}
                     renderItem={this._renderItem}
@@ -198,7 +267,7 @@ class ProfileScreen extends Component {
                 </View> */}
                 { this.getFriendsCarousel() }
                 <View style={styles.fourthContainer}>
-                    <TouchableOpacity onPress={() => this.toggleEditing()}>
+                    <TouchableOpacity onPress={this._pickImage}>
                         <Text style={styles.updateText}>Update Profile</Text>
                     </TouchableOpacity>
                 </View>
@@ -378,7 +447,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID))
+      fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+      newProfilePic: (userID, url) => dispatch(newProfilePic(userID, url))
     };
   };
 

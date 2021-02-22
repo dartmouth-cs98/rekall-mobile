@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     borderColor: "#9C9C9C",
     borderBottomWidth: 1,
     backgroundColor: '#9C9C9C',
-    shadowOffset:{  height: 0.2},
+    shadowOffset:{ width: 1, height: 3},
     shadowColor: 'black',
     shadowOpacity: 0.3,
     color: '#FFFFFF',
@@ -214,6 +214,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignSelf: 'center',
+    shadowOffset:{ width: 1, height: 3},
+    shadowColor: 'black',
+    shadowOpacity: 0.3,
   },
   signUpLabel:{
     textAlign: 'center',

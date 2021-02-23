@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { fetchUserInfo, newProfilePic } from '../actions/userActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, 
+import { StyleSheet, View, Image, Text, TextInput, ActivityIndicator, TouchableOpacity, 
     TouchableWithoutFeedback, ImageBackground, PanResponder, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
@@ -9,40 +11,54 @@ import Carousel from 'react-native-snap-carousel';
 import { LinearGradient } from 'expo-linear-gradient';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
+import { RNS3 } from 'react-native-aws3';
+// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
+// const uid = "6010a60b2903ce360163ca10"
 
 class ProfileScreen extends Component {
     constructor(props){
         super(props);
         this.state = {
-            profileName: "Profile Name",
-            email: "Enter Email",
+            profileName: null,
+            email: "",
+            profilePic: "",
             activeIndex:0,
             isEditing: false,
-            friendsList: [
-            {
-                userName:"Item 1",
-                text: "Text 1",
-            },
-            {
-                userName:"Item 2",
-                text: "Text 2",
-            },
-            {
-                userName:"Item 3",
-                text: "Text 3",
-            },
-            {
-                userName:"Item 4",
-                text: "Text 4",
-            },
-            {
-                userName:"Item 5",
-                text: "Text 5",
-            },
-            ]
+            editText: "Update Profile",
+            // friendsList: [],
+            uid: this.props.user.uid,
+            image: null,
+            vrcode: null,
         };
     }
+
+    async componentDidMount() {
+        this.loadData();
+
+        // Ask for album access when first using app
+        await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    }
+
+    async loadData() {
+        await this.props.fetchUserInfo(this.props.user.uid).then(() => {
+
+            // let friends = this.props.user.friends.map(a => a.title);
+
+            this.setState({
+                uid: this.props.user.uid,
+                profileName: this.props.user.firstname + ' ' + this.props.user.lastname,
+                email: this.props.user.email,
+                profilePic: this.props.user.profilePic,
+                vrcode: this.props.user.vrcode
+                // friendsList: friends,
+            });
+        });
+    }
+
 
     // toggleUpdateButton(){
     //     if (this.state.isEditing) {
@@ -61,15 +77,71 @@ class ProfileScreen extends Component {
     //     }
     // }
 
+    /*
+    Function to allow picking an image from camera roll and holding it in base64
+    */
+    _pickImage = async () => {
+        try {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+            base64: true
+        });
+        if (!result.cancelled) {
+            const file = {
+                uri: result.uri,
+                name: `profile${new Date().getTime()}.jpg`,
+                type: "image/jpg"
+              };
+            const options = {
+                // keyPrefix: this.props.user.uid + "/media/",
+                keyPrefix: this.props.user.uid + "/media/",
+                bucket: "rekall-storage",
+                region: "us-east-1",
+                accessKey: "AKIAQWWJHNTC6ZC2JFH3",
+                secretKey: "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",
+                // accessKey: AWS_ACCESS_KEY_ID,
+                // secretKey: AWS_SECRET_ACCESS_KEY,
+                successActionStatus: 201
+            };
+            return RNS3.put(file, options)
+            .then(response => {
+                if (response.status !== 201) {
+                    throw new Error("Failed to upload image to S3");
+                }
+                else {
+                console.log(
+                    "Successfully uploaded image to s3. s3 bucket url: ",
+                    response.body.postResponse.location
+                );
+                this.props.newProfilePic(this.props.user.uid, response.body.postResponse.location)
+                .then(() => {
+                    this.loadData();
+                });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+
+        console.log(result);
+        } catch (E) {
+        console.log(E);
+        }
+    };
+
     _renderItem({item,index}){
         return (
           <View style={styles.friendContainer}>
-            <View style={styles.friendImage}>
-
-            </View>
+            {/* <View style={styles.friendImage}> */}
+            <Image style={styles.friendImage} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
+            {/* </View> */}
             {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
             <Text>{item.text}</Text> */}
-            <Text style={styles.friendNameText}>{item.userName}</Text>
+            <Text style={styles.friendNameText}>{item.title}</Text>
           </View>
 
         )
@@ -78,10 +150,12 @@ class ProfileScreen extends Component {
     toggleEditing(){
         if (this.state.isEditing){
             this.setState({isEditing: false});
+            this.setState({editText: "Update Profile"});
             console.log(this.state.isEditing)
         }
         else{
             this.setState({isEditing: true})
+            this.setState({editText: "Done"});
             console.log(this.state.isEditing)
         }
     }
@@ -91,7 +165,11 @@ class ProfileScreen extends Component {
             return(
                 <View style={styles.secondContainer}>
                     <View style={styles.profilePicBox}>
-                        <View style={styles.profileCircle}></View>
+                        <TouchableOpacity onPress={this._pickImage}>
+                            <View style={styles.profileCircle}>
+                                <Image uri={this.state.profilePic}/>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.profileInfoBox}>
                         <TextInput style={styles.profileName} onChangeText={(text) => {this.setState({ profileName: text});}} value={this.state.profileName} />
@@ -107,13 +185,13 @@ class ProfileScreen extends Component {
             return(
                 <View style={styles.secondContainer}>
                     <View style={styles.profilePicBox}>
-                        <View style={styles.profileCircle}></View>
+                        <Image source={this.state.profilePic ? {uri: this.state.profilePic} : null} style={styles.profileCircle}></Image>
                     </View>
                     <View style={styles.profileInfoBox}>
                         <Text style={styles.profileName}>{this.state.profileName}</Text>
                         <View style={styles.emailBox}>
                             <Text style={styles.email}>{this.state.email}</Text>
-                            <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
+                            <View style={styles.emailIcon}><Icon name='envelope' type='font-awesome' color='#8D8D8D'></Icon></View>
                         </View>
                     </View>
                 </View>
@@ -122,59 +200,75 @@ class ProfileScreen extends Component {
         }
     }
 
-    render() {
+    getFriendsCarousel() {
+
+        // let friends = this.props.user.friends.map(a => a.title);
+        
       return (
-        <View style={styles.container}>
-          <Image
-            style={styles.image}
-            source={require('../assets/acc_bg.png')} />
-            <View style={styles.menuBox}>
-                <Text style={styles.headerText}>REKALL</Text>
-                <TouchableOpacity style={styles.menuButton} onPress={()=> this.props.navigation.toggleDrawer()}>
-                    <Image style={styles.navimage}
-                        source={require('../assets/navbutton.png')}
-                    />
-                </TouchableOpacity> 
+        <View style={styles.thirdContainer}>
+            <View style={styles.friendsHeaderBox}>
+                <Text style={styles.friendTitle}>Friends</Text>
             </View>
-            <View>
-                {this.renderProfileInfo()}
-            </View>
-            {/* <View style={styles.secondContainer}>
-                <View style={styles.profilePicBox}>
-                    <View style={styles.profileCircle}></View>
+            <View style={styles.friendsListBox}>
+                <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+                    <Carousel
+                    layout={"default"}
+                    ref={ref => this.carousel = ref}
+                    data={this.props.user.friends}
+                    sliderWidth={300}
+                    itemWidth={250}
+                    renderItem={this._renderItem}
+                    onSnapToItem = { index => this.setState({activeIndex:index}) } />
                 </View>
-                <View style={styles.profileInfoBox}>
-                    <TextInput style={styles.profileName}>{this.state.profileName}</TextInput>
-                    <View style={styles.emailBox}>
-                        <TextInput style={styles.email}>{this.state.email}</TextInput>
-                        <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
-                    </View>
-                </View>
-            </View> */}
-            <View style={styles.thirdContainer}>
-                <View style={styles.friendsHeaderBox}>
-                    <Text style={styles.friendTitle}>Friends</Text>
-                </View>
-                <View style={styles.friendsListBox}>
-                    <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
-                        <Carousel
-                        layout={"default"}
-                        ref={ref => this.carousel = ref}
-                        data={this.state.friendsList}
-                        sliderWidth={300}
-                        itemWidth={250}
-                        renderItem={this._renderItem}
-                        onSnapToItem = { index => this.setState({activeIndex:index}) } />
-                    </View>
-                </View>
-            </View>
-            <View style={styles.fourthContainer}>
-                <TouchableOpacity onPress={() => this.toggleEditing()}>
-                    <Text style={styles.updateText}>Update Profile</Text>
-                </TouchableOpacity>
             </View>
         </View>
       );
+    }
+
+    render() {
+        // console.log(this.props.user.email)
+        // console.log(this.props.user.profilePic)
+        // console.log("HERE")
+        // console.log("RETRY")
+        // console.log(this.props.user.profilePic)
+        // console.log(this.props.user.friends)
+        // console.log(this.props.user.userAlbums)
+    //   console.log(this.props.user.firstname);
+        if (this.state.profileName == null) {
+            return(
+                <View style={styles.preloader}>
+                  <ActivityIndicator size="large" color="#9E9E9E"/>
+                </View>
+            )
+        }
+
+        return (
+            <View style={styles.container}>
+                <Image
+                style={styles.image}
+                source={require('../assets/acc_bg.png')} />
+                <View style={styles.menuBox}>
+                    <Text style={styles.headerText}>REKALL</Text>
+                    <TouchableOpacity style={styles.menuButton} onPress={()=> this.props.navigation.toggleDrawer()}>
+                        <Image style={styles.navimage}
+                            source={require('../assets/navbutton.png')}
+                        />
+                    </TouchableOpacity> 
+                </View>
+                <View>
+                    {this.renderProfileInfo()}
+                </View>
+                <View style={styles.vrCodeBox}>
+                    <Text style={styles.vrCode}>{this.state.vrcode}</Text>
+                </View>
+                { this.getFriendsCarousel() }
+                <View style={styles.fourthContainer}>
+                    <TouchableOpacity onPress={()=> {this.toggleEditing()}}>
+                        <Text style={styles.updateText}>{this.state.editText}</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
     }
   }
 
@@ -272,15 +366,30 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     email:{
+        alignSelf: 'center',
         paddingLeft: 10,
         fontFamily: 'AppleSDGothicNeo-Thin',
         fontSize: 20,
     },
     emailIcon:{
-        paddingBottom: 10,
+        alignSelf: 'center',
+        //paddingBottom: 10,
+    },
+    vrCodeBox:{
+        width: 80,
+        height: 50,
+        backgroundColor: 'darkgrey',
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    vrCode:{
+        color: '#FFFFFF',
+        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontSize: 25,
+        textAlign: 'center',
     },
     thirdContainer:{
-        height: 350,
+        height: 300,
         //backgroundColor: 'pink',
     },
     fourthContainer: {
@@ -327,8 +436,31 @@ const styles = StyleSheet.create({
         color: '#4F4F4F',
         textAlign: 'center',
         fontSize: 25,
-    }
+    },
+    preloader: {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff'
+      }
 });
 
-export default ProfileScreen;
 
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+      newProfilePic: (userID, url) => dispatch(newProfilePic(userID, url))
+    };
+  };
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

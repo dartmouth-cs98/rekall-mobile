@@ -185,12 +185,11 @@ class ProfileScreen extends Component {
                     }});
                 }
             else {
-                await axios.post(`${API}/user/updateUserInfo`, {
-                    "uid": this.props.user.uid,
-                    "newUserInfo": {
-                        "firstname": name[0],
-                }});
-            };
+                this.setState({
+                    profileName: this.props.user.firstname + ' ' + this.props.user.lastname
+                });
+                console.log("Error: Name input too short, please input a first and last name.")
+            }
 
             this.props.fetchUserInfo(this.props.user.uid);
         };

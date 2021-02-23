@@ -104,20 +104,20 @@ export const newProfilePic = (userId, url) => {
   }
 }
 
-export const updateUserInfo = (userId, userinfo) => {
-  return new Promise((resolve, reject) => {
-    axios.post(`${API}/user/updateUserInfo`, {
-      "uid": userId,
-      "newUserInfo": userinfo
-    })
-    .then((res) => {
-      resolve();
-    })
-    .catch((e) => {
-      console.log(e);
-    })
-  })
-}
+// export const updateUserInfo = (userId, userinfo) => {
+//   return new Promise((resolve, reject) => {
+//     axios.post(`${API}/user/updateUserInfo`, {
+//       "uid": userId,
+//       "newUserInfo": userinfo
+//     })
+//     .then((res) => {
+//       resolve();
+//     })
+//     .catch((e) => {
+//       console.log(e);
+//     })
+//   })
+// }
 
 const generateRandCode = () => {
   const max = 9999;

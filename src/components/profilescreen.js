@@ -15,9 +15,12 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { RNS3 } from 'react-native-aws3';
+import axios from 'axios';
+
 // import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
 // const uid = "6010a60b2903ce360163ca10"
+const API = 'https://rekall-server.herokuapp.com';
 
 class ProfileScreen extends Component {
     constructor(props){
@@ -160,6 +163,39 @@ class ProfileScreen extends Component {
         }
     }
 
+    updateUser = async () => {
+        if (this.state.isEditing){
+            const name = this.state.profileName.split(" ", 5);
+            var firstname = "";
+            if (name.length > 1) {
+                for (var i = 0; i < name.length-1; i++) {
+                    if (i != name.length-2) {
+                        firstname = firstname.concat(name[i] + " ");
+                    }
+                    else {
+                        firstname = firstname.concat(name[i]);
+                    }
+                };
+
+                await axios.post(`${API}/user/updateUserInfo`, {
+                    "uid": this.props.user.uid,
+                    "newUserInfo": {
+                        "firstname": firstname,
+                        "lastname": name[name.length-1]
+                    }});
+                }
+            else {
+                await axios.post(`${API}/user/updateUserInfo`, {
+                    "uid": this.props.user.uid,
+                    "newUserInfo": {
+                        "firstname": name[0],
+                }});
+            };
+
+            this.props.fetchUserInfo(this.props.user.uid);
+        };
+    }
+
     renderProfileInfo(){
         if (this.state.isEditing){
             return(
@@ -188,7 +224,7 @@ class ProfileScreen extends Component {
                         <Image source={this.state.profilePic ? {uri: this.state.profilePic} : null} style={styles.profileCircle}></Image>
                     </View>
                     <View style={styles.profileInfoBox}>
-                        <Text style={styles.profileName}>{this.state.profileName}</Text>
+                        <Text style={styles.profileName}>{this.props.user.firstname + ' ' + this.props.user.lastname}</Text>
                         <View style={styles.emailBox}>
                             <Text style={styles.email}>{this.state.email}</Text>
                             <View style={styles.emailIcon}><Icon name='envelope' type='font-awesome' color='#8D8D8D'></Icon></View>
@@ -263,7 +299,10 @@ class ProfileScreen extends Component {
                 </View>
                 { this.getFriendsCarousel() }
                 <View style={styles.fourthContainer}>
-                    <TouchableOpacity onPress={()=> {this.toggleEditing()}}>
+                    <TouchableOpacity onPress={()=> {
+                            this.toggleEditing();
+                            this.updateUser();
+                        }}>
                         <Text style={styles.updateText}>{this.state.editText}</Text>
                     </TouchableOpacity>
                 </View>
@@ -460,7 +499,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
       fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
-      newProfilePic: (userID, url) => dispatch(newProfilePic(userID, url))
+      newProfilePic: (userID, url) => dispatch(newProfilePic(userID, url)),
+    //   updateUserInfo: (userID, userinfo) => dispatch(updateUserInfo(userID, userinfo))
     };
   };
 

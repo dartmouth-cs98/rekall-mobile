@@ -174,8 +174,8 @@ class ProfileScreen extends Component {
                     <View style={styles.profileInfoBox}>
                         <TextInput style={styles.profileName} onChangeText={(text) => {this.setState({ profileName: text});}} value={this.state.profileName} />
                         <View style={styles.emailBox}>
-                            <TextInput style={styles.email} onChangeText={(text) => {this.setState({ email: text });}} value={this.state.email} />
-                            <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
+                            <Text style={styles.email}>{this.state.email}</Text>
+                            <View style={styles.emailIcon}><Icon name='envelope' type='font-awesome' color='#8D8D8D'></Icon></View>
                         </View>
                     </View>
                 </View>
@@ -391,6 +391,7 @@ const styles = StyleSheet.create({
     thirdContainer:{
         height: 300,
         //backgroundColor: 'pink',
+        justifyContent: 'center',
     },
     fourthContainer: {
         height: 100,
@@ -404,7 +405,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     friendsHeaderBox:{
-        height: 100,
+        height: 50,
         //backgroundColor: 'lightblue',
         justifyContent: 'center',
     },

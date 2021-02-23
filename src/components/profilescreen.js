@@ -15,9 +15,12 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { RNS3 } from 'react-native-aws3';
+import axios from 'axios';
+
 // import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
 // const uid = "6010a60b2903ce360163ca10"
+const API = 'https://rekall-server.herokuapp.com';
 
 class ProfileScreen extends Component {
     constructor(props){
@@ -28,6 +31,7 @@ class ProfileScreen extends Component {
             profilePic: "",
             activeIndex:0,
             isEditing: false,
+            editText: "Update Profile",
             // friendsList: [],
             uid: this.props.user.uid,
             image: null,
@@ -149,12 +153,46 @@ class ProfileScreen extends Component {
     toggleEditing(){
         if (this.state.isEditing){
             this.setState({isEditing: false});
+            this.setState({editText: "Update Profile"});
             console.log(this.state.isEditing)
         }
         else{
             this.setState({isEditing: true})
+            this.setState({editText: "Done"});
             console.log(this.state.isEditing)
         }
+    }
+
+    updateUser = async () => {
+        if (this.state.isEditing){
+            const name = this.state.profileName.split(" ", 5);
+            var firstname = "";
+            if (name.length > 1) {
+                for (var i = 0; i < name.length-1; i++) {
+                    if (i != name.length-2) {
+                        firstname = firstname.concat(name[i] + " ");
+                    }
+                    else {
+                        firstname = firstname.concat(name[i]);
+                    }
+                };
+
+                await axios.post(`${API}/user/updateUserInfo`, {
+                    "uid": this.props.user.uid,
+                    "newUserInfo": {
+                        "firstname": firstname,
+                        "lastname": name[name.length-1]
+                    }});
+                }
+            else {
+                this.setState({
+                    profileName: this.props.user.firstname + ' ' + this.props.user.lastname
+                });
+                console.log("Error: Name input too short, please input a first and last name.")
+            }
+
+            this.props.fetchUserInfo(this.props.user.uid);
+        };
     }
 
     renderProfileInfo(){
@@ -162,15 +200,17 @@ class ProfileScreen extends Component {
             return(
                 <View style={styles.secondContainer}>
                     <View style={styles.profilePicBox}>
-                        <View style={styles.profileCircle}>
-
-                        </View>
+                        <TouchableOpacity onPress={this._pickImage}>
+                            <View style={styles.profileCircle}>
+                                <Image uri={this.state.profilePic}/>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.profileInfoBox}>
                         <TextInput style={styles.profileName} onChangeText={(text) => {this.setState({ profileName: text});}} value={this.state.profileName} />
                         <View style={styles.emailBox}>
-                            <TextInput style={styles.email} onChangeText={(text) => {this.setState({ email: text });}} value={this.state.email} />
-                            <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
+                            <Text style={styles.email}>{this.state.email}</Text>
+                            <View style={styles.emailIcon}><Icon name='envelope' type='font-awesome' color='#8D8D8D'></Icon></View>
                         </View>
                     </View>
                 </View>
@@ -183,10 +223,10 @@ class ProfileScreen extends Component {
                         <Image source={this.state.profilePic ? {uri: this.state.profilePic} : null} style={styles.profileCircle}></Image>
                     </View>
                     <View style={styles.profileInfoBox}>
-                        <Text style={styles.profileName}>{this.state.profileName}</Text>
+                        <Text style={styles.profileName}>{this.props.user.firstname + ' ' + this.props.user.lastname}</Text>
                         <View style={styles.emailBox}>
                             <Text style={styles.email}>{this.state.email}</Text>
-                            <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
+                            <View style={styles.emailIcon}><Icon name='envelope' type='font-awesome' color='#8D8D8D'></Icon></View>
                         </View>
                     </View>
                 </View>
@@ -253,22 +293,16 @@ class ProfileScreen extends Component {
                 <View>
                     {this.renderProfileInfo()}
                 </View>
-                {/* <View style={styles.secondContainer}>
-                    <View style={styles.profilePicBox}>
-                        <View style={styles.profileCircle}></View>
-                    </View>
-                    <View style={styles.profileInfoBox}>
-                        <TextInput style={styles.profileName}>{this.state.profileName}</TextInput>
-                        <View style={styles.emailBox}>
-                            <TextInput style={styles.email}>{this.state.email}</TextInput>
-                            <Icon style={styles.emailIcon} name='envelope' type='font-awesome' color='#8D8D8D'></Icon>
-                        </View>
-                    </View>
-                </View> */}
+                <View style={styles.vrCodeBox}>
+                    <Text style={styles.vrCode}>{this.state.vrcode}</Text>
+                </View>
                 { this.getFriendsCarousel() }
                 <View style={styles.fourthContainer}>
-                    <TouchableOpacity onPress={this._pickImage}>
-                        <Text style={styles.updateText}>Update Profile</Text>
+                    <TouchableOpacity onPress={()=> {
+                            this.toggleEditing();
+                            this.updateUser();
+                        }}>
+                        <Text style={styles.updateText}>{this.state.editText}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -370,16 +404,32 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     email:{
+        alignSelf: 'center',
         paddingLeft: 10,
         fontFamily: 'AppleSDGothicNeo-Thin',
         fontSize: 20,
     },
     emailIcon:{
-        paddingBottom: 10,
+        alignSelf: 'center',
+        //paddingBottom: 10,
+    },
+    vrCodeBox:{
+        width: 80,
+        height: 50,
+        backgroundColor: 'darkgrey',
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    vrCode:{
+        color: '#FFFFFF',
+        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontSize: 25,
+        textAlign: 'center',
     },
     thirdContainer:{
-        height: 350,
+        height: 300,
         //backgroundColor: 'pink',
+        justifyContent: 'center',
     },
     fourthContainer: {
         height: 100,
@@ -393,12 +443,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     friendsHeaderBox:{
-        height: 100,
+        height: 50,
         //backgroundColor: 'lightblue',
         justifyContent: 'center',
     },
     friendTitle:{
-        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontFamily: 'AppleSDGothicNeo-SemiBold',
         fontSize: 20,
         paddingLeft: 15,
     },
@@ -448,7 +498,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
       fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
-      newProfilePic: (userID, url) => dispatch(newProfilePic(userID, url))
+      newProfilePic: (userID, url) => dispatch(newProfilePic(userID, url)),
+    //   updateUserInfo: (userID, userinfo) => dispatch(updateUserInfo(userID, userinfo))
     };
   };
 

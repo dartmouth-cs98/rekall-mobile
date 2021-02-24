@@ -13,6 +13,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
+import axios from 'axios';
+// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
+
+const API = 'https://rekall-server.herokuapp.com';
 
 // const uid = "6010a60b2903ce360163ca10"
 
@@ -59,6 +63,90 @@ class GalleryScreen extends Component {
         }
     }
 
+    addMedia = async (userID, s3Key, mediaType, albumID, albumType) => {
+        if (albumType == "User") {
+            const url = `${API}/album/addMediaToAlbum`
+        }
+        else {
+            const url = `${API}/album/addMediaToShared`
+        }
+        axios.put(`${API}/album/addMediaToLibrary`,
+            { 
+                "_id": userID,
+                "s3Key": s3Key,
+                "mediaType": mediaType
+            }).then((res) => {
+                axios.put(url,
+                    { 
+                        "album": {
+                            "_id": albumID,
+                        },
+                        "media": {
+                            "_id": res._id,
+                        },
+                    },
+                ).then((res) => {
+                    this.loadData();
+                })
+            }).catch((e) => {
+                console.log(`Error putting media: ${e}`);
+            });
+    }
+
+    /*
+    Function to allow picking a video from camera roll and uploading it
+    */
+    _pickVideo = async (name, albumID, albumType) => {
+        try {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+        });
+        
+        if (!result.cancelled) {
+            const file = {
+                uri: result.uri,
+                name: `${name}.mov`,
+                type: "video/quicktime"
+            };
+            
+            const options = {
+                // keyPrefix: this.props.user.uid + "/media/",
+                keyPrefix: this.props.user.uid + "/media/",
+                bucket: "rekall-storage",
+                region: "us-east-1",
+                accessKey: "AKIAQWWJHNTC6ZC2JFH3",
+                secretKey: "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",
+                // accessKey: AWS_ACCESS_KEY_ID,
+                // secretKey: AWS_SECRET_ACCESS_KEY,
+                successActionStatus: 201
+            };
+
+            return RNS3.put(file, options)
+            .then(response => {
+                if (response.status !== 201) {
+                    throw new Error("Failed to upload video to S3");
+                }
+                else {
+                    console.log(
+                        "Successfully uploaded video to s3. s3 bucket url: ",
+                        response.body.postResponse.location
+                    );
+                    this.addMedia(this.props.user.uid, response.body.postResponse.location, "mov", albumID, albumType)
+                    .then(() => {
+                        this.loadData();
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+        console.log(result);
+        } catch (E) {
+            console.log(E);
+        }
+    };
+
     async addMyAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
@@ -71,11 +159,7 @@ class GalleryScreen extends Component {
         //     newAlbumName: ""
         // });
         await this.props.UpdateUserAlbums(this.props.user.uid, newAlbumName).then(() => {
-            this.props.fetchUserInfo(this.props.user.uid).then(() => {
-                this.setState({
-                    myAlbums: this.props.user.userAlbums,
-                });
-            });
+            this.loadData();
         });
     }
 
@@ -90,12 +174,8 @@ class GalleryScreen extends Component {
         // this.setState({
         //     newAlbumName: ""
         // });
-        await this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, []).then(() => {
-            this.props.fetchUserInfo(this.props.user.uid).then(() => {
-                this.setState({
-                    sharedAlbums: this.props.user.sharedAlbums,
-                });
-            });
+        await this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, [this.props.user.uid]).then(() => {
+            this.loadData();
         });
     }
 
@@ -128,9 +208,15 @@ class GalleryScreen extends Component {
     renderAlbumCard({item,index}){
       if (item.albumName !== null){
         console.log(item)
-        const video = item.albumMedia[0].s3Key.split('/', 5);
-        const thumbnail = 'https://rekall-storage.s3.amazonaws.com/' + video[0] + '/Thumbnails/' + video[2].slice(0, -4) + '.png';
-        console.log(thumbnail)
+        var thumbnail = null;
+        try {
+            const video = item.albumMedia[0].s3Key.split('/', 5);
+            thumbnail = 'https://rekall-storage.s3.amazonaws.com/' + video[0] + '/Thumbnails/' + video[2].slice(0, -4) + '.png';
+            console.log(thumbnail)
+        }
+        catch(e) {
+            console.log("Album has not populated yet")
+        }
 
         return (
           <View style={styles.friendContainer}>

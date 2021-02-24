@@ -10,6 +10,11 @@ import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import youtubeSearch from './youtube_api.js';
+import axios from 'axios';
+import { connect } from 'react-redux';
+import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../actions/albumActions';
+
+const API = 'https://rekall-server.herokuapp.com';
 
 class ExploreScreen extends Component {
     constructor(props){
@@ -191,6 +196,41 @@ class ExploreScreen extends Component {
                 </View>
             </View>
         )
+    }
+
+    async loadData() {
+        await this.props.getAlbums(this.props.user.uid);
+        await this.props.getSharedAlbums(this.props.user.uid);
+    }
+
+    addMedia = async (userID, s3Key, mediaType, albumID, albumType) => {
+        if (albumType == "User") {
+            const url = `${API}/album/addMediaToAlbum`
+        }
+        else {
+            const url = `${API}/album/addMediaToShared`
+        }
+        axios.put(`${API}/album/addMediaToLibrary`,
+            { 
+                "_id": userID,
+                "s3Key": s3Key,
+                "mediaType": mediaType
+            }).then((res) => {
+                axios.put(url,
+                    { 
+                        "album": {
+                            "_id": albumID,
+                        },
+                        "media": {
+                            "_id": res._id,
+                        },
+                    },
+                ).then((res) => {
+                    this.loadData();
+                })
+            }).catch((e) => {
+                console.log(`Error putting media: ${e}`);
+            });
     }
 
     render(){
@@ -406,4 +446,20 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ExploreScreen;
+const mapStateToProps = (state) => {
+    return {
+      user: state.user,
+    }
+};
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
+        UpdateSharedAlbums: (user, sharedalbum, sharedwith) => dispatch(addSharedAlbum(user, sharedalbum, sharedwith)),
+        getAlbums: (userID) => dispatch(getAlbums(userID)),
+        getSharedAlbums: (userID) => dispatch(getSharedAlbums(userID))
+    };
+};
+  
+export default connect(mapStateToProps, mapDispatchToProps)(ExploreScreen);

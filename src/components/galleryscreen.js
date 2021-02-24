@@ -159,11 +159,7 @@ class GalleryScreen extends Component {
         //     newAlbumName: ""
         // });
         await this.props.UpdateUserAlbums(this.props.user.uid, newAlbumName).then(() => {
-            this.props.fetchUserInfo(this.props.user.uid).then(() => {
-                this.setState({
-                    myAlbums: this.props.user.userAlbums,
-                });
-            });
+            this.loadData();
         });
     }
 
@@ -178,12 +174,8 @@ class GalleryScreen extends Component {
         // this.setState({
         //     newAlbumName: ""
         // });
-        await this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, []).then(() => {
-            this.props.fetchUserInfo(this.props.user.uid).then(() => {
-                this.setState({
-                    sharedAlbums: this.props.user.sharedAlbums,
-                });
-            });
+        await this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, [this.props.user.uid]).then(() => {
+            this.loadData();
         });
     }
 
@@ -216,9 +208,15 @@ class GalleryScreen extends Component {
     renderAlbumCard({item,index}){
       if (item.albumName !== null){
         console.log(item)
-        const video = item.albumMedia[0].s3Key.split('/', 5);
-        const thumbnail = 'https://rekall-storage.s3.amazonaws.com/' + video[0] + '/Thumbnails/' + video[2].slice(0, -4) + '.png';
-        console.log(thumbnail)
+        var thumbnail = null;
+        try {
+            const video = item.albumMedia[0].s3Key.split('/', 5);
+            thumbnail = 'https://rekall-storage.s3.amazonaws.com/' + video[0] + '/Thumbnails/' + video[2].slice(0, -4) + '.png';
+            console.log(thumbnail)
+        }
+        catch(e) {
+            console.log("Album has not populated yet")
+        }
 
         return (
           <View style={styles.friendContainer}>

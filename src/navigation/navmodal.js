@@ -16,9 +16,27 @@ import FriendsScreen from '../components/friendsscreen.js';
 import EntryScreen from '../components/entryScreen.js';
 import Signup from '../components/signup.js';
 import Login from '../components/login.js';
+import AlbumDetail from '../components/albumDetail.js';
+//import GalleryStackNav from './albumNavigation.js';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+// const AlbumStack = createStackNavigator();
+
+// const MyAlbums = () => {
+
+// }
+
+// const AlbumStack = createStackNavigator()
+
+// function GalleryStackNav() {
+//     return (
+//         <AlbumStack.Navigator screenOptions={{headerShown: false}}>
+//           <AlbumStack.Screen name='Gallery' component={GalleryScreen} />
+//           <AlbumStack.Screen name='AlbumDetail' component={AlbumDetailScreen} />
+//         </AlbumStack.Navigator>
+//     )
+// }
 
 const MyDrawer = () => {
     return(
@@ -42,6 +60,7 @@ const MyDrawer = () => {
             <Drawer.Screen name="GALLERY" component={GalleryScreen} />
             <Drawer.Screen name="FRIENDS" component={FriendsScreen}/>
             <Drawer.Screen name="MY PROFILE" component={ProfileScreen}/>
+            <Drawer.Screen name="album detail" component={AlbumDetail} />
             <Drawer.Screen name="LOGOUT" component={Login} />
         </Drawer.Navigator>
     );
@@ -51,12 +70,13 @@ function MyNav() {
     const isLargeScreen = useWindowDimensions();
     
     return (
-        <NavigationContainer>
+        <NavigationContainer >
             <Stack.Navigator screenOptions={{headerShown: false}}>
                 <Stack.Screen name="Entry" component={EntryScreen} />
                 <Stack.Screen name="Drawer" component={MyDrawer} />
                 <Stack.Screen name="Signup" component={Signup} />
                 <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Detail" component={AlbumDetail} />
             </Stack.Navigator>
         </NavigationContainer>
     )

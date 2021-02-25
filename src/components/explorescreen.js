@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import youtubeSearch from './youtube_api.js';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../actions/albumActions';
 
 const API = 'https://rekall-server.herokuapp.com';
@@ -23,12 +24,17 @@ class ExploreScreen extends Component {
             querySearch: " ",
             isLoading: false,
             modalVisible: false,
+            albumListModal: false,
             activeIndex:0,
             videos: [],
             pics: [],
         }
         this.renderVideoCard = this.renderVideoCard.bind(this);
     }
+
+    // componentDidMount() {
+    //     this.loadData();
+    // }
 
     fetchVideoData(query) {
         youtubeSearch(query)
@@ -56,9 +62,12 @@ class ExploreScreen extends Component {
     }
 
     componentDidMount(){
+        this.loadData();
         this.fetchVideoData("360 Video");
         this.fetchPictureData("360 Picture");
     }
+
+    
 
     renderLoadingView() {
         return (
@@ -76,6 +85,15 @@ class ExploreScreen extends Component {
         else{
             this.setState({modalVisible: true})
             this.setState({querySearch: " "});
+        }
+    }
+
+    toggleAlbumList(){
+        if (this.state.albumListModal){
+            this.setState({albumListModal: false});
+        }
+        else{
+            this.setState({albumListModal: true});
         }
     }
 
@@ -97,6 +115,57 @@ class ExploreScreen extends Component {
             this.fetchPictureData(finalQuery);
             this.toggleSearch();
         }
+    }
+
+    // async loadData() {
+    //     await this.props.getAlbums(this.props.user.uid).then(() => {
+    //         this.setState({
+    //             myAlbums: this.props.user.userAlbums,
+    //         });
+    //     });
+
+    //     await this.props.getSharedAlbums(this.props.user.uid).then(() => {
+    //         this.setState({
+    //             sharedAlbums: this.props.user.sharedAlbums,
+    //         });
+        
+
+    getCurrentAlbums(){
+        const albumList = this.props.user.userAlbums;
+        const sharedAlbumList = this.props.user.sharedAlbums;
+        albumList.push(...sharedAlbumList);
+        console.log(albumList)
+        this.toggleAlbumList();
+        console.log(this.state.albumListModal);
+        //if (this.state.albumListModal){
+            return(
+                <View>
+                    <Modal isVisible={this.state.albumListModal} onSwipeComplete={()=> this.toggleAlbumList()} swipeDirection="up">
+                        <View>
+                            <View style={styles.dropDownMenuBox}>
+                            <DropDownPicker
+                                    items={[
+                                        {label: 'USA', value: 'usa', icon: () => <Icon name="flag" size={18} color="#900" />, hidden: true},
+                                        {label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900" />},
+                                        {label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" />},
+                                    ]}
+                                    defaultValue={this.state.country}
+                                    containerStyle={{height: 40}}
+                                    style={{backgroundColor: '#fafafa'}}
+                                    itemStyle={{
+                                        justifyContent: 'flex-start'
+                                    }}
+                                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                                    onChangeItem={item => this.setState({
+                                        country: item.value
+                                    })}
+                            />
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+            )
+        //}
     }
 
     renderModal(){
@@ -144,7 +213,7 @@ class ExploreScreen extends Component {
                 </View>
                 <View style={styles.plusIconBox}>
                     <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
-                        onPress={()=> console.log("Item added to Gallery")}></Icon>
+                        onPress={()=> {this.getCurrentAlbums()}}></Icon>
                 </View>
               </View>
             </View>
@@ -261,7 +330,7 @@ class ExploreScreen extends Component {
                         </View>
                     </View>
                 </View>
-                <View>{this.renderModal()}</View>
+                <View>{this.renderModal()}</View>   
             </LinearGradient>
         );
     }
@@ -443,6 +512,11 @@ const styles = StyleSheet.create({
     searchBox: {
         backgroundColor: '#F2F1F1',
         height: 50,
+    },
+    dropDownMenuBox:{
+        backgroundColor: 'white',
+        height: 50,
+        width: 50,
     },
 });
 

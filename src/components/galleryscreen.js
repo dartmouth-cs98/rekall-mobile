@@ -13,6 +13,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
+import AlbumDetail from '../components/albumDetail.js';
+import GalleryStackNav from '../navigation/albumNavigation';
 import axios from 'axios';
 // import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
@@ -29,6 +31,7 @@ class GalleryScreen extends Component {
             isModalVisible: false,
             newAlbumName: "",
         }
+        this.showAlbumDetail = this.showAlbumDetail.bind(this);
     }
 
     componentDidMount() {
@@ -63,89 +66,89 @@ class GalleryScreen extends Component {
         }
     }
 
-    addMedia = async (userID, s3Key, mediaType, albumID, albumType) => {
-        if (albumType == "User") {
-            const url = `${API}/album/addMediaToAlbum`
-        }
-        else {
-            const url = `${API}/album/addMediaToShared`
-        }
-        axios.put(`${API}/album/addMediaToLibrary`,
-            { 
-                "_id": userID,
-                "s3Key": s3Key,
-                "mediaType": mediaType
-            }).then((res) => {
-                axios.put(url,
-                    { 
-                        "album": {
-                            "_id": albumID,
-                        },
-                        "media": {
-                            "_id": res._id,
-                        },
-                    },
-                ).then((res) => {
-                    this.loadData();
-                })
-            }).catch((e) => {
-                console.log(`Error putting media: ${e}`);
-            });
-    }
+    // addMedia = async (userID, s3Key, mediaType, albumID, albumType) => {
+    //     if (albumType == "User") {
+    //         const url = `${API}/album/addMediaToAlbum`
+    //     }
+    //     else {
+    //         const url = `${API}/album/addMediaToShared`
+    //     }
+    //     axios.put(`${API}/album/addMediaToLibrary`,
+    //         { 
+    //             "_id": userID,
+    //             "s3Key": s3Key,
+    //             "mediaType": mediaType
+    //         }).then((res) => {
+    //             axios.put(url,
+    //                 { 
+    //                     "album": {
+    //                         "_id": albumID,
+    //                     },
+    //                     "media": {
+    //                         "_id": res._id,
+    //                     },
+    //                 },
+    //             ).then((res) => {
+    //                 this.loadData();
+    //             })
+    //         }).catch((e) => {
+    //             console.log(`Error putting media: ${e}`);
+    //         });
+    // }
 
-    /*
-    Function to allow picking a video from camera roll and uploading it
-    */
-    _pickVideo = async (name, albumID, albumType) => {
-        try {
-            let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-        });
+    // /*
+    // Function to allow picking a video from camera roll and uploading it
+    // */
+    // _pickVideo = async (name, albumID, albumType) => {
+    //     try {
+    //         let result = await ImagePicker.launchImageLibraryAsync({
+    //             mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+    //     });
         
-        if (!result.cancelled) {
-            const file = {
-                uri: result.uri,
-                name: `${name}.mov`,
-                type: "video/quicktime"
-            };
+    //     if (!result.cancelled) {
+    //         const file = {
+    //             uri: result.uri,
+    //             name: `${name}.mov`,
+    //             type: "video/quicktime"
+    //         };
             
-            const options = {
-                // keyPrefix: this.props.user.uid + "/media/",
-                keyPrefix: this.props.user.uid + "/media/",
-                bucket: "rekall-storage",
-                region: "us-east-1",
-                accessKey: "AKIAQWWJHNTC6ZC2JFH3",
-                secretKey: "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",
-                // accessKey: AWS_ACCESS_KEY_ID,
-                // secretKey: AWS_SECRET_ACCESS_KEY,
-                successActionStatus: 201
-            };
+    //         const options = {
+    //             // keyPrefix: this.props.user.uid + "/media/",
+    //             keyPrefix: this.props.user.uid + "/media/",
+    //             bucket: "rekall-storage",
+    //             region: "us-east-1",
+    //             accessKey: "AKIAQWWJHNTC6ZC2JFH3",
+    //             secretKey: "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",
+    //             // accessKey: AWS_ACCESS_KEY_ID,
+    //             // secretKey: AWS_SECRET_ACCESS_KEY,
+    //             successActionStatus: 201
+    //         };
 
-            return RNS3.put(file, options)
-            .then(response => {
-                if (response.status !== 201) {
-                    throw new Error("Failed to upload video to S3");
-                }
-                else {
-                    console.log(
-                        "Successfully uploaded video to s3. s3 bucket url: ",
-                        response.body.postResponse.location
-                    );
-                    this.addMedia(this.props.user.uid, response.body.postResponse.location, "mov", albumID, albumType)
-                    .then(() => {
-                        this.loadData();
-                    });
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        }
-        console.log(result);
-        } catch (E) {
-            console.log(E);
-        }
-    };
+    //         return RNS3.put(file, options)
+    //         .then(response => {
+    //             if (response.status !== 201) {
+    //                 throw new Error("Failed to upload video to S3");
+    //             }
+    //             else {
+    //                 console.log(
+    //                     "Successfully uploaded video to s3. s3 bucket url: ",
+    //                     response.body.postResponse.location
+    //                 );
+    //                 this.addMedia(this.props.user.uid, response.body.postResponse.location, "mov", albumID, albumType)
+    //                 .then(() => {
+    //                     this.loadData();
+    //                 });
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.log(error);
+    //         });
+    //     }
+    //     console.log(result);
+    //     } catch (E) {
+    //         console.log(E);
+    //     }
+    // };
 
     async addMyAlbum(e){
         e.preventDefault();
@@ -203,10 +206,15 @@ class GalleryScreen extends Component {
         }
         
     }
-  
 
-    renderAlbumCard({item,index}){
+    showAlbumDetail(){
+        this.props.navigation.navigate('Detail');
+    }
+
+
+    renderAlbumCard({item,index, navigation}){
       if (item.albumName !== null){
+        //console.log(this.props.navigation)
         console.log(item)
         var thumbnail = null;
         try {
@@ -221,9 +229,10 @@ class GalleryScreen extends Component {
         return (
           <View style={styles.friendContainer}>
             <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
-            <Text style={styles.friendNameText}>{item.albumName}</Text>
+            <TouchableOpacity onPress={()=> this.props.navigation.navigate('Detail')}>
+                <Text style={styles.friendNameText}>{item.albumName}</Text>
+            </TouchableOpacity>
           </View>
-
         );
       }
     }
@@ -301,7 +310,8 @@ class GalleryScreen extends Component {
                 </View>
             )
         }
-        console.log(this.state.myAlbums)
+        //console.log(this.state.myAlbums)
+        console.log(this.props.navigation)
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}
@@ -317,7 +327,7 @@ class GalleryScreen extends Component {
                             </TouchableOpacity> 
                         </View>
                     </View>
-                    { this.getAlbums() }
+                    { this.getAlbums()}
                     {this.getSharedAlbums()}
                     <View style={styles.bottomContainer}>
                         <Icon style={styles.plusIcon} name='plus' size={60} type='evilicon' color='#686868'
@@ -416,11 +426,11 @@ const styles = StyleSheet.create({
         height: 350,
         //backgroundColor: 'lightblue'
     },
-    friendTitle:{
-        fontFamily: 'AppleSDGothicNeo-Bold',
-        fontSize: 20,
-        paddingLeft: 15,
-    },
+    // friendTitle:{
+    //     fontFamily: 'AppleSDGothicNeo-Bold',
+    //     fontSize: 20,
+    //     paddingLeft: 15,
+    // },
     friendsListBox:{
         height: 300,
         //backgroundColor: 'darkgreen',
@@ -442,14 +452,18 @@ const styles = StyleSheet.create({
     friendImage:{
         height: 200,
         backgroundColor: '#BABABB',
-        borderRadius: 10,
+        //borderRadius: 10,
     },
     friendNameText:{
-        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontFamily: 'AppleSDGothicNeo-Regular',
         color: '#FFFFFF',
-        textAlign: "left",
         fontSize: 25,
-        paddingLeft: 20,
+        justifyContent: 'flex-end',
+        paddingLeft: 5,
+        paddingTop: 10,
+        // textAlign: "left",
+        // fontSize: 20,
+        // paddingLeft: 15,
     },
     modalContainer: {
         display: 'flex',

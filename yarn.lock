@@ -6673,6 +6673,13 @@ react-native-dotenv@^2.5.3:
   dependencies:
     dotenv "^8.0.0"
 
+react-native-dropdown-picker@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-dropdown-picker/-/react-native-dropdown-picker-4.0.2.tgz#03cc48d6f817ff1348323c99f35afbc69640e1e7"
+  integrity sha512-x6OZ5YNzFc5PEwWFDYQBBxYq6qvCnc8NPX9d9UsXpaLizTSXLT0kWLsUzsJOMm6SVsUxWY7FOAyXsB4JUSyKdQ==
+  dependencies:
+    react-native-vector-icons "^7.0.0"
+
 react-native-elements@^3.0.1:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-3.1.0.tgz#ff2d6fd0ed91b1ebdd15598c4da1fcb2d5780c5f"
@@ -6822,7 +6829,7 @@ react-native-text-gradient@^0.1.7:
   resolved "https://registry.yarnpkg.com/react-native-text-gradient/-/react-native-text-gradient-0.1.7.tgz#2b7a4c3dab59d50bb292b184f1d4ac214f73f06b"
   integrity sha512-QuEwW8TMKBNI5ejmDFu3/SDJh5CIzOi5eL1xNzq8yBEwU5wHaloBxhQ9K0zc16GPkr3KgSUDyU4olQtiYje4mw==
 
-react-native-vector-icons@^7.1.0:
+react-native-vector-icons@^7.0.0, react-native-vector-icons@^7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-7.1.0.tgz#145487d617b2a81d395d2cf64e6e065fcab3a454"
   integrity sha512-V2a1zJ4i+kS8O4j183gIwX14St9AxxXabxwYpFBgRhvr2NDXyFcjHDEAgrOYYlt2W57e20aN1tBDU/I+wn9WtQ==

@@ -63,7 +63,7 @@ class GalleryScreen extends Component {
         }
     }
 
-    addMedia = async (userID, s3Key, mediaType, albumID, albumType) => {
+    addMedia = async (userID, mediaURL, mediaType, albumID, albumType) => {
         if (albumType == "User") {
             const url = `${API}/album/addMediaToAlbum`
         }
@@ -73,7 +73,7 @@ class GalleryScreen extends Component {
         axios.put(`${API}/album/addMediaToLibrary`,
             { 
                 "_id": userID,
-                "s3Key": s3Key,
+                "mediaURL": mediaURL,
                 "mediaType": mediaType
             }).then((res) => {
                 axios.put(url,
@@ -210,7 +210,7 @@ class GalleryScreen extends Component {
         console.log(item)
         var thumbnail = null;
         try {
-            const video = item.albumMedia[0].s3Key.split('/', 5);
+            const video = item.albumMedia[0].mediaURL.split('/', 5);
             thumbnail = 'https://rekall-storage.s3.amazonaws.com/' + video[0] + '/Thumbnails/' + video[2].slice(0, -4) + '.png';
             console.log(thumbnail)
         }

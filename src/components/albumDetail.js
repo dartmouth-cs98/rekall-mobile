@@ -26,9 +26,21 @@ class MyAlbumDetail extends Component {
         this.state={
             dummyName: 'GrOOvy',
             albumContents: [],
+            friends: null,
         }
     }
 
+    componentDidMount() {
+        this.loadData();
+    }
+
+    async loadData() {
+        await this.props.fetchUserInfo(this.props.user.uid).then(() => {
+            this.setState({
+                friends: this.props.user.friends,
+            });
+        });
+    }
 
     addMedia = async (userID, s3Key, mediaType, albumID, albumType) => {
         if (albumType == "User") {
@@ -113,6 +125,10 @@ class MyAlbumDetail extends Component {
             console.log(E);
         }
     };
+
+    // renderSharingOptions(){
+
+    // }
 
     render(){
         return(
@@ -213,4 +229,23 @@ const styles = StyleSheet.create({
 
 });
 
-export default MyAlbumDetail;
+
+const mapStateToProps = (state) => {
+    return {
+      user: state.user,
+    }
+};
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
+        UpdateSharedAlbums: (user, sharedalbum, sharedwith) => dispatch(addSharedAlbum(user, sharedalbum, sharedwith)),
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+        getAlbums: (userID) => dispatch(getAlbums(userID)),
+        getSharedAlbums: (userID) => dispatch(getSharedAlbums(userID))
+    };
+};
+
+//export default MyAlbumDetail;
+export default connect(mapStateToProps, mapDispatchToProps)(MyAlbumDetail);

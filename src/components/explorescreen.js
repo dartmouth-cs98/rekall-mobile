@@ -28,6 +28,7 @@ class ExploreScreen extends Component {
             activeIndex:0,
             videos: [],
             pics: [],
+            allAlbums: [],
         }
         this.renderVideoCard = this.renderVideoCard.bind(this);
     }
@@ -91,6 +92,7 @@ class ExploreScreen extends Component {
     toggleAlbumList(){
         if (this.state.albumListModal){
             this.setState({albumListModal: false});
+            this.getCurrentAlbums();
         }
         else{
             this.setState({albumListModal: true});
@@ -131,48 +133,25 @@ class ExploreScreen extends Component {
         
 
     getCurrentAlbums(){
-        const albumList = this.props.user.userAlbums;
-        const sharedAlbumList = this.props.user.sharedAlbums;
+        var albumList = this.props.user.userAlbums;
+        var sharedAlbumList = this.props.user.sharedAlbums;
         albumList.push(...sharedAlbumList);
         console.log(albumList)
-        this.toggleAlbumList();
+        //this.toggleAlbumList();
         console.log(this.state.albumListModal);
         //if (this.state.albumListModal){
-            return(
-                <View>
-                    <Modal isVisible={this.state.albumListModal} onSwipeComplete={()=> this.toggleAlbumList()} swipeDirection="up">
-                        <View>
-                            <View style={styles.dropDownMenuBox}>
-                            <DropDownPicker
-                                    items={[
-                                        {label: 'USA', value: 'usa', icon: () => <Icon name="flag" size={18} color="#900" />, hidden: true},
-                                        {label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900" />},
-                                        {label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" />},
-                                    ]}
-                                    defaultValue={this.state.country}
-                                    containerStyle={{height: 40}}
-                                    style={{backgroundColor: '#fafafa'}}
-                                    itemStyle={{
-                                        justifyContent: 'flex-start'
-                                    }}
-                                    dropDownStyle={{backgroundColor: '#fafafa'}}
-                                    onChangeItem={item => this.setState({
-                                        country: item.value
-                                    })}
-                            />
-                            </View>
-                        </View>
-                    </Modal>
-                </View>
-            )
-        //}
+        return(
+            <View style={{flex: 1, backgroundColor: 'red'}}>
+
+            </View>
+        );
     }
 
     renderModal(){
         //console.log("In renderModal")
         if (this.state.modalVisible){
             return(
-                <View>
+                <View style={{flex:1}}>
                     <Modal isVisible={this.state.modalVisible} onSwipeComplete={()=> this.toggleSearch()} swipeDirection="up">
                         <View>
                             <View style={styles.modalContainer}>
@@ -213,7 +192,7 @@ class ExploreScreen extends Component {
                 </View>
                 <View style={styles.plusIconBox}>
                     <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
-                        onPress={()=> {this.getCurrentAlbums()}}></Icon>
+                        onPress={()=> this.toggleAlbums()}></Icon>
                 </View>
               </View>
             </View>
@@ -330,7 +309,8 @@ class ExploreScreen extends Component {
                         </View>
                     </View>
                 </View>
-                <View>{this.renderModal()}</View>   
+                <View>{this.renderModal()}</View>
+                <View>{this.getCurrentAlbums()}</View>
             </LinearGradient>
         );
     }
@@ -514,8 +494,9 @@ const styles = StyleSheet.create({
         height: 50,
     },
     dropDownMenuBox:{
+        display: 'flex',
         backgroundColor: 'white',
-        height: 50,
+        height: 400,
         width: 50,
     },
 });

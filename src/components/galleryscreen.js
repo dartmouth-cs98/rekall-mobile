@@ -212,7 +212,7 @@ class GalleryScreen extends Component {
     }
 
 
-    renderAlbumCard({item,index, navigation}){
+    renderAlbumCard({item,index}){
       if (item.albumName !== null){
         //console.log(this.props.navigation)
         console.log(item)
@@ -229,7 +229,7 @@ class GalleryScreen extends Component {
         return (
           <View style={styles.friendContainer}>
             <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
-            <TouchableOpacity onPress={()=> this.props.navigation.navigate('Detail')}>
+            <TouchableOpacity onPress={() =>  this.props.navigation.navigate('Detail')}>
                 <Text style={styles.friendNameText}>{item.albumName}</Text>
             </TouchableOpacity>
           </View>

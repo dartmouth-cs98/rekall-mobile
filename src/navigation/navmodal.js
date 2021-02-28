@@ -76,7 +76,6 @@ function MyNav() {
                 <Stack.Screen name="Drawer" component={MyDrawer} />
                 <Stack.Screen name="Signup" component={Signup} />
                 <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen name="Detail" component={AlbumDetail} />
             </Stack.Navigator>
         </NavigationContainer>
     )

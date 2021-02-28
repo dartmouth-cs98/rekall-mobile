@@ -1,33 +1,56 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { fetchUserInfo } from '../actions/userActions';
+import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../actions/albumActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, PanResponder, Alert} from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, ActivityIndicator,
+    PanResponder, Alert, ActionSheetIOS} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
 import { LinearGradient } from 'expo-linear-gradient';
+import CameraRollGallery from "react-native-camera-roll-gallery";
 import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
+import AlbumDetail from '../components/albumDetail.js';
+import axios from 'axios';
+// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
+
+const API = 'https://rekall-server.herokuapp.com';
+
+// const uid = "6010a60b2903ce360163ca10"
 
 class GalleryScreen extends Component {
     constructor(props){
         super(props);
         this.state={
-            myAlbums: [],
+            myAlbums: null,
             sharedAlbums: [],
             isModalVisible: false,
             newAlbumName: "",
+            navigation: this.props.navigation,
         }
+        //this.showAlbumDetail = this.showAlbumDetail.bind(this);
+        this.renderAlbumCard = this.renderAlbumCard.bind(this);
     }
 
     componentDidMount() {
-        this.props.fetchUserInfo('5fb47383de4e8ebf1d79d3b4');
-        this.setState({
-            myAlbums: this.props.user.userAlbums,
-            sharedAlbums: this.props.user.sharedAlbums,
+        this.loadData();
+    }
+
+    async loadData() {
+        await this.props.getAlbums(this.props.user.uid).then(() => {
+            this.setState({
+                myAlbums: this.props.user.userAlbums,
+            });
+        });
+
+        await this.props.getSharedAlbums(this.props.user.uid).then(() => {
+            this.setState({
+                sharedAlbums: this.props.user.sharedAlbums,
+            });
         });
     }
 
@@ -45,31 +68,119 @@ class GalleryScreen extends Component {
         }
     }
 
-    addMyAlbum(e){
+    addMedia = async (userID, mediaURL, mediaType, albumID, albumType) => {
+        if (albumType == "User") {
+            const url = `${API}/album/addMediaToAlbum`
+        }
+        else {
+            const url = `${API}/album/addMediaToShared`
+        }
+        axios.put(`${API}/album/addMediaToLibrary`,
+            { 
+                "_id": userID,
+                "mediaURL": mediaURL,
+                "mediaType": mediaType
+            }).then((res) => {
+                axios.put(url,
+                    { 
+                        "album": {
+                            "_id": albumID,
+                        },
+                        "media": {
+                            "_id": res._id,
+                        },
+                    },
+                ).then((res) => {
+                    this.loadData();
+                })
+            }).catch((e) => {
+                console.log(`Error putting media: ${e}`);
+            });
+    }
+
+    // /*
+    // Function to allow picking a video from camera roll and uploading it
+    // */
+    // _pickVideo = async (name, albumID, albumType) => {
+    //     try {
+    //         let result = await ImagePicker.launchImageLibraryAsync({
+    //             mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+    //     });
+        
+    //     if (!result.cancelled) {
+    //         const file = {
+    //             uri: result.uri,
+    //             name: `${name}.mov`,
+    //             type: "video/quicktime"
+    //         };
+            
+    //         const options = {
+    //             // keyPrefix: this.props.user.uid + "/media/",
+    //             keyPrefix: this.props.user.uid + "/media/",
+    //             bucket: "rekall-storage",
+    //             region: "us-east-1",
+    //             accessKey: "AKIAQWWJHNTC6ZC2JFH3",
+    //             secretKey: "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",
+    //             // accessKey: AWS_ACCESS_KEY_ID,
+    //             // secretKey: AWS_SECRET_ACCESS_KEY,
+    //             successActionStatus: 201
+    //         };
+
+    //         return RNS3.put(file, options)
+    //         .then(response => {
+    //             if (response.status !== 201) {
+    //                 throw new Error("Failed to upload video to S3");
+    //             }
+    //             else {
+    //                 console.log(
+    //                     "Successfully uploaded video to s3. s3 bucket url: ",
+    //                     response.body.postResponse.location
+    //                 );
+    //                 this.addMedia(this.props.user.uid, response.body.postResponse.location, "mov", albumID, albumType)
+    //                 .then(() => {
+    //                     this.loadData();
+    //                 });
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.log(error);
+    //         });
+    //     }
+    //     console.log(result);
+    //     } catch (E) {
+    //         console.log(E);
+    //     }
+    // };
+
+    async addMyAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
-        const obj = {'albumName': newAlbumName}
-        this.setState({
-            myAlbums: [...this.state.myAlbums, obj]
-        });
+        // this.setState({
+        //     myAlbums: [...this.state.myAlbums, newAlbumName]
+        // });
         console.log(this.state.myAlbums)
         this.toggleModal()
-        this.setState({
-            newAlbumName: ""
+        // this.setState({
+        //     newAlbumName: ""
+        // });
+        await this.props.UpdateUserAlbums(this.props.user.uid, newAlbumName).then(() => {
+            this.loadData();
         });
     }
 
-    addSharedAlbum(e){
+    async addSharedAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;
-        const obj = {'albumName': newAlbumName}
         this.setState({
-            sharedAlbums: [...this.state.sharedAlbums, obj]
+            sharedAlbums: [...this.state.sharedAlbums, newAlbumName]
         });
         console.log(this.state.sharedAlbums)
         this.toggleModal()
-        this.setState({
-            newAlbumName: ""
+        // this.setState({
+        //     newAlbumName: ""
+        // });
+        await this.props.UpdateSharedAlbums(this.props.user.uid, newAlbumName, [this.props.user.uid]).then(() => {
+            this.loadData();
         });
     }
 
@@ -97,27 +208,112 @@ class GalleryScreen extends Component {
         }
         
     }
-  
 
-    renderAlbumCard({item,index}){
-        return (
-          <View style={styles.friendContainer}>
-            <View style={styles.friendImage}>
-
-            </View>
-            {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
-            <Text>{item.text}</Text> */}
-            <Text style={styles.friendNameText}>{item.albumName}</Text>
-          </View>
-
-        )
+    showAlbumDetail(){
+        this.props.navigation.navigate('Detail');
     }
 
-    // addAlbums(){
 
-    // }
+    renderAlbumCard({item,index}){
+      if (item.albumName !== null){
+        //console.log(this.props.navigation)
+        console.log(item)
+        var thumbnail = null;
+        try {
+            const video = item.albumMedia[0].mediaURL.split('/', 5);
+            thumbnail = 'https://rekall-storage.s3.amazonaws.com/' + video[0] + '/Thumbnails/' + video[2].slice(0, -4) + '.png';
+            console.log(thumbnail)
+        }
+        catch(e) {
+            console.log("Album has not populated yet")
+        }
+
+        return (
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {screen: 'AlbumDetail', params: {albumName: item.albumName}})}>
+                <View style={styles.friendContainer}>
+                    <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
+                        <Text style={styles.friendNameText}>{item.albumName}</Text>
+                </View>
+          </TouchableOpacity>
+        );
+      }
+    }
+
+    getAlbums() {
+      const albums = this.state.myAlbums.map((name) => {
+        if (name !== null || name !== ''){
+          return name;
+            // albumName: name,
+            // text: "MyAlbum"
+        //   };
+        }
+      });
+      return (
+        <View style={styles.myAlbumsContainer}>
+            <View style={styles.albumHeaderBox}>
+                <Text style={styles.albumTitle}>My Albums</Text>
+            </View>
+            <View style={styles.albumsContainer}>
+                <View style={styles.friendsListBox}>
+                  <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+                      <Carousel
+                      layout={"default"}
+                      ref={ref => this.carousel = ref}
+                      data={albums}
+                      sliderWidth={300}
+                      itemWidth={250}
+                      renderItem={this.renderAlbumCard}
+                      onSnapToItem = { index => this.setState({activeIndex:index}) }
+                      key = {this.state.myAlbums} />
+                  </View>
+                </View>
+            </View>        
+        </View>
+
+      );
+    }
+
+    getSharedAlbums() {
+      const sharedAlbums = this.state.sharedAlbums.map((name) => {
+        if (name !== null || name !== ''){
+          return name;
+        //     albumName: name,
+        //     text: "Shared"
+        //   };
+        }
+      });
+      return (
+        <View style={styles.sharedAlbumsContainer}>
+            <View style={styles.albumHeaderBox}>
+                <Text style={styles.albumTitle}>Shared Albums</Text>
+            </View>
+            <View style={styles.friendsListBox}>
+                <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+                    <Carousel
+                        layout={"default"}
+                        ref={ref => this.carousel = ref}
+                        data={sharedAlbums}
+                        sliderWidth={300}
+                        itemWidth={250}
+                        renderItem={this.renderAlbumCard}
+                        onSnapToItem = { index => this.setState({activeIndex:index}) } 
+                        key = {this.state.sharedAlbums} />
+                </View>
+            </View>
+        </View>
+      );
+    }
 
     render(){
+        if (this.state.myAlbums == null) {
+            return(
+                <View style={styles.preloader}>
+                  <ActivityIndicator size="large" color="#9E9E9E"/>
+                </View>
+            )
+        }
+        //console.log(this.state.myAlbums)
+        console.log(this.props.navigation)
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}
@@ -133,45 +329,10 @@ class GalleryScreen extends Component {
                             </TouchableOpacity> 
                         </View>
                     </View>
-                    <View style={styles.myAlbumsContainer}>
-                        <View style={styles.albumHeaderBox}>
-                            <Text style={styles.albumTitle}>My Albums</Text>
-                        </View>
-                        <View style={styles.albumsContainer}>
-                            <View style={styles.friendsListBox}>
-                                <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
-                                    <Carousel
-                                    layout={"default"}
-                                    ref={ref => this.carousel = ref}
-                                    data={this.state.myAlbums}
-                                    sliderWidth={300}
-                                    itemWidth={250}
-                                    renderItem={this.renderAlbumCard}
-                                    onSnapToItem = { index => this.setState({activeIndex:index}) } />
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.sharedAlbumsContainer}>
-                        <View style={styles.albumHeaderBox}>
-                            <Text style={styles.albumTitle}>Shared Albums</Text>
-                        </View>
-                        <View style={styles.friendsListBox}>
-                            <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
-                                <Carousel
-                                    layout={"default"}
-                                    ref={ref => this.carousel = ref}
-                                    data={this.state.sharedAlbums}
-                                    sliderWidth={300}
-                                    itemWidth={250}
-                                    renderItem={this.renderAlbumCard}
-                                    onSnapToItem = { index => this.setState({activeIndex:index}) } />
-                            </View>
-                        </View>
-                    </View>
-                    
+                    { this.getAlbums()}
+                    {this.getSharedAlbums()}
                     <View style={styles.bottomContainer}>
-                        <Icon style={styles.plusIcon} name='plus' size='60' type='evilicon' color='#686868'
+                        <Icon style={styles.plusIcon} name='plus' size={60} type='evilicon' color='#686868'
                         onPress={()=> this.toggleModal()}></Icon>
                     </View>
                 </View>
@@ -267,11 +428,11 @@ const styles = StyleSheet.create({
         height: 350,
         //backgroundColor: 'lightblue'
     },
-    friendTitle:{
-        fontFamily: 'AppleSDGothicNeo-Bold',
-        fontSize: 20,
-        paddingLeft: 15,
-    },
+    // friendTitle:{
+    //     fontFamily: 'AppleSDGothicNeo-Bold',
+    //     fontSize: 20,
+    //     paddingLeft: 15,
+    // },
     friendsListBox:{
         height: 300,
         //backgroundColor: 'darkgreen',
@@ -293,14 +454,18 @@ const styles = StyleSheet.create({
     friendImage:{
         height: 200,
         backgroundColor: '#BABABB',
-        borderRadius: 10,
+        //borderRadius: 10,
     },
     friendNameText:{
-        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontFamily: 'AppleSDGothicNeo-Regular',
         color: '#FFFFFF',
-        textAlign: "left",
         fontSize: 25,
-        paddingLeft: 20,
+        justifyContent: 'flex-end',
+        paddingLeft: 5,
+        paddingTop: 10,
+        // textAlign: "left",
+        // fontSize: 20,
+        // paddingLeft: 15,
     },
     modalContainer: {
         display: 'flex',
@@ -336,5 +501,16 @@ const mapStateToProps = (state) => {
       user: state.user,
     }
 };
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        UpdateUserAlbums: (user, useralbum) => dispatch(addUserAlbum(user, useralbum)),
+        UpdateSharedAlbums: (user, sharedalbum, sharedwith) => dispatch(addSharedAlbum(user, sharedalbum, sharedwith)),
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+        getAlbums: (userID) => dispatch(getAlbums(userID)),
+        getSharedAlbums: (userID) => dispatch(getSharedAlbums(userID))
+    };
+};
   
-export default connect(mapStateToProps, { fetchUserInfo })(GalleryScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(GalleryScreen);

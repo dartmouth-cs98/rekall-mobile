@@ -10,11 +10,11 @@ import {Button, TextInput} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
 import { LinearGradient } from 'expo-linear-gradient';
+import CameraRollGallery from "react-native-camera-roll-gallery";
 import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import AlbumDetail from '../components/albumDetail.js';
-import GalleryStackNav from '../navigation/albumNavigation';
 import axios from 'axios';
 // import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
@@ -30,8 +30,10 @@ class GalleryScreen extends Component {
             sharedAlbums: [],
             isModalVisible: false,
             newAlbumName: "",
+            navigation: this.props.navigation,
         }
-        this.showAlbumDetail = this.showAlbumDetail.bind(this);
+        //this.showAlbumDetail = this.showAlbumDetail.bind(this);
+        this.renderAlbumCard = this.renderAlbumCard.bind(this);
     }
 
     componentDidMount() {
@@ -66,35 +68,35 @@ class GalleryScreen extends Component {
         }
     }
 
-    // addMedia = async (userID, s3Key, mediaType, albumID, albumType) => {
-    //     if (albumType == "User") {
-    //         const url = `${API}/album/addMediaToAlbum`
-    //     }
-    //     else {
-    //         const url = `${API}/album/addMediaToShared`
-    //     }
-    //     axios.put(`${API}/album/addMediaToLibrary`,
-    //         { 
-    //             "_id": userID,
-    //             "s3Key": s3Key,
-    //             "mediaType": mediaType
-    //         }).then((res) => {
-    //             axios.put(url,
-    //                 { 
-    //                     "album": {
-    //                         "_id": albumID,
-    //                     },
-    //                     "media": {
-    //                         "_id": res._id,
-    //                     },
-    //                 },
-    //             ).then((res) => {
-    //                 this.loadData();
-    //             })
-    //         }).catch((e) => {
-    //             console.log(`Error putting media: ${e}`);
-    //         });
-    // }
+    addMedia = async (userID, mediaURL, mediaType, albumID, albumType) => {
+        if (albumType == "User") {
+            const url = `${API}/album/addMediaToAlbum`
+        }
+        else {
+            const url = `${API}/album/addMediaToShared`
+        }
+        axios.put(`${API}/album/addMediaToLibrary`,
+            { 
+                "_id": userID,
+                "mediaURL": mediaURL,
+                "mediaType": mediaType
+            }).then((res) => {
+                axios.put(url,
+                    { 
+                        "album": {
+                            "_id": albumID,
+                        },
+                        "media": {
+                            "_id": res._id,
+                        },
+                    },
+                ).then((res) => {
+                    this.loadData();
+                })
+            }).catch((e) => {
+                console.log(`Error putting media: ${e}`);
+            });
+    }
 
     // /*
     // Function to allow picking a video from camera roll and uploading it
@@ -218,7 +220,7 @@ class GalleryScreen extends Component {
         console.log(item)
         var thumbnail = null;
         try {
-            const video = item.albumMedia[0].s3Key.split('/', 5);
+            const video = item.albumMedia[0].mediaURL.split('/', 5);
             thumbnail = 'https://rekall-storage.s3.amazonaws.com/' + video[0] + '/Thumbnails/' + video[2].slice(0, -4) + '.png';
             console.log(thumbnail)
         }
@@ -227,12 +229,12 @@ class GalleryScreen extends Component {
         }
 
         return (
-          <View style={styles.friendContainer}>
-            <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
-            <TouchableOpacity onPress={() =>  this.props.navigation.navigate('Detail')}>
-                <Text style={styles.friendNameText}>{item.albumName}</Text>
-            </TouchableOpacity>
-          </View>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {screen: 'AlbumDetail', params: {albumName: item.albumName}})}>
+                <View style={styles.friendContainer}>
+                    <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
+                        <Text style={styles.friendNameText}>{item.albumName}</Text>
+                </View>
+          </TouchableOpacity>
         );
       }
     }

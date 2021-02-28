@@ -152,7 +152,7 @@ class ExploreScreen extends Component {
         if (this.state.modalVisible){
             return(
                 <View style={{flex:1}}>
-                    <Modal isVisible={this.state.modalVisible} onSwipeComplete={()=> this.toggleSearch()} swipeDirection="up">
+                    <Modal isVisible={this.state.modalVisible} onSwipeComplete={()=> this.toggleSearch()} swipeDirection="down">
                         <View>
                             <View style={styles.modalContainer}>
                                 <View style={styles.modal}>
@@ -177,25 +177,29 @@ class ExploreScreen extends Component {
         // console.log(item);
         if (item.title !== null){
           return (
-            <View style={styles.videoContainer}>
-              <View style={styles.videoImage}>
-                <Image
-                    source={{ uri: item.snippet.thumbnails.high.url }}
-                    style={styles.videoImage}
-                />
-              </View>
-              {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
-              <Text>{item.text}</Text> */}
-              <View style={styles.videoCardBottom} >
-                <View style={styles.videoTextBox}>
-                    <Text style={styles.videoNameText}>{item.snippet.title}</Text>
+            <TouchableOpacity onPress={()=> this.props.navigation.navigate("Explore", {screen: 'vidDetail'})}>
+                <View style={styles.videoContainer}>
+                    <View style={styles.videoImage}>
+                        <Image
+                            source={{ uri: item.snippet.thumbnails.high.url }}
+                            style={styles.videoImage}
+                        />
+                    </View>
+                    {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
+                    <Text>{item.text}</Text> */}
+                    <View style={styles.videoCardBottom} >
+                        <View style={styles.videoTextBox}>
+                            <Text style={styles.videoNameText}>{item.snippet.title}</Text>
+                        </View>
+                        {/* <View style={styles.plusIconBox}>
+                            <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
+                                onPress={()=> this.toggleAlbumList()}></Icon>
+                        </View> */}
+                    </View>
                 </View>
-                <View style={styles.plusIconBox}>
-                    <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
-                        onPress={()=> this.toggleAlbums()}></Icon>
-                </View>
-              </View>
-            </View>
+
+            </TouchableOpacity>
+            
   
           );
         }
@@ -461,7 +465,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     videoTextBox:{
-        width: 200,
+        width: 250,
     },
     modalContainer: {
         display: 'flex',

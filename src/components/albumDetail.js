@@ -14,6 +14,7 @@ import Modal from 'react-native-modal';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import CameraRollGallery from "react-native-camera-roll-gallery";
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { RNS3 } from 'react-native-aws3';
@@ -24,13 +25,16 @@ class MyAlbumDetail extends Component {
     constructor(props){
         super(props);
         this.state={
-            dummyName: 'GrOOvy',
-            albumContents: [],
+            albumName: this.props.route.params.albumName,
+            albumMedia: [],
             friends: null,
+            
         }
     }
 
     componentDidMount() {
+        console.log("HEREHEHEHRHEHEHR");
+        console.log(this.props);
         this.loadData();
     }
 
@@ -126,19 +130,25 @@ class MyAlbumDetail extends Component {
         }
     };
 
+
+    // renderSharingModal(){
+    //     return(
+
+    //     )
+    // }
     // renderSharingOptions(){
 
     // }
 
     render(){
         return(
-        <LinearGradient
-        colors={['#FFFFFF', '#D9D9D9']}
-        style={{flex: 1}}>
+        // <LinearGradient
+        // colors={['#FFFFFF', '#D9D9D9']}
+        // style={{flex: 1}}>
             <View style={styles.container}>
                 <View style={styles.firstContainer}>
                     <View style={styles.menuBox}>
-                        <Text style={styles.headerText}>{this.state.dummyName}</Text>
+                        <Text style={styles.headerText}>{this.state.albumName}</Text>
                         <TouchableOpacity style={styles.menuButton} onPress={()=> this.props.navigation.toggleDrawer()}>
                             <Image style={styles.image}
                                 source={require('../assets/navbutton.png')}
@@ -146,19 +156,50 @@ class MyAlbumDetail extends Component {
                         </TouchableOpacity> 
                     </View>
                 </View>
-                
+                <CameraRollGallery
+                    enableCameraRoll={false} // default true
+                    // Get data logic goes here.
+                    // This will get trigger initially
+                    // and when it reached the end
+                    // if there is more.
+                    onGetData={(fetchParams, resolve) => {
+                        resolve({
+                            assets: [
+                                // NOTE THIS IS WHERE YOU WOULD PUT THE MEDIA THAT NEEDS TO BE RENDERED. SO ALBUM MEDIA GOES HERE
+                                // Can be used with different image object fieldnames.
+                                // Ex. source, source.uri, uri, URI, url, URL
+                                { uri: "https://i.pinimg.com/originals/b2/ca/43/b2ca43656248156bb421f54594c397dc.jpg" },
+                                // { source: require("yourApp/image.png"),
+                                //     // IMPORTANT: It is REQUIRED for LOCAL IMAGES
+                                //     // to include a dimensions field with the
+                                //     // actual width and height of the image or
+                                //     // it will throw an error.
+                                //     dimensions: { width: 1080, height: 1920 } },
+                                { source: { uri: "https://www.wearethemighty.com/app/uploads/legacy/assets.rbl.ms/23229881/origin.png" } },
+                                { uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.melbournechildpsychology.com.au%2Fblog%2F5-productive-ways-for-parents-to-help-with-school-work%2F&psig=AOvVaw2Oa9U5l_2ZvmSIZm34Jhc_&ust=1614572481247000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjhx6zdi-8CFQAAAAAdAAAAABAD" },
+                                { URI: "https://cdn.vox-cdn.com/thumbor/9WQdjWjSF0bB0KYyBPcRXOZ1tL0=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/16204669/sb1.jpg" },
+                                { url: "https://www.vive.com/media/filer_public/vive/product-listing/hero-vive-cosmos.png" },
+                                { URL: "https://i.ytimg.com/vi/Kd0uT_0t3s4/maxresdefault.jpg" },
+                            ],
+                            pageInfo: {
+                                hasNextPage: false
+                            }
+                        });
+                    }}
+                    height={800}
+                />
                 <View style={styles.bottomContainer}>
                     <View style={styles.buttonBox}>
-                        <Icon name='arrow-left' size={60} type='evilicon' color='#686868'
-                        onPress={()=> console.log("GO back to gallery")}></Icon>
-                        <Icon name='share-apple' size={60} type='evilicon' color='#686868'
-                        onPress={()=> console.log("Share")}></Icon>
-                        <Icon style={styles.plusIcon} name='plus' size={60} type='evilicon' color='#686868'
+                        <Icon name='arrow-left' size={70} type='evilicon' color='#686868'
+                        onPress={()=> this.props.navigation.goBack()}></Icon>
+                        <Icon style={styles.plusIcon} name='plus' size={80} type='evilicon' color='#686868'
                         onPress={this._pickVideo}></Icon>
+                        <Icon name='person-add-outline' size={50} type='ionicon' color='#686868'
+                        onPress={()=> console.log("Share")}></Icon>
                     </View>
                 </View>
             </View>
-        </LinearGradient>
+        //</LinearGradient>
         )
     }
 }
@@ -168,6 +209,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: 'space-between',
+      backgroundColor: '#F2F1F1',
     },
     firstContainer: {
         display: 'flex',
@@ -217,14 +259,21 @@ const styles = StyleSheet.create({
         width: 400,
         //backgroundColor: 'red',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         alignItems: 'center',
         alignSelf: 'center',
     },
     plusIcon:{
-        height: 50,
-        width: 60,
+        // height: 50,
+        // width: 60,
         //backgroundColor: 'red',
+        // alignSelf: 'center',
+        // shadowOffset:{  width: 1, height: 4},
+        // shadowColor: 'black',
+        // shadowOpacity: 0.8,
+        // shadowColor: 'grey',
+        // shadowOffset: { width: 1, height: 4},
+        // shadowRadius: 5,
     }
 
 });

@@ -217,19 +217,36 @@ class GalleryScreen extends Component {
     renderAlbumCard({item,index}){
       if (item.albumName !== null){
         //console.log(this.props.navigation)
-        console.log(item)
+        // console.log(item)
         var thumbnail = null;
+        let media = [];
         try {
-            const video = item.albumMedia[0].mediaURL.split('/', 5);
-            thumbnail = 'https://rekall-storage.s3.amazonaws.com/' + video[0] + '/Thumbnails/' + video[2].slice(0, -4) + '.png';
-            console.log(thumbnail)
+            for(let i = 0; i < item.albumMedia.length; i++) {
+                // might need to change this part up for YouTube links, pending testing
+                if (item.albumMedia[i].mediaType == "mp4") {
+                    let pic = null;
+                    const video = item.albumMedia[i].mediaURL.split('/', 7);
+                    pic = 'https://rekall-storage.s3.amazonaws.com/' + video[3] + '/Thumbnails/' + video[5].slice(0, -4) + '.png';
+
+                    if (i == 0) {
+                        thumbnail = pic;
+                        console.log(thumbnail)
+                    }
+
+                    media.push({uri: pic})
+                }
+
+                else {
+                    media.push({uri: item.albumMedia[i].mediaURL})
+                }
+            }
         }
         catch(e) {
             console.log("Album has not populated yet")
         }
 
         return (
-            <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {screen: 'AlbumDetail', params: {albumName: item.albumName}})}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {screen: 'AlbumDetail', params: {albumName: item.albumName, albumMedia: media}})}>
                 <View style={styles.friendContainer}>
                     <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
                         <Text style={styles.friendNameText}>{item.albumName}</Text>
@@ -313,7 +330,7 @@ class GalleryScreen extends Component {
             )
         }
         //console.log(this.state.myAlbums)
-        console.log(this.props.navigation)
+        // console.log(this.props.navigation)
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}

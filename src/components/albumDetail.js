@@ -26,7 +26,7 @@ class MyAlbumDetail extends Component {
         super(props);
         this.state={
             albumName: this.props.route.params.albumName,
-            albumMedia: [],
+            albumMedia: this.props.route.params.albumMedia,
             friends: null,
             
         }
@@ -164,23 +164,24 @@ class MyAlbumDetail extends Component {
                     // if there is more.
                     onGetData={(fetchParams, resolve) => {
                         resolve({
-                            assets: [
-                                // NOTE THIS IS WHERE YOU WOULD PUT THE MEDIA THAT NEEDS TO BE RENDERED. SO ALBUM MEDIA GOES HERE
-                                // Can be used with different image object fieldnames.
-                                // Ex. source, source.uri, uri, URI, url, URL
-                                { uri: "https://i.pinimg.com/originals/b2/ca/43/b2ca43656248156bb421f54594c397dc.jpg" },
-                                // { source: require("yourApp/image.png"),
-                                //     // IMPORTANT: It is REQUIRED for LOCAL IMAGES
-                                //     // to include a dimensions field with the
-                                //     // actual width and height of the image or
-                                //     // it will throw an error.
-                                //     dimensions: { width: 1080, height: 1920 } },
-                                { source: { uri: "https://www.wearethemighty.com/app/uploads/legacy/assets.rbl.ms/23229881/origin.png" } },
-                                { uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.melbournechildpsychology.com.au%2Fblog%2F5-productive-ways-for-parents-to-help-with-school-work%2F&psig=AOvVaw2Oa9U5l_2ZvmSIZm34Jhc_&ust=1614572481247000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjhx6zdi-8CFQAAAAAdAAAAABAD" },
-                                { URI: "https://cdn.vox-cdn.com/thumbor/9WQdjWjSF0bB0KYyBPcRXOZ1tL0=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/16204669/sb1.jpg" },
-                                { url: "https://www.vive.com/media/filer_public/vive/product-listing/hero-vive-cosmos.png" },
-                                { URL: "https://i.ytimg.com/vi/Kd0uT_0t3s4/maxresdefault.jpg" },
-                            ],
+                            assets: this.state.albumMedia,
+                            // [
+                            //     // NOTE THIS IS WHERE YOU WOULD PUT THE MEDIA THAT NEEDS TO BE RENDERED. SO ALBUM MEDIA GOES HERE
+                            //     // Can be used with different image object fieldnames.
+                            //     // Ex. source, source.uri, uri, URI, url, URL
+                            //     { uri: "https://i.pinimg.com/originals/b2/ca/43/b2ca43656248156bb421f54594c397dc.jpg" },
+                            //     // { source: require("yourApp/image.png"),
+                            //     //     // IMPORTANT: It is REQUIRED for LOCAL IMAGES
+                            //     //     // to include a dimensions field with the
+                            //     //     // actual width and height of the image or
+                            //     //     // it will throw an error.
+                            //     //     dimensions: { width: 1080, height: 1920 } },
+                            //     { source: { uri: "https://www.wearethemighty.com/app/uploads/legacy/assets.rbl.ms/23229881/origin.png" } },
+                            //     { uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.melbournechildpsychology.com.au%2Fblog%2F5-productive-ways-for-parents-to-help-with-school-work%2F&psig=AOvVaw2Oa9U5l_2ZvmSIZm34Jhc_&ust=1614572481247000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjhx6zdi-8CFQAAAAAdAAAAABAD" },
+                            //     { URI: "https://cdn.vox-cdn.com/thumbor/9WQdjWjSF0bB0KYyBPcRXOZ1tL0=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/16204669/sb1.jpg" },
+                            //     { url: "https://www.vive.com/media/filer_public/vive/product-listing/hero-vive-cosmos.png" },
+                            //     { URL: "https://i.ytimg.com/vi/Kd0uT_0t3s4/maxresdefault.jpg" },
+                            // ],
                             pageInfo: {
                                 hasNextPage: false
                             }

@@ -92,7 +92,6 @@ class ExploreScreen extends Component {
     toggleAlbumList(){
         if (this.state.albumListModal){
             this.setState({albumListModal: false});
-            this.getCurrentAlbums();
         }
         else{
             this.setState({albumListModal: true});
@@ -133,18 +132,38 @@ class ExploreScreen extends Component {
         
 
     getCurrentAlbums(){
+        console.log("In getCurrentAlbums!!!!");
         var albumList = this.props.user.userAlbums;
         var sharedAlbumList = this.props.user.sharedAlbums;
         albumList.push(...sharedAlbumList);
-        console.log(albumList)
-        //this.toggleAlbumList();
-        console.log(this.state.albumListModal);
-        //if (this.state.albumListModal){
-        return(
-            <View style={{flex: 1, backgroundColor: 'red'}}>
+        //console.log(album);
+        var albumObjs = [];
+        //var albumObj = {};
+        for (var i=0; i < albumList.length; i++){
+            var albumObj = {};
+            albumObj["label"] = albumList[i].albumName;
+            albumObj["value"] = albumList[i].albumName;
+            albumObjs.push(albumObj);
+        }
+        this.setState({
+            allAlbums: albumObjs,
+        });
+        console.log("ALBUM OBJS");
+        console.log(albumObjs);
+        // console.log(albumList)
 
-            </View>
-        );
+        
+        
+        console.log("STATE.ALL ALBUMS");
+        console.log(this.state.allAlbums);
+        //this.toggleAlbumList();
+        //console.log(this.state.albumListModal);
+        //if (this.state.albumListModal){
+        // return(
+        //     <View style={{flex: 1, backgroundColor: 'red'}}>
+
+        //     </View>
+        // );
     }
 
     renderModal(){
@@ -174,10 +193,11 @@ class ExploreScreen extends Component {
 
     renderVideoCard({item,index}){
         // console.log(index);
-        console.log(item);
+        //console.log(item);
+        
         if (item.title !== null){
           return (
-            <TouchableOpacity onPress={()=> this.props.navigation.navigate("Explore", {screen: 'vidDetail', params:{video: item}})}>
+            <TouchableOpacity onPress={()=> this.props.navigation.navigate("Explore", {screen: 'vidDetail', params:{video: item, albums: this.state.allAlbums, title: item.snippet.title}})}>
                 <View style={styles.videoContainer}>
                     <View style={styles.videoImage}>
                         <Image
@@ -253,6 +273,7 @@ class ExploreScreen extends Component {
     async loadData() {
         await this.props.getAlbums(this.props.user.uid);
         await this.props.getSharedAlbums(this.props.user.uid);
+        this.getCurrentAlbums();
     }
 
     addMedia = async (userID, s3Key, mediaType, albumID, albumType) => {
@@ -314,7 +335,7 @@ class ExploreScreen extends Component {
                     </View>
                 </View>
                 <View>{this.renderModal()}</View>
-                <View>{this.getCurrentAlbums()}</View>
+                {/* <View>{this.getCurrentAlbums()}</View> */}
             </LinearGradient>
         );
     }

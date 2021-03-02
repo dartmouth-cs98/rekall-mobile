@@ -22,10 +22,32 @@ class VideoDetail extends Component {
         super(props);
         this.state={
             video: this.props.route.params.video,
+            albumNames: this.props.route.params.albums,
+            title: this.props.route.params.title,
+            //albums: [],
+            showAlbums: false,
+            updateAlbums: [],
         }
     }
 
+    // getAlbumNames(){
+    //     var albums = this.state.albumNames;
+    //     console.log(albums);
+    //     var albumObjs = [];
+    //     //var albumObj = {};
+    //     for (var i=0; i < albums.length; i++){
+    //         var albumObj = {};
+    //         albumObj["label"] = albums[i].albumName;
+    //         albumObj["value"] = albums[i].albumName;
+    //         albumObjs.push(albumObj);
+    //     };
+    //     this.setState({
+    //         albums: albumObjs,
+    //     });
+    // 
+
     renderLoadingView() {
+        //console.log(this.state.albumNames);
         return (
           <View style={styles.loading}>
             <ActivityIndicator size="large" color="#0000ff" />
@@ -33,34 +55,96 @@ class VideoDetail extends Component {
         );
     }
 
+    addToGallery(){
+        console.log(this.state.updateAlbums);
+        this.props.navigation.goBack();
+    }
+
 
     render(){
+        //console.log(this.props);
         const { videoId } = this.state.video.id
+        //console.log(this.state.title)
+        //console.log(this.state.albums);
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}
             style={{flex: 1}}>
-                <View style={styles.videoContainer}>
-                    <WebView
-                    source={{ uri: `https://www.youtube.com/embed/${videoId}` }}
-                    automaticallyAdjustContentInsets={false}
-                    startInLoadingState={true}
-                    renderLoading={() => this.renderLoadingView()}
-                    containerStyle={{flex: 0, height: 200}}
-                    />
+                <View style={styles.container}>
+                    <View style={styles.firstContainer}>
+                        <View style={styles.titleBox}><Text style={styles.titleText}>{this.state.title}</Text></View>
+                        <View style={styles.videoContainer}>
+                            <WebView
+                                source={{ uri: `https://www.youtube.com/embed/${videoId}` }}
+                                automaticallyAdjustContentInsets={false}
+                                startInLoadingState={true}
+                                renderLoading={() => this.renderLoadingView()}
+                                containerStyle={{flex: 0, height: 250}}
+                            />
+                        </View>
+                        <View style={styles.addToGalleryContainter}>
+                            <DropDownPicker
+                                        items={this.state.albumNames}
+
+                                        multiple={true}
+                                        multipleText="%d albums have been selected."
+                                        min={0}
+                                        max={15}
+                                        placeholder={"Select an album"}
+
+                                        defaultValue={this.state.updateAlbums}
+                                        containerStyle={{height: 40}}
+                                        itemStyle={{
+                                            justifyContent: 'flex-start'
+                                        }}
+                                        onChangeItem={item => this.setState({
+                                            updateAlbums: item // an array of the selected items
+                                        })}
+                            />               
+                        </View>
+                    </View>
+                   <View style={styles.secondContainer}>
+                        <View style={styles.addButtonBox}>
+                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery()} >
+                                Add to Gallery
+                            </Button>
+                        </View>
+                   </View>
+                    
                 </View>
+                
             </LinearGradient>
+        )
+        
             
             // <TouchableOpacity onPress={() => this.props.navigation.navigate.goBack()} >
             //     <View style={styles.container}><Text style={styles.dummyText}>Video Detail!</Text></View>
             // </TouchableOpacity>
-        )
+        
     }
 }
 
 const styles = StyleSheet.create({
-    videoContainer: {
+    container: {
         flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+    },
+
+    firstContainer: {
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+    },
+    titleBox:{
+        height: '15%',
+        alignItems: 'center',
+    },
+    titleText:{
+        fontFamily: 'AppleSDGothicNeo-Regular',
+        fontSize: 20,
+        
+    },
+    videoContainer: {
         //height: 500,
         //backgroundColor: 'green',
         justifyContent: 'center',
@@ -73,6 +157,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    addButtonBox:{
+        alignSelf: 'center',
+        alignItems: 'center',
+        width: '50%',
+    },
+    buttonText:{
+        fontFamily: 'AppleSDGothicNeo-Regular',
+        fontSize: 20,
+    },
+    addToGalleryContainter:{
+        //height: 500,
+        //backgroundColor: 'red',
+    }
 })
 
 

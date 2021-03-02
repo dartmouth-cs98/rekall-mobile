@@ -13,6 +13,7 @@ import youtubeSearch from './youtube_api.js';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { WebView } from 'react-native-webview';
 import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../actions/albumActions';
 
 
@@ -20,34 +21,60 @@ class VideoDetail extends Component {
     constructor(props){
         super(props);
         this.state={
-
+            video: this.props.route.params.video,
         }
     }
 
+    renderLoadingView() {
+        return (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        );
+    }
+
+
     render(){
+        const { videoId } = this.state.video.id
         return(
-            <TouchableOpacity onPress={() => this.props.navigation.navigate.goBack()} >
-                <View style={styles.container}><Text style={styles.dummyText}>Video Detail!</Text></View>
-            </TouchableOpacity>
+            <LinearGradient
+            colors={['#FFFFFF', '#D9D9D9']}
+            style={{flex: 1}}>
+                <View style={styles.videoContainer}>
+                    <WebView
+                    source={{ uri: `https://www.youtube.com/embed/${videoId}` }}
+                    automaticallyAdjustContentInsets={false}
+                    startInLoadingState={true}
+                    renderLoading={() => this.renderLoadingView()}
+                    containerStyle={{flex: 0, height: 200}}
+                    />
+                </View>
+            </LinearGradient>
+            
+            // <TouchableOpacity onPress={() => this.props.navigation.navigate.goBack()} >
+            //     <View style={styles.container}><Text style={styles.dummyText}>Video Detail!</Text></View>
+            // </TouchableOpacity>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
+    videoContainer: {
         flex: 1,
-        height: 800,
-        backgroundColor: 'green',
+        //height: 500,
+        //backgroundColor: 'green',
         justifyContent: 'center',
     },
     dummyText: {
         textAlign: 'center',
-    }
+    },
+    loading: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 })
 
 
 
-export default VideoDetail;
-
-
-    
+export default VideoDetail;    

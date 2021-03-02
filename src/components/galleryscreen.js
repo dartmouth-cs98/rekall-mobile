@@ -220,30 +220,33 @@ class GalleryScreen extends Component {
         // console.log(item)
         var thumbnail = null;
         let media = [];
-        try {
-            for(let i = 0; i < item.albumMedia.length; i++) {
-                // might need to change this part up for YouTube links, pending testing
-                if (item.albumMedia[i].mediaType == "mp4") {
-                    let pic = null;
-                    const video = item.albumMedia[i].mediaURL.split('/', 7);
-                    pic = 'https://rekall-storage.s3.amazonaws.com/' + video[3] + '/Thumbnails/' + video[5].slice(0, -4) + '.png';
-
-                    if (i == 0) {
-                        thumbnail = pic;
-                        console.log(thumbnail)
+        if (item.albumMedia !== []){
+            try {
+                for(let i = 0; i < item.albumMedia.length; i++) {
+                    // might need to change this part up for YouTube links, pending testing
+                    if (item.albumMedia[i].mediaType == "mp4") {
+                        let pic = null;
+                        const video = item.albumMedia[i].mediaURL.split('/', 7);
+                        pic = 'https://rekall-storage.s3.amazonaws.com/' + video[3] + '/Thumbnails/' + video[5].slice(0, -4) + '.png';
+    
+                        if (i == 0) {
+                            thumbnail = pic;
+                            console.log(thumbnail)
+                        }
+    
+                        media.push({uri: pic})
                     }
-
-                    media.push({uri: pic})
-                }
-
-                else {
-                    media.push({uri: item.albumMedia[i].mediaURL})
+    
+                    else {
+                        media.push({uri: item.albumMedia[i].mediaURL})
+                    }
                 }
             }
+            catch(e) {
+                console.log("Album has not populated yet")
+            }
         }
-        catch(e) {
-            console.log("Album has not populated yet")
-        }
+       
         let albumID = item._id.toString();
         return (
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {

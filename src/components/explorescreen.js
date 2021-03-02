@@ -174,10 +174,10 @@ class ExploreScreen extends Component {
 
     renderVideoCard({item,index}){
         // console.log(index);
-        // console.log(item);
+        console.log(item);
         if (item.title !== null){
           return (
-            <TouchableOpacity onPress={()=> this.props.navigation.navigate("Explore", {screen: 'vidDetail'})}>
+            <TouchableOpacity onPress={()=> this.props.navigation.navigate("Explore", {screen: 'vidDetail', params:{video: item}})}>
                 <View style={styles.videoContainer}>
                     <View style={styles.videoImage}>
                         <Image

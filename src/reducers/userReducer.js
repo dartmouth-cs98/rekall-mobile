@@ -24,6 +24,7 @@ const UserReducer = (state = initState, action) => {
           // friends.push(action.payload.friends[i].firstname + ' ' + action.payload.friends[i].lastname)
           friends.push({
             id: i.toString(),
+            uid: action.payload.friends[i]._id.toString(),
             title: action.payload.friends[i].firstname + ' ' + action.payload.friends[i].lastname,
             email: action.payload.friends[i].email,
             profilePic: action.payload.friends[i].profilePic

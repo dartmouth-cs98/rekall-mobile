@@ -22,6 +22,7 @@ import { RNS3 } from 'react-native-aws3';
 import axios from 'axios';
 import { arrayOf } from 'prop-types';
 
+const API = 'https://rekall-server.herokuapp.com';
 
 class MyAlbumDetail extends Component {
     constructor(props){
@@ -29,6 +30,7 @@ class MyAlbumDetail extends Component {
         this.state={
             albumName: this.props.route.params.albumName,
             albumMedia: this.props.route.params.albumMedia,
+            albumID: this.props.route.params.albumID,
             friends: null,
             sharedWith: [],
             isSharedAlbum: false,
@@ -41,7 +43,7 @@ class MyAlbumDetail extends Component {
         // console.log("HEREHEHEHRHEHEHR");
         // console.log(this.props);
         this.loadData();
-        console.log(this.state.isSharedAlbum)
+        // console.log(this.state.isSharedAlbum)
     }
 
 
@@ -147,7 +149,7 @@ class MyAlbumDetail extends Component {
                 console.log(error);
             });
         }
-        console.log(result);
+        // console.log(result);
         } catch (E) {
             console.log(E);
         }
@@ -165,15 +167,25 @@ class MyAlbumDetail extends Component {
         }
     }
 
+    addSharedWith = async (albumID, friendEmail, userID) => {
+        axios.put(`${API}/album/addSharedWith`,
+            { 
+                "albumID": albumID,
+                "friendEmail": friendEmail,
+                "userID": userID
+            }).then(() => {
+                this.loadData();
+            });
+    }
+
     renderFriend( {item} ){
         console.log("In renderFriend");
-        console.log(item);
-        console.log(item.userID);
-        console.log(this.state.sharedWith);
+        // console.log(item);
+        // console.log(item.userID);
+        // console.log(this.state.sharedWith);
         // if (item.some(e => e.Name === 'Magenic')) {
         //     /* vendors contains the element we're looking for */
         // }
-
         return(
                 <View>
                     <View style={styles.rowContainer}>
@@ -186,7 +198,7 @@ class MyAlbumDetail extends Component {
                             </View>
                         </TouchableOpacity>
                         <View style={styles.friendShareButtonBox}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.addSharedWith(this.state.albumID, item.email, this.props.user.uid)}>
                                 <View style={styles.friendShareButton}>
                                     <Text style={styles.friendShareLabel}>Share</Text>
                                 </View>

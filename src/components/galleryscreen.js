@@ -244,9 +244,11 @@ class GalleryScreen extends Component {
         catch(e) {
             console.log("Album has not populated yet")
         }
-
+        let albumID = item._id.toString();
         return (
-            <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {screen: 'AlbumDetail', params: {albumName: item.albumName, albumMedia: media}})}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {
+                screen: 'AlbumDetail', 
+                params: {albumName: item.albumName, albumID: albumID, albumMedia: media}})}>
                 <View style={styles.friendContainer}>
                     <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
                         <Text style={styles.friendNameText}>{item.albumName}</Text>

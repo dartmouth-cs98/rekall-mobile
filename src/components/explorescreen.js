@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import youtubeSearch from './youtube_api.js';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../actions/albumActions';
 
 const API = 'https://rekall-server.herokuapp.com';
@@ -23,12 +24,18 @@ class ExploreScreen extends Component {
             querySearch: " ",
             isLoading: false,
             modalVisible: false,
+            albumListModal: false,
             activeIndex:0,
             videos: [],
             pics: [],
+            allAlbums: [],
         }
         this.renderVideoCard = this.renderVideoCard.bind(this);
     }
+
+    // componentDidMount() {
+    //     this.loadData();
+    // }
 
     fetchVideoData(query) {
         youtubeSearch(query)
@@ -56,9 +63,12 @@ class ExploreScreen extends Component {
     }
 
     componentDidMount(){
+        this.loadData();
         this.fetchVideoData("360 Video");
         this.fetchPictureData("360 Picture");
     }
+
+    
 
     renderLoadingView() {
         return (
@@ -76,6 +86,16 @@ class ExploreScreen extends Component {
         else{
             this.setState({modalVisible: true})
             this.setState({querySearch: " "});
+        }
+    }
+
+    toggleAlbumList(){
+        if (this.state.albumListModal){
+            this.setState({albumListModal: false});
+            this.getCurrentAlbums();
+        }
+        else{
+            this.setState({albumListModal: true});
         }
     }
 
@@ -99,12 +119,40 @@ class ExploreScreen extends Component {
         }
     }
 
+    // async loadData() {
+    //     await this.props.getAlbums(this.props.user.uid).then(() => {
+    //         this.setState({
+    //             myAlbums: this.props.user.userAlbums,
+    //         });
+    //     });
+
+    //     await this.props.getSharedAlbums(this.props.user.uid).then(() => {
+    //         this.setState({
+    //             sharedAlbums: this.props.user.sharedAlbums,
+    //         });
+        
+
+    getCurrentAlbums(){
+        var albumList = this.props.user.userAlbums;
+        var sharedAlbumList = this.props.user.sharedAlbums;
+        albumList.push(...sharedAlbumList);
+        console.log(albumList)
+        //this.toggleAlbumList();
+        console.log(this.state.albumListModal);
+        //if (this.state.albumListModal){
+        return(
+            <View style={{flex: 1, backgroundColor: 'red'}}>
+
+            </View>
+        );
+    }
+
     renderModal(){
         //console.log("In renderModal")
         if (this.state.modalVisible){
             return(
-                <View>
-                    <Modal isVisible={this.state.modalVisible} onSwipeComplete={()=> this.toggleSearch()} swipeDirection="up">
+                <View style={{flex:1}}>
+                    <Modal isVisible={this.state.modalVisible} onSwipeComplete={()=> this.toggleSearch()} swipeDirection="down">
                         <View>
                             <View style={styles.modalContainer}>
                                 <View style={styles.modal}>
@@ -129,25 +177,29 @@ class ExploreScreen extends Component {
         // console.log(item);
         if (item.title !== null){
           return (
-            <View style={styles.videoContainer}>
-              <View style={styles.videoImage}>
-                <Image
-                    source={{ uri: item.snippet.thumbnails.high.url }}
-                    style={styles.videoImage}
-                />
-              </View>
-              {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
-              <Text>{item.text}</Text> */}
-              <View style={styles.videoCardBottom} >
-                <View style={styles.videoTextBox}>
-                    <Text style={styles.videoNameText}>{item.snippet.title}</Text>
+            <TouchableOpacity onPress={()=> this.props.navigation.navigate("Explore", {screen: 'vidDetail'})}>
+                <View style={styles.videoContainer}>
+                    <View style={styles.videoImage}>
+                        <Image
+                            source={{ uri: item.snippet.thumbnails.high.url }}
+                            style={styles.videoImage}
+                        />
+                    </View>
+                    {/* <Text style={{fontSize: 30}}>{item.userName}</Text>
+                    <Text>{item.text}</Text> */}
+                    <View style={styles.videoCardBottom} >
+                        <View style={styles.videoTextBox}>
+                            <Text style={styles.videoNameText}>{item.snippet.title}</Text>
+                        </View>
+                        {/* <View style={styles.plusIconBox}>
+                            <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
+                                onPress={()=> this.toggleAlbumList()}></Icon>
+                        </View> */}
+                    </View>
                 </View>
-                <View style={styles.plusIconBox}>
-                    <Icon style={styles.plusIcon} name='plus' size={40} type='evilicon' color='#686868'
-                        onPress={()=> console.log("Item added to Gallery")}></Icon>
-                </View>
-              </View>
-            </View>
+
+            </TouchableOpacity>
+            
   
           );
         }
@@ -262,6 +314,7 @@ class ExploreScreen extends Component {
                     </View>
                 </View>
                 <View>{this.renderModal()}</View>
+                <View>{this.getCurrentAlbums()}</View>
             </LinearGradient>
         );
     }
@@ -412,7 +465,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     videoTextBox:{
-        width: 200,
+        width: 250,
     },
     modalContainer: {
         display: 'flex',
@@ -443,6 +496,12 @@ const styles = StyleSheet.create({
     searchBox: {
         backgroundColor: '#F2F1F1',
         height: 50,
+    },
+    dropDownMenuBox:{
+        display: 'flex',
+        backgroundColor: 'white',
+        height: 400,
+        width: 50,
     },
 });
 

@@ -4,7 +4,6 @@ import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { LinearGradient } from 'expo-linear-gradient';
 import FriendRequestScreen from './friendRequests';
 import FollowersScreen from './followersScreen';
-import FollowingScreen from './followingScreen';
 
 
 const FirstRoute = () => (
@@ -43,14 +42,12 @@ const TabViewExample =() => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'Requests' },
-    { key: 'second', title: 'Followers' },
-    { key: 'third', title: 'Following' },
+    { key: 'second', title: 'Friends' },
   ]);
  
   const renderScene = SceneMap({
     first: FriendRequestScreen,
     second: FollowersScreen,
-    third: FollowingScreen,
   });
  
   return (

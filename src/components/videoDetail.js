@@ -16,6 +16,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { WebView } from 'react-native-webview';
 import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../actions/albumActions';
 
+const API = 'https://rekall-server.herokuapp.com';
 
 class VideoDetail extends Component {
     constructor(props){
@@ -55,15 +56,43 @@ class VideoDetail extends Component {
         );
     }
 
-    addToGallery(){
+    addToGallery = async (albumType) => {
         console.log(this.state.updateAlbums);
-        this.props.navigation.goBack();
+        if (albumType == "User") {
+            const url = `${API}/album/addMediaToAlbum`
+        }
+        else {
+            const url = `${API}/album/addMediaToShared`
+        }
+        axios.put(`${API}/album/addMediaToLibrary`,
+            { 
+                "_id": userID,
+                "mediaURL": 'https://www.youtube.com/watch?v=' + mediaURL,
+                "mediaType": 'YouTube'
+            }).then((res) => {
+                axios.put(url,
+                    { 
+                        "album": {
+                            "_id": albumID,
+                        },
+                        "media": {
+                            "_id": res._id,
+                        },
+                    },
+                ).then((res) => {
+                    this.loadData();
+                    this.props.navigation.goBack();
+                })
+            }).catch((e) => {
+                console.log(`Error putting media: ${e}`);
+            });
     }
 
 
     render(){
         //console.log(this.props);
         const { videoId } = this.state.video.id
+        console.log(this.state.albumNames);
         //console.log(this.state.title)
         //console.log(this.state.albums);
         return(

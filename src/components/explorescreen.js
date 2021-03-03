@@ -132,7 +132,7 @@ class ExploreScreen extends Component {
         
 
     getCurrentAlbums(){
-        console.log("In getCurrentAlbums!!!!");
+        // console.log("In getCurrentAlbums!!!!");
         var albumList = this.props.user.userAlbums;
         var sharedAlbumList = this.props.user.sharedAlbums;
         albumList.push(...sharedAlbumList);
@@ -143,19 +143,21 @@ class ExploreScreen extends Component {
             var albumObj = {};
             albumObj["label"] = albumList[i].albumName;
             albumObj["value"] = albumList[i].albumName;
+            albumObj["albumid"] = albumList[i]._id;
+            albumObj["userid"] = albumList[i].userID;
             albumObjs.push(albumObj);
         }
         this.setState({
             allAlbums: albumObjs,
         });
-        console.log("ALBUM OBJS");
-        console.log(albumObjs);
+        // console.log("ALBUM OBJS");
+        // console.log(albumObjs);
         // console.log(albumList)
 
         
         
-        console.log("STATE.ALL ALBUMS");
-        console.log(this.state.allAlbums);
+        // console.log("STATE.ALL ALBUMS");
+        // console.log(this.state.allAlbums);
         //this.toggleAlbumList();
         //console.log(this.state.albumListModal);
         //if (this.state.albumListModal){

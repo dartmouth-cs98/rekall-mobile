@@ -1,7 +1,7 @@
 import { ActionTypes } from '../actions';
 
 const initState = {
-  uid: '',
+  uid: null,
   firstname: '',
   lastname: '',
   email: '',

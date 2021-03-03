@@ -90,17 +90,17 @@ class VideoDetail extends Component {
                                         multipleText="%d albums have been selected."
                                         min={0}
                                         max={15}
-                                        placeholder={"Select an album"}
+                                        placeholder={"Select from my albums"}
 
                                         defaultValue={this.state.updateAlbums}
-                                        containerStyle={{height: 40}}
+                                        containerStyle={{height: 50}}
                                         itemStyle={{
                                             justifyContent: 'flex-start'
                                         }}
                                         onChangeItem={item => this.setState({
                                             updateAlbums: item // an array of the selected items
                                         })}
-                            />               
+                            />              
                         </View>
                     </View>
                    <View style={styles.secondContainer}>
@@ -166,10 +166,12 @@ const styles = StyleSheet.create({
         fontFamily: 'AppleSDGothicNeo-Regular',
         fontSize: 20,
     },
-    addToGalleryContainter:{
-        //height: 500,
-        //backgroundColor: 'red',
-    }
+    // addToGalleryContainter:{
+    //     //height: 500,
+    //     //backgroundColor: 'red',
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-evenly',
+    // }
 })
 
 

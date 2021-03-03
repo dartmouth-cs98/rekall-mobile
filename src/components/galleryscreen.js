@@ -87,7 +87,7 @@ class GalleryScreen extends Component {
                             "_id": albumID,
                         },
                         "media": {
-                            "_id": res._id,
+                            "_id": res.data._id,
                         },
                     },
                 ).then((res) => {
@@ -236,7 +236,20 @@ class GalleryScreen extends Component {
     
                         media.push({uri: pic})
                     }
+                    // https://i3.ytimg.com/vi/0-q1KafFCLU/maxresdefault.jpg
+                    else if (item.albumMedia[i].mediaType == "YouTube") {
+                        let pic = null;
+                        const video = item.albumMedia[i].mediaURL.split('=', 2);
+                        pic = 'https://i3.ytimg.com/vi/' + video[1] + '/maxresdefault.jpg';
     
+                        if (i == 0) {
+                            thumbnail = pic;
+                            console.log(thumbnail)
+                        }
+    
+                        media.push({uri: pic})
+                    }
+
                     else {
                         media.push({uri: item.albumMedia[i].mediaURL})
                     }

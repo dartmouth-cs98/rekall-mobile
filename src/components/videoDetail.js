@@ -46,6 +46,19 @@ class VideoDetail extends Component {
     //         albums: albumObjs,
     //     });
     // 
+    async loadData() {
+        await this.props.getAlbums(this.props.user.uid).then(() => {
+            this.setState({
+                myAlbums: this.props.user.userAlbums,
+            });
+        });
+
+        await this.props.getSharedAlbums(this.props.user.uid).then(() => {
+            this.setState({
+                sharedAlbums: this.props.user.sharedAlbums,
+            });
+        });
+    }
 
     renderLoadingView() {
         //console.log(this.state.albumNames);
@@ -59,27 +72,34 @@ class VideoDetail extends Component {
     addToGallery = async (albumType) => {
         console.log(this.state.updateAlbums);
         if (albumType == "User") {
-            const url = `${API}/album/addMediaToAlbum`
+            var url = `${API}/album/addMediaToAlbum`
         }
         else {
-            const url = `${API}/album/addMediaToShared`
+            var url = `${API}/album/addMediaToShared`
         }
+        let promises = [];
+        
         axios.put(`${API}/album/addMediaToLibrary`,
             { 
-                "_id": userID,
-                "mediaURL": 'https://www.youtube.com/watch?v=' + mediaURL,
+                "_id": this.props.user.uid,
+                "mediaURL": 'https://www.youtube.com/watch?v=' + this.state.video.id.videoId,
                 "mediaType": 'YouTube'
             }).then((res) => {
-                axios.put(url,
-                    { 
-                        "album": {
-                            "_id": albumID,
+                let mediaid = res.data._id;
+
+                for(let i = 0; i < this.state.updateAlbums.length; i++) {
+                    promises.push(axios.put(url,
+                        { 
+                            "album": {
+                                "_id": this.state.updateAlbums[i].toString(),
+                            },
+                            "media": {
+                                "_id": mediaid,
+                            },
                         },
-                        "media": {
-                            "_id": res._id,
-                        },
-                    },
-                ).then((res) => {
+                    ));
+                }
+                Promise.all(promises).then(() => {
                     this.loadData();
                     this.props.navigation.goBack();
                 })
@@ -92,7 +112,7 @@ class VideoDetail extends Component {
     render(){
         //console.log(this.props);
         const { videoId } = this.state.video.id
-        console.log(this.state.albumNames);
+        console.log(this.state.video.id);
         //console.log(this.state.title)
         //console.log(this.state.albums);
         return(
@@ -134,7 +154,7 @@ class VideoDetail extends Component {
                     </View>
                    <View style={styles.secondContainer}>
                         <View style={styles.addButtonBox}>
-                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery()} >
+                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery('User')} >
                                 Add to Gallery
                             </Button>
                         </View>
@@ -203,6 +223,19 @@ const styles = StyleSheet.create({
     // }
 })
 
+const mapStateToProps = (state) => {
+    return {
+      user: state.user,
+    }
+};
 
 
-export default VideoDetail;    
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
+        getAlbums: (userID) => dispatch(getAlbums(userID)),
+        getSharedAlbums: (userID) => dispatch(getSharedAlbums(userID))
+    };
+};
+  
+export default connect(mapStateToProps, mapDispatchToProps)(VideoDetail);

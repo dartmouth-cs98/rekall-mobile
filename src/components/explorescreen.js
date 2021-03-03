@@ -142,9 +142,9 @@ class ExploreScreen extends Component {
         for (var i=0; i < albumList.length; i++){
             var albumObj = {};
             albumObj["label"] = albumList[i].albumName;
-            albumObj["value"] = albumList[i].albumName;
-            albumObj["albumid"] = albumList[i]._id;
-            albumObj["userid"] = albumList[i].userID;
+            albumObj["value"] = albumList[i]._id;
+            // albumObj["albumid"] = albumList[i]._id;
+            // albumObj["userid"] = albumList[i].userID;
             albumObjs.push(albumObj);
         }
         this.setState({

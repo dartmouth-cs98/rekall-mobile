@@ -334,6 +334,7 @@ class MyAlbumDetail extends Component {
                 </View>
                 <CameraRollGallery
                     enableCameraRoll={false} // default true
+                    assetType={"All"}
                     // Get data logic goes here.
                     // This will get trigger initially
                     // and when it reached the end

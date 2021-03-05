@@ -51,8 +51,8 @@ const UserReducer = (state = initState, action) => {
         profilePic: action.payload.profilePic,
         friends: friends,
         requests: requests,
-        userAlbums: action.payload.userAlbums,
-        sharedAlbums: action.payload.sharedAlbums,
+        // userAlbums: action.payload.userAlbums,
+        // sharedAlbums: action.payload.sharedAlbums,
         vrcode: action.payload.vrcode,
         bannedfriends: action.payload.bannedfriends,
         bannedvideos: action.payload.bannedvideos

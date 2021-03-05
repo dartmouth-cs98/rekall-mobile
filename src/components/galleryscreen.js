@@ -188,8 +188,8 @@ class GalleryScreen extends Component {
                     albumName: item.albumName, 
                     albumID: albumID, 
                     albumMedia: media, 
-                    useralbums: this.state.myAlbums,
-                    sharedalbums: this.state.sharedAlbums}})}>
+                    useralbums: this.props.user.userAlbums,
+                    sharedalbums: this.props.user.sharedAlbums}})}>
                 <View style={styles.friendContainer}>
                     <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
                         <Text style={styles.friendNameText}>{item.albumName}</Text>

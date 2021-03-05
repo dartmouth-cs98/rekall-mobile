@@ -56,6 +56,8 @@ class MyAlbumDetail extends Component {
                 friends: this.props.user.friends,
             });
         });
+        await this.props.getAlbums(this.props.user.uid);
+        await this.props.getSharedAlbums(this.props.user.uid);
         var sharedAlbums = this.props.user.sharedAlbums;
         var albumName = this.props.route.params.albumName;
         if (sharedAlbums.some(e => e.albumName === albumName)) {

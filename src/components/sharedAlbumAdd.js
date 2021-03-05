@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { requestFriend } from '../actions/friendActions';
 import { fetchUserInfo } from '../actions/userActions';
+import { getAlbums, getSharedAlbums } from '../actions/albumActions';
 import {Button} from 'react-native-paper';
 import axios from 'axios';
 
@@ -32,6 +33,8 @@ class SharedAlbumRoute extends Component{
                 albumList: this.props.user.sharedAlbums,
             });
         });
+        await this.props.getAlbums(this.props.user.uid);
+        await this.props.getSharedAlbums(this.props.user.uid);
         this.getCurrentAlbums();
     }
 
@@ -123,7 +126,7 @@ class SharedAlbumRoute extends Component{
                         </View>
                     </View>
                     <View style={styles.addButtonBox}>
-                        <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery('User')} >
+                        <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery()} >
                             Add to Gallery
                         </Button>
                     </View>  
@@ -161,7 +164,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
-        requestFriend: (uid, friendEmail) => dispatch(requestFriend(uid, friendEmail))
+        requestFriend: (uid, friendEmail) => dispatch(requestFriend(uid, friendEmail)),
+        getAlbums: (userID) => dispatch(getAlbums(userID)),
+        getSharedAlbums: (userID) => dispatch(getSharedAlbums(userID))
     };
 };
   

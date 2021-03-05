@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { requestFriend } from '../actions/friendActions';
 import { fetchUserInfo } from '../actions/userActions';
+import { getAlbums, getSharedAlbums } from '../actions/albumActions';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import axios from 'axios';
@@ -35,6 +36,8 @@ class MyAlbumRoute extends Component{
                 albumList: this.props.user.userAlbums,
             });
         });
+        await this.props.getAlbums(this.props.user.uid);
+        await this.props.getSharedAlbums(this.props.user.uid);
         this.getCurrentAlbums();
     }
 
@@ -174,7 +177,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
-        requestFriend: (uid, friendEmail) => dispatch(requestFriend(uid, friendEmail))
+        requestFriend: (uid, friendEmail) => dispatch(requestFriend(uid, friendEmail)),
+        getAlbums: (userID) => dispatch(getAlbums(userID)),
+        getSharedAlbums: (userID) => dispatch(getSharedAlbums(userID))
     };
 };
   

@@ -11,6 +11,8 @@ const initState = {
   userAlbums: [],
   sharedAlbums: [],
   vrcode: [],
+  bannedfriends: [],
+  bannedvideos: []
 };
 
 const UserReducer = (state = initState, action) => {
@@ -33,7 +35,7 @@ const UserReducer = (state = initState, action) => {
 
       for (var i = 0; i < action.payload.requests.length; i++) {
           requests.push({
-            id: i.toString(),
+            id: action.payload.requests[i]._id,
             title: action.payload.requests[i].firstname + ' ' + action.payload.requests[i].lastname,
             email: action.payload.requests[i].email,
             profilePic: action.payload.requests[i].profilePic
@@ -52,6 +54,8 @@ const UserReducer = (state = initState, action) => {
         userAlbums: action.payload.userAlbums,
         sharedAlbums: action.payload.sharedAlbums,
         vrcode: action.payload.vrcode,
+        bannedfriends: action.payload.bannedfriends,
+        bannedvideos: action.payload.bannedvideos
       };
     case ActionTypes.CREATE_USER:
       return {

@@ -173,34 +173,37 @@ class GalleryScreen extends Component {
             try {
                 for(let i = 0; i < item.albumMedia.length; i++) {
                     // might need to change this part up for YouTube links, pending testing
-                    if (item.albumMedia[i].mediaType == "mp4") {
-                        let pic = null;
-                        const video = item.albumMedia[i].mediaURL.split('/', 7);
-                        pic = 'https://rekall-storage.s3.amazonaws.com/' + video[3] + '/Thumbnails/' + video[5].slice(0, -4) + '.png';
-    
-                        if (i == 0) {
-                            thumbnail = pic;
-                            console.log(thumbnail)
+                    if (this.props.user.bannedvideos.indexOf(item.albumMedia[i]._id) < 0) {
+                        if (item.albumMedia[i].mediaType == "mp4") {
+                            let pic = null;
+                            const video = item.albumMedia[i].mediaURL.split('/', 7);
+                            pic = 'https://rekall-storage.s3.amazonaws.com/' + video[3] + '/Thumbnails/' + video[5].slice(0, -4) + '.png';
+        
+                            if (i == 0) {
+                                thumbnail = pic;
+                                console.log(thumbnail)
+                            }
+        
+                            media.push({uri: pic})
+                            mid.push
                         }
-    
-                        media.push({uri: pic})
-                    }
-                    // https://i3.ytimg.com/vi/0-q1KafFCLU/maxresdefault.jpg
-                    else if (item.albumMedia[i].mediaType == "YouTube") {
-                        let pic = null;
-                        const video = item.albumMedia[i].mediaURL.split('=', 2);
-                        pic = 'https://i3.ytimg.com/vi/' + video[1] + '/maxresdefault.jpg';
-    
-                        if (i == 0) {
-                            thumbnail = pic;
-                            console.log(thumbnail)
+                        // https://i3.ytimg.com/vi/0-q1KafFCLU/maxresdefault.jpg
+                        else if (item.albumMedia[i].mediaType == "YouTube") {
+                            let pic = null;
+                            const video = item.albumMedia[i].mediaURL.split('=', 2);
+                            pic = 'https://i3.ytimg.com/vi/' + video[1] + '/maxresdefault.jpg';
+        
+                            if (i == 0) {
+                                thumbnail = pic;
+                                console.log(thumbnail)
+                            }
+        
+                            media.push({uri: pic})
                         }
-    
-                        media.push({uri: pic})
-                    }
 
-                    else {
-                        media.push({uri: item.albumMedia[i].mediaURL})
+                        else {
+                            media.push({uri: item.albumMedia[i].mediaURL})
+                        }
                     }
                 }
             }
@@ -212,7 +215,12 @@ class GalleryScreen extends Component {
         return (
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {
                 screen: 'AlbumDetail', 
-                params: {albumName: item.albumName, albumID: albumID, albumMedia: media}})}>
+                params: {
+                    albumName: item.albumName, 
+                    albumID: albumID, 
+                    albumMedia: media, 
+                    useralbums: this.state.myAlbums,
+                    sharedalbums: this.state.sharedAlbums}})}>
                 <View style={styles.friendContainer}>
                     <Image style={styles.friendImage} source={thumbnail ? {uri: thumbnail} : null}></Image>
                         <Text style={styles.friendNameText}>{item.albumName}</Text>

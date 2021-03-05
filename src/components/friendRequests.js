@@ -7,8 +7,9 @@ import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { fetchUserInfo } from '../actions/userActions';
-import { addFriend, declineRequest } from '../actions/friendActions';
+import { addFriend, declineRequest, banFriend } from '../actions/friendActions';
 import { useFocusEffect } from '@react-navigation/native';
+import { TouchableHighlightBase } from 'react-native';
 
 class FriendRequests extends Component{
     constructor(props){
@@ -24,8 +25,16 @@ class FriendRequests extends Component{
 
         async loadData() {
             await this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                var requests = []
+                for (let i=0; i < this.props.user.requests.length; i++) {
+                    console.log(this.props.user.requests[i].id)
+                    console.log(this.props.user.bannedfriends.indexOf(this.props.user.requests[i].id))
+                    if (this.props.user.bannedfriends.indexOf(this.props.user.requests[i].id) < 0) {
+                        requests.push(this.props.user.requests[i]);
+                    }
+                }
                 this.setState({
-                    testRows: this.props.user.requests,
+                    testRows: requests,
                 });
             });
         }
@@ -44,22 +53,14 @@ class FriendRequests extends Component{
                             </View>
                             <View style={styles.buttonBox}>
                                 <TouchableHighlight underlayColor="#ffffff0" onPress={() => this.props.declineRequest(this.props.user.uid, item.email).then(() => {
-                                    this.props.fetchUserInfo(this.props.user.uid).then(() => {
-                                        this.setState({
-                                            testRows: this.props.user.requests
-                                        });
-                                    });
+                                    this.loadData();
                                 })}>
                                     <View style={styles.buttonBackground}>
                                         <Text style={styles.buttonText}>Decline</Text>
                                     </View>
                                 </TouchableHighlight>
                                 <TouchableHighlight underlayColor="#ffffff0"  onPress={() => this.props.addFriend(this.props.user.uid, item.email).then(() => {
-                                    this.props.fetchUserInfo(this.props.user.uid).then(() => {
-                                        this.setState({
-                                            testRows: this.props.user.requests
-                                        });
-                                    });
+                                    this.loadData();
                                 })}>
                                     <View style={styles.buttonBackground}>
                                         <Text style={styles.buttonText}>Accept</Text>
@@ -79,10 +80,10 @@ class FriendRequests extends Component{
                     </View>
                 )
             }
-
+            console.log(this.state.testRows)
             return(
                 <FlatList
-                data={this.props.user.requests}
+                data={this.state.testRows}
                 renderItem={({item}) => this.renderFriendRequest({item})}
                 keyExtractor={item => item.id}
                 ></FlatList>
@@ -174,7 +175,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
         addFriend: (userID, email) => dispatch(addFriend(userID, email)),
-        declineRequest: (userID, email) => dispatch(declineRequest(userID, email))
+        declineRequest: (userID, email) => dispatch(declineRequest(userID, email)),
+        banFriend: (userID, email) => dispatch(banFriend(userID, email))
     };
 };
   

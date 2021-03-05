@@ -73,7 +73,45 @@ export const removeFriend = (userID, email) => {
         console.log(res)
         resolve();
       }).catch((e) => {
-          console.log(`Error putting friend: ${e}`);
+          console.log(`Error removing friend: ${e}`);
+          reject(e);
+      });
+    });
+  };
+};
+
+export const banFriend = (userID, email) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/banFriend`,
+      { 
+          "uid": userID,
+          "friendEmail": email
+      },
+      ).then((res) => {
+        console.log(res)
+        resolve();
+      }).catch((e) => {
+          console.log(`Error banning friend: ${e}`);
+          reject(e);
+      });
+    });
+  };
+};
+
+export const banVideo = (userID, mediaID) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/friend/banVideo`,
+      { 
+          "uid": userID,
+          "mid": mediaID
+      },
+      ).then((res) => {
+        console.log(res)
+        resolve();
+      }).catch((e) => {
+          console.log(`Error banning video: ${e}`);
           reject(e);
       });
     });

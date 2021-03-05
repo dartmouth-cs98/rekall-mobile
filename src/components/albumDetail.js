@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { fetchUserInfo } from '../actions/userActions';
 import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../actions/albumActions';
+import { banVideo } from '../actions/friendActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, ImageBackground, ActivityIndicator,
@@ -31,6 +32,8 @@ class MyAlbumDetail extends Component {
             albumName: this.props.route.params.albumName,
             albumMedia: this.props.route.params.albumMedia,
             albumID: this.props.route.params.albumID,
+            useralbums: this.props.route.params.useralbums,
+            sharedalbums: this.props.route.params.sharedalbums,
             friends: null,
             sharedWith: [],
             isSharedAlbum: false,

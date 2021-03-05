@@ -69,37 +69,6 @@ class GalleryScreen extends Component {
         }
     }
 
-    addMedia = async (userID, mediaURL, mediaType, albumID, albumType) => {
-        if (albumType == "User") {
-            const url = `${API}/album/addMediaToAlbum`
-        }
-        else {
-            const url = `${API}/album/addMediaToShared`
-        }
-        axios.put(`${API}/album/addMediaToLibrary`,
-            { 
-                "_id": userID,
-                "mediaURL": mediaURL,
-                "mediaType": mediaType
-            }).then((res) => {
-                axios.put(url,
-                    { 
-                        "album": {
-                            "_id": albumID,
-                        },
-                        "media": {
-                            "_id": res.data._id,
-                        },
-                    },
-                ).then((res) => {
-                    this.loadData();
-                })
-            }).catch((e) => {
-                console.log(`Error putting media: ${e}`);
-            });
-    }
-
-
     async addMyAlbum(e){
         e.preventDefault();
         const newAlbumName = this.state.newAlbumName;

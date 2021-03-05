@@ -141,13 +141,13 @@ class VideoDetail extends Component {
                             <VideoDetailTabs updateAlbums={this.state.updateAlbums} albumName={this.state.albumNames} />
                         </View>
                     </View>
-                   <View style={styles.secondContainer}>
+                   {/* <View style={styles.secondContainer}>
                         <View style={styles.addButtonBox}>
                             <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery('User')} >
                                 Add to Gallery
                             </Button>
                         </View>
-                   </View>
+                   </View> */}
                     
                 </View>
                 
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     },
     dropDownContainer:{
         //backgroundColor: 'red',
-        height: 400,
+        height: '52%',
         // height: '45%',
     },
     videoContainer: {

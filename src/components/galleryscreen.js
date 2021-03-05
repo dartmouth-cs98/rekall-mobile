@@ -16,11 +16,12 @@ import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import AlbumDetail from '../components/albumDetail.js';
 import axios from 'axios';
-// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
+//import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
 const API = 'https://rekall-server.herokuapp.com';
 
 // const uid = "6010a60b2903ce360163ca10"
+
 
 class GalleryScreen extends Component {
     constructor(props){
@@ -98,59 +99,6 @@ class GalleryScreen extends Component {
             });
     }
 
-    // /*
-    // Function to allow picking a video from camera roll and uploading it
-    // */
-    // _pickVideo = async (name, albumID, albumType) => {
-    //     try {
-    //         let result = await ImagePicker.launchImageLibraryAsync({
-    //             mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-    //     });
-        
-    //     if (!result.cancelled) {
-    //         const file = {
-    //             uri: result.uri,
-    //             name: `${name}.mov`,
-    //             type: "video/quicktime"
-    //         };
-            
-    //         const options = {
-    //             // keyPrefix: this.props.user.uid + "/media/",
-    //             keyPrefix: this.props.user.uid + "/media/",
-    //             bucket: "rekall-storage",
-    //             region: "us-east-1",
-    //             accessKey: "AKIAQWWJHNTC6ZC2JFH3",
-    //             secretKey: "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",
-    //             // accessKey: AWS_ACCESS_KEY_ID,
-    //             // secretKey: AWS_SECRET_ACCESS_KEY,
-    //             successActionStatus: 201
-    //         };
-
-    //         return RNS3.put(file, options)
-    //         .then(response => {
-    //             if (response.status !== 201) {
-    //                 throw new Error("Failed to upload video to S3");
-    //             }
-    //             else {
-    //                 console.log(
-    //                     "Successfully uploaded video to s3. s3 bucket url: ",
-    //                     response.body.postResponse.location
-    //                 );
-    //                 this.addMedia(this.props.user.uid, response.body.postResponse.location, "mov", albumID, albumType)
-    //                 .then(() => {
-    //                     this.loadData();
-    //                 });
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //         });
-    //     }
-    //     console.log(result);
-    //     } catch (E) {
-    //         console.log(E);
-    //     }
-    // };
 
     async addMyAlbum(e){
         e.preventDefault();
@@ -220,6 +168,7 @@ class GalleryScreen extends Component {
         // console.log(item)
         var thumbnail = null;
         let media = [];
+        let albumID = item._id.toString();
         if (item.albumMedia !== []){
             try {
                 for(let i = 0; i < item.albumMedia.length; i++) {
@@ -259,8 +208,7 @@ class GalleryScreen extends Component {
                 console.log("Album has not populated yet")
             }
         }
-       
-        let albumID = item._id.toString();
+        
         return (
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {
                 screen: 'AlbumDetail', 

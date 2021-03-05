@@ -17,6 +17,7 @@ import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../act
 
 const API = 'https://rekall-server.herokuapp.com';
 
+
 class ExploreScreen extends Component {
     constructor(props){
         super(props);
@@ -526,6 +527,9 @@ const styles = StyleSheet.create({
         height: 400,
         width: 50,
     },
+    scene: {
+        flex: 1,
+      },
 });
 
 const mapStateToProps = (state) => {

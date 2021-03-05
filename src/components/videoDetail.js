@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, ActivityIndicator, ImageBackground, FlatList, PanResponder, Alert} from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Dimensions, TouchableOpacity, ActivityIndicator, ImageBackground, FlatList, PanResponder, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel';
@@ -14,7 +14,10 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { WebView } from 'react-native-webview';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+//import VideoDetailTabs from '../components/videoDetailTabs.js';
 import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../actions/albumActions';
+import VideoDetailTabs from './videoDetailTabs.js';
 
 const API = 'https://rekall-server.herokuapp.com';
 
@@ -46,6 +49,9 @@ class VideoDetail extends Component {
     //         albums: albumObjs,
     //     });
     // 
+
+   
+
     async loadData() {
         await this.props.getAlbums(this.props.user.uid).then(() => {
             this.setState({
@@ -131,25 +137,8 @@ class VideoDetail extends Component {
                                 containerStyle={{flex: 0, height: 250}}
                             />
                         </View>
-                        <View style={styles.addToGalleryContainter}>
-                            <DropDownPicker
-                                        items={this.state.albumNames}
-
-                                        multiple={true}
-                                        multipleText="%d albums have been selected."
-                                        min={0}
-                                        max={15}
-                                        placeholder={"Select from my albums"}
-
-                                        defaultValue={this.state.updateAlbums}
-                                        containerStyle={{height: 50}}
-                                        itemStyle={{
-                                            justifyContent: 'flex-start'
-                                        }}
-                                        onChangeItem={item => this.setState({
-                                            updateAlbums: item // an array of the selected items
-                                        })}
-                            />              
+                        <View style={styles.dropDownContainer}>
+                            <VideoDetailTabs updateAlbums={this.state.updateAlbums} albumName={this.state.albumNames} />
                         </View>
                     </View>
                    <View style={styles.secondContainer}>
@@ -187,11 +176,17 @@ const styles = StyleSheet.create({
     titleBox:{
         height: '15%',
         alignItems: 'center',
+        justifyContent: 'center',
     },
     titleText:{
         fontFamily: 'AppleSDGothicNeo-Regular',
         fontSize: 20,
         
+    },
+    dropDownContainer:{
+        //backgroundColor: 'red',
+        height: 400,
+        // height: '45%',
     },
     videoContainer: {
         //height: 500,

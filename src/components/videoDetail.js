@@ -26,7 +26,8 @@ class VideoDetail extends Component {
         super(props);
         this.state={
             video: this.props.route.params.video,
-            albumNames: this.props.route.params.albums,
+            myalbumNames: this.props.route.params.myalbums,
+            sharedalbumNames: this.props.route.params.sharedalbums,
             title: this.props.route.params.title,
             //albums: [],
             showAlbums: false,
@@ -138,7 +139,7 @@ class VideoDetail extends Component {
                             />
                         </View>
                         <View style={styles.dropDownContainer}>
-                            <VideoDetailTabs updateAlbums={this.state.updateAlbums} albumName={this.state.albumNames} />
+                            <VideoDetailTabs updateAlbums={this.state.updateAlbums} myalbumName={this.state.myalbumNames} sharedalbumName={this.state.sharedalbumNames} />
                         </View>
                     </View>
                    {/* <View style={styles.secondContainer}>

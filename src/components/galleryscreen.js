@@ -163,7 +163,7 @@ class GalleryScreen extends Component {
 
 
     renderAlbumCard({item,index}){
-      if (item.albumName !== null){
+      if (item._id != null){
         //console.log(this.props.navigation)
         // console.log(item)
         var thumbnail = null;
@@ -231,7 +231,7 @@ class GalleryScreen extends Component {
     }
 
     getAlbums() {
-      const albums = this.state.myAlbums.map((name) => {
+      const albums = this.props.user.userAlbums.map((name) => {
         if (name !== null || name !== ''){
           return name;
             // albumName: name,
@@ -265,7 +265,7 @@ class GalleryScreen extends Component {
     }
 
     getSharedAlbums() {
-      const sharedAlbums = this.state.sharedAlbums.map((name) => {
+      const sharedAlbums = this.props.user.sharedAlbums.map((name) => {
         if (name !== null || name !== ''){
           return name;
         //     albumName: name,

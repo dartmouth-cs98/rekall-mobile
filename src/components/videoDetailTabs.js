@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import MyAlbumRoute from '../components/myAlbumAdd.js';
-import SharedAlbumRoute from '../components/sharedAlbumAdd.js';
+import MyAlbumRoute from './myAlbumAdd.js';
+import SharedAlbumRoute from './sharedAlbumAdd.js';
 
  
 const renderTabBar = props => (
@@ -15,14 +15,14 @@ const renderTabBar = props => (
       labelStyle={{fontFamily: 'AppleSDGothicNeo-Bold'}}
     />
 );
-  
+
 const initialLayout = { width: Dimensions.get('window').width };
  
-const VideoDetailTabs =(updateAlbums, albumNames) => {
+const VideoDetailTabs =(updateAlbums, myalbumNames, sharedalbumNames) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: 'first', title: 'My Albums', updateAlbums: updateAlbums, albums: albumNames},
-    { key: 'second', title: 'Shared Albums', updateAlbums: updateAlbums, albums: albumNames},
+    { key: 'first', title: 'My Albums', updateAlbums: updateAlbums, albums: myalbumNames},
+    { key: 'second', title: 'Shared Albums', updateAlbums: updateAlbums, albums: sharedalbumNames},
   ]);
  
   const renderScene = SceneMap({

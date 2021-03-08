@@ -134,13 +134,6 @@ class GalleryScreen extends Component {
         this.props.navigation.navigate('Detail');
     }
 
-    decodeHtml(html) {
-        var txt = document.createElement("textarea");
-        txt.innerHTML = html;
-        console.log(txt.value);
-        return txt.value;
-    }
-
     renderAlbumCard({item,index}){
         if (item._id != null){
             var thumbnail = null;
@@ -184,7 +177,7 @@ class GalleryScreen extends Component {
                             }
                         }
                     }
-                    console.log(media);
+                    // console.log(media);
                 }
                 catch(e) {
                     console.log("Album has not populated yet")

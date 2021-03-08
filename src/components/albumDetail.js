@@ -222,7 +222,7 @@ class MyAlbumDetail extends Component {
         console.log("In renderFriend");
         var sharedFriends = this.state.sharedWith;
         if (sharedFriends.includes(item.uid)) {
-            console.log("TRUE");
+            // console.log("TRUE");
             return(
                 <View>
                     <View style={styles.rowContainer}>
@@ -246,7 +246,7 @@ class MyAlbumDetail extends Component {
                 </View>
             )
         }else{
-            console.log("FALSE AS HELL");
+            // console.log("FALSE AS HELL");
             return(
                 <View>
                     <View style={styles.rowContainer}>

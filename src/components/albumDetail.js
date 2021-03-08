@@ -42,6 +42,7 @@ class MyAlbumDetail extends Component {
             url: null,
             isModalVisible: false,
             countries: ['uk'],
+            refresh: true,
         }
     }
 
@@ -100,7 +101,9 @@ class MyAlbumDetail extends Component {
                         },
                     },
                 ).then((res) => {
-                    this.loadData();
+                    this.loadData().then(() => {
+                        this.props.navigation.goBack();
+                    });
                 })
             }).catch((e) => {
                 console.log(`Error putting media: ${e}`);

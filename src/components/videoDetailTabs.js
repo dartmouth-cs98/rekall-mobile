@@ -18,11 +18,11 @@ const renderTabBar = props => (
 
 const initialLayout = { width: Dimensions.get('window').width };
  
-const VideoDetailTabs =(props) => {
+const VideoDetailTabs =(videoId, nav) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: 'first', title: 'My Albums'},//, updateAlbums: updateAlbums, albums: myalbumNames, video: videoid},
-    { key: 'second', title: 'Shared Albums'}//, updateAlbums: updateAlbums, albums: sharedalbumNames, video: videoid},
+    { key: 'first', navigation: nav, title: 'My Albums', videoId: videoId},
+    { key: 'second', navigation: nav, title: 'Shared Albums', videoId: videoId},
   ]);
 
   const renderScene = ({ route }) => {

@@ -96,7 +96,7 @@ class VideoDetail extends Component {
                             />
                         </View>
                         <View style={styles.dropDownContainer}>
-                            <VideoDetailTabs videoid={videoId} />
+                            <VideoDetailTabs videoId={videoId} navigation={this.props.navigation}/>
                         </View>
                     </View>
                    {/* <View style={styles.secondContainer}>

@@ -16,7 +16,7 @@ import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import AlbumDetail from '../components/albumDetail.js';
 import axios from 'axios';
-//import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
+// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
 const API = 'https://rekall-server.herokuapp.com';
 
@@ -32,6 +32,10 @@ class GalleryScreen extends Component {
             isModalVisible: false,
             newAlbumName: "",
             navigation: this.props.navigation,
+            media: {},
+            currentThumbnail: null,
+            thumbnail: {},
+            yolo: false
         }
         //this.showAlbumDetail = this.showAlbumDetail.bind(this);
         this.renderAlbumCard = this.renderAlbumCard.bind(this);
@@ -130,63 +134,69 @@ class GalleryScreen extends Component {
         this.props.navigation.navigate('Detail');
     }
 
+    decodeHtml(html) {
+        var txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        console.log(txt.value);
+        return txt.value;
+    }
 
     renderAlbumCard({item,index}){
-      if (item._id != null){
-        //console.log(this.props.navigation)
-        // console.log(item)
-        var thumbnail = null;
-        let media = [];
-        let albumID = item._id.toString();
-        if (item.albumMedia !== []){
-            try {
-                for(let i = 0; i < item.albumMedia.length; i++) {
-                    // might need to change this part up for YouTube links, pending testing
-                    if (this.props.user.bannedvideos.indexOf(item.albumMedia[i]._id) < 0) {
-                        if (item.albumMedia[i].mediaType == "mp4") {
-                            let pic = null;
-                            const video = item.albumMedia[i].mediaURL.split('/', 7);
-                            pic = 'https://rekall-storage.s3.amazonaws.com/' + video[3] + '/Thumbnails/' + video[5].slice(0, -4) + '.png';
-        
-                            if (i == 0) {
-                                thumbnail = pic;
-                                console.log(thumbnail)
-                            }
-        
-                            media.push({uri: pic})
-                            mid.push
-                        }
-                        // https://i3.ytimg.com/vi/0-q1KafFCLU/maxresdefault.jpg
-                        else if (item.albumMedia[i].mediaType == "YouTube") {
-                            let pic = null;
-                            const video = item.albumMedia[i].mediaURL.split('=', 2);
-                            pic = 'https://i3.ytimg.com/vi/' + video[1] + '/maxresdefault.jpg';
-        
-                            if (i == 0) {
-                                thumbnail = pic;
-                                console.log(thumbnail)
-                            }
-        
-                            media.push({uri: pic})
-                        }
+        if (item._id != null){
+            var thumbnail = null;
+            let media = [];
+            let albumID = item._id.toString();
 
-                        else {
-                            media.push({uri: item.albumMedia[i].mediaURL})
+            if (item.albumMedia !== []){
+                try {
+                    for(let i = 0; i < item.albumMedia.length; i++) {
+                        // might need to change this part up for YouTube links, pending testing
+                        if (this.props.user.bannedvideos.indexOf(item.albumMedia[i]._id) < 0) {
+                            if (item.albumMedia[i].mediaType == "mov") {
+                                let pic = item.albumMedia[i].mediaURL.replace("media", "Thumbnails").replace("mov", "png");
+                                // const video = this.decodeHtml(item.albumMedia[i].mediaURL).split('/', 7);
+                                // console.log(video);
+                                // pic = 'https://rekall-storage.s3.amazonaws.com/' + video[3] + '/Thumbnails/' + video[5].slice(0, -4) + '.png';
+            
+                                if (i == 0) {
+                                    thumbnail = pic;
+                                    // console.log(thumbnail)
+                                }
+
+                                media.push({uri: pic});
+                            }
+
+                            else if (item.albumMedia[i].mediaType == "YouTube") {
+                                let pic = null;
+                                const video = item.albumMedia[i].mediaURL.split('=', 2);
+                                pic = 'https://i3.ytimg.com/vi/' + video[1] + '/maxresdefault.jpg';
+            
+                                if (i == 0) {
+                                    thumbnail = pic;
+                                    // console.log(thumbnail)
+                                }
+            
+                                media.push({uri: pic})
+                            }
+
+                            else {
+                                media.push({uri: item.albumMedia[i].mediaURL})
+                            }
                         }
                     }
+                    console.log(media);
+                }
+                catch(e) {
+                    console.log("Album has not populated yet")
                 }
             }
-            catch(e) {
-                console.log("Album has not populated yet")
-            }
-        }
-        
+
         return (
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {
                 screen: 'AlbumDetail', 
                 params: {
                     albumName: item.albumName, 
-                    albumID: albumID, 
+                    albumID: albumID,
                     albumMedia: media, 
                     useralbums: this.props.user.userAlbums,
                     sharedalbums: this.props.user.sharedAlbums}})}>

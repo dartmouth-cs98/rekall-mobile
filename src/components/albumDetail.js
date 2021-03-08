@@ -21,6 +21,7 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { RNS3 } from 'react-native-aws3';
 import axios from 'axios';
+import * as VideoThumbnails from 'expo-video-thumbnails';
 import { arrayOf } from 'prop-types';
 
 const API = 'https://rekall-server.herokuapp.com';
@@ -37,6 +38,8 @@ class MyAlbumDetail extends Component {
             friends: null,
             sharedWith: [],
             isSharedAlbum: false,
+            albumType: null,
+            url: null,
             isModalVisible: false,
             countries: ['uk'],
         }
@@ -63,6 +66,8 @@ class MyAlbumDetail extends Component {
         if (sharedAlbums.some(e => e.albumName === albumName)) {
             this.setState({
                 isSharedAlbum: true,
+                albumType: "Shared",
+                url: `${API}/album/addMediaToShared`
             });
             let sharedAlbum = sharedAlbums.find( album => album['albumName'] === albumName );
             this.setState({
@@ -72,30 +77,26 @@ class MyAlbumDetail extends Component {
         else{
             this.setState({
                 isSharedAlbum: false,
+                albumType: "User",
+                url: `${API}/album/addMediaToAlbum`
             });
         };
     }
 
-    addMedia = async (userID, s3Key, mediaType, albumID, albumType) => {
-        if (albumType == "User") {
-            const url = `${API}/album/addMediaToAlbum`
-        }
-        else {
-            const url = `${API}/album/addMediaToShared`
-        }
+    addMedia = async (userID, mediaURL, mediaType, albumID, albumType) => {
         axios.put(`${API}/album/addMediaToLibrary`,
             { 
-                "_id": userID,
-                "s3Key": s3Key,
+                "userID": userID,
+                "mediaURL": mediaURL,
                 "mediaType": mediaType
             }).then((res) => {
-                axios.put(url,
+                axios.put(this.state.url,
                     { 
                         "album": {
                             "_id": albumID,
                         },
                         "media": {
-                            "_id": res._id,
+                            "_id": res.data._id,
                         },
                     },
                 ).then((res) => {
@@ -109,21 +110,29 @@ class MyAlbumDetail extends Component {
     /*
     Function to allow picking a video from camera roll and uploading it
     */
-    _pickVideo = async (name, albumID, albumType) => {
+    _pickVideo = async () => {
+        let name = new Date().getTime();
+
         try {
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Videos,
         });
         
         if (!result.cancelled) {
+            let temp_thumbnail = await VideoThumbnails.getThumbnailAsync(result.uri, { time: 3000, });
             const file = {
                 uri: result.uri,
                 name: `${name}.mov`,
                 type: "video/quicktime"
             };
+
+            const thumbnail = {
+                uri: temp_thumbnail.uri,
+                name: `${name}.png`,
+                type: "image/png"
+            };
             
-            const options = {
-                // keyPrefix: this.props.user.uid + "/media/",
+            const fileoptions = {
                 keyPrefix: this.props.user.uid + "/media/",
                 bucket: "rekall-storage",
                 region: "us-east-1",
@@ -134,7 +143,18 @@ class MyAlbumDetail extends Component {
                 successActionStatus: 201
             };
 
-            return RNS3.put(file, options)
+            const thumbnailoptions = {
+                keyPrefix: this.props.user.uid + "/Thumbnails/",
+                bucket: "rekall-storage",
+                region: "us-east-1",
+                accessKey: "AKIAQWWJHNTC6ZC2JFH3",
+                secretKey: "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",
+                // accessKey: AWS_ACCESS_KEY_ID,
+                // secretKey: AWS_SECRET_ACCESS_KEY,
+                successActionStatus: 201
+            };
+
+            return RNS3.put(file, fileoptions)
             .then(response => {
                 if (response.status !== 201) {
                     throw new Error("Failed to upload video to S3");
@@ -144,10 +164,22 @@ class MyAlbumDetail extends Component {
                         "Successfully uploaded video to s3. s3 bucket url: ",
                         response.body.postResponse.location
                     );
-                    this.addMedia(this.props.user.uid, response.body.postResponse.location, "mov", albumID, albumType)
-                    .then(() => {
-                        this.loadData();
-                    });
+                    let videobucket = response.body.postResponse.location;
+                    return RNS3.put(thumbnail, thumbnailoptions)
+                    .then(response => {
+                        if (response.status !== 201) {
+                            throw new Error("Failed to upload thumbnail to S3");
+                        }
+                        else {
+                            console.log(
+                                "Successfully uploaded thumbnail to s3. s3 bucket url: ",
+                                response.body.postResponse.location
+                            );
+                            this.addMedia(this.props.user.uid, videobucket, "mov", this.state.albumID, this.state.albumType).then(() => {
+                                this.loadData();
+                            });
+                        }
+                    })
                 }
             })
             .catch(error => {

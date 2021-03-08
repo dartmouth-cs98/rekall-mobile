@@ -7,8 +7,9 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { requestFriend } from '../actions/friendActions';
 import { fetchUserInfo } from '../actions/userActions';
 import {Button} from 'react-native-paper';
+import axios from 'axios';
 
-
+const API = 'https://rekall-server.herokuapp.com';
 
 class SharedAlbumRoute extends Component{
     constructor(props){
@@ -50,6 +51,48 @@ class SharedAlbumRoute extends Component{
         });
     }
 
+    addToGallery = async (albumType) => {
+        console.log(this.state.updateAlbums);
+        if (albumType == "User") {
+            var url = `${API}/album/addMediaToAlbum`
+        }
+        else {
+            var url = `${API}/album/addMediaToShared`
+        }
+        let promises = [];
+        
+        axios.put(`${API}/album/addMediaToLibrary`,
+            { 
+                "_id": this.props.user.uid,
+                "mediaURL": 'https://www.youtube.com/watch?v=' + this.props.route.videoId.videoId,
+                "mediaType": 'YouTube'
+            }).then((res) => {
+                let mediaid = res.data._id;
+
+                for(let i = 0; i < this.state.updateAlbums.length; i++) {
+                    promises.push(axios.put(url,
+                        { 
+                            "album": {
+                                "_id": this.state.updateAlbums[i].toString(),
+                            },
+                            "media": {
+                                "_id": mediaid,
+                            },
+                        },
+                    ));
+                }
+                Promise.all(promises).then(() => {
+                    this.props.route.videoId.navigation.goBack();
+                    this.loadData();
+                })
+            }).catch((e) => {
+                console.log(`Error putting media: ${e}`);
+            });
+    }
+
+
+
+
     render(){
         if (this.state.friends == null) {
             return(
@@ -88,7 +131,7 @@ class SharedAlbumRoute extends Component{
                         </View>
                     </View>
                     <View style={styles.addButtonBox}>
-                        <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery('User')} >
+                        <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery('Shared')} >
                             Add to Gallery
                         </Button>
                     </View>  

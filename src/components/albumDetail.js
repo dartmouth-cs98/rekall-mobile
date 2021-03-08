@@ -180,13 +180,34 @@ class MyAlbumDetail extends Component {
 
     renderFriend( {item} ){
         console.log("In renderFriend");
-        // console.log(item);
-        // console.log(item.userID);
-        // console.log(this.state.sharedWith);
-        // if (item.some(e => e.Name === 'Magenic')) {
-        //     /* vendors contains the element we're looking for */
-        // }
-        return(
+        var sharedFriends = this.state.sharedWith;
+        if (sharedFriends.includes(item.uid)) {
+            console.log("TRUE");
+            return(
+                <View>
+                    <View style={styles.rowContainer}>
+                        <View style={styles.profilePicBox}>
+                            <Image style={styles.profileCircle} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
+                        </View>
+                        <TouchableOpacity underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
+                            <View style={styles.friendNameBox}>
+                                <Text style={styles.friendName}>{item.title}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <View style={styles.friendShareButtonBox}>
+                            <TouchableOpacity onPress={() => this.addSharedWith(this.state.albumID, item.email, this.props.user.uid)}>
+                                <View style={styles.friendSharedButton}>
+                                    <Text style={styles.friendShareLabel}>Shared</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    {/* <View style={styles.separator} /> */}
+                </View>
+            )
+        }else{
+            console.log("FALSE AS HELL");
+            return(
                 <View>
                     <View style={styles.rowContainer}>
                         <View style={styles.profilePicBox}>
@@ -207,7 +228,9 @@ class MyAlbumDetail extends Component {
                     </View>
                     {/* <View style={styles.separator} /> */}
                 </View>
-        );
+        
+        );}
+
     }
 
     renderSharingModal(){
@@ -311,6 +334,7 @@ class MyAlbumDetail extends Component {
                 </View>
                 <CameraRollGallery
                     enableCameraRoll={false} // default true
+                    assetType={"All"}
                     // Get data logic goes here.
                     // This will get trigger initially
                     // and when it reached the end
@@ -517,6 +541,20 @@ const styles = StyleSheet.create({
           //borderColor: 'darkgrey',
           //borderWidth: 2,
       },
+      friendSharedButton: {
+        width: 80,
+        height: 40,
+        //backgroundColor: 'white',
+        backgroundColor: '#C4C4C4',
+        borderRadius: 15,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        shadowOffset:{  height: 1},
+        shadowColor: 'black',
+        shadowOpacity: 0.2,
+        //borderColor: 'darkgrey',
+        //borderWidth: 2,
+    },
       friendShareLabel: {
           textAlign: 'center',
           fontFamily: 'AppleSDGothicNeo-Bold',

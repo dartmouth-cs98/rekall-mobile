@@ -34,14 +34,15 @@ class Login extends Component {
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
-        this.props.logIn(res.user.uid);
-        console.log('User logged-in successfully!')
-        this.setState({
-          isLoading: false,
-          email: '', 
-          password: ''
-        })
-        this.props.navigation.navigate('Drawer', { screen: 'EXPLORE' })
+        this.props.logIn(res.user.uid).then(() => {
+          console.log('User logged-in successfully!')
+          this.setState({
+            isLoading: false,
+            email: '', 
+            password: ''
+          })
+          this.props.navigation.navigate('Drawer', { screen: 'EXPLORE' })
+        });
       })
       .then(() => {
         newVRCode(this.props.user.uid);

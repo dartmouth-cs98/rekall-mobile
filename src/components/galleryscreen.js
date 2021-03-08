@@ -16,11 +16,12 @@ import { LinearTextGradient } from 'react-native-text-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import AlbumDetail from '../components/albumDetail.js';
 import axios from 'axios';
-// import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
+//import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '@env';
 
 const API = 'https://rekall-server.herokuapp.com';
 
 // const uid = "6010a60b2903ce360163ca10"
+
 
 class GalleryScreen extends Component {
     constructor(props){
@@ -87,7 +88,7 @@ class GalleryScreen extends Component {
                             "_id": albumID,
                         },
                         "media": {
-                            "_id": res._id,
+                            "_id": res.data._id,
                         },
                     },
                 ).then((res) => {
@@ -98,59 +99,6 @@ class GalleryScreen extends Component {
             });
     }
 
-    // /*
-    // Function to allow picking a video from camera roll and uploading it
-    // */
-    // _pickVideo = async (name, albumID, albumType) => {
-    //     try {
-    //         let result = await ImagePicker.launchImageLibraryAsync({
-    //             mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-    //     });
-        
-    //     if (!result.cancelled) {
-    //         const file = {
-    //             uri: result.uri,
-    //             name: `${name}.mov`,
-    //             type: "video/quicktime"
-    //         };
-            
-    //         const options = {
-    //             // keyPrefix: this.props.user.uid + "/media/",
-    //             keyPrefix: this.props.user.uid + "/media/",
-    //             bucket: "rekall-storage",
-    //             region: "us-east-1",
-    //             accessKey: "AKIAQWWJHNTC6ZC2JFH3",
-    //             secretKey: "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",
-    //             // accessKey: AWS_ACCESS_KEY_ID,
-    //             // secretKey: AWS_SECRET_ACCESS_KEY,
-    //             successActionStatus: 201
-    //         };
-
-    //         return RNS3.put(file, options)
-    //         .then(response => {
-    //             if (response.status !== 201) {
-    //                 throw new Error("Failed to upload video to S3");
-    //             }
-    //             else {
-    //                 console.log(
-    //                     "Successfully uploaded video to s3. s3 bucket url: ",
-    //                     response.body.postResponse.location
-    //                 );
-    //                 this.addMedia(this.props.user.uid, response.body.postResponse.location, "mov", albumID, albumType)
-    //                 .then(() => {
-    //                     this.loadData();
-    //                 });
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //         });
-    //     }
-    //     console.log(result);
-    //     } catch (E) {
-    //         console.log(E);
-    //     }
-    // };
 
     async addMyAlbum(e){
         e.preventDefault();
@@ -220,31 +168,47 @@ class GalleryScreen extends Component {
         // console.log(item)
         var thumbnail = null;
         let media = [];
-        try {
-            for(let i = 0; i < item.albumMedia.length; i++) {
-                // might need to change this part up for YouTube links, pending testing
-                if (item.albumMedia[i].mediaType == "mp4") {
-                    let pic = null;
-                    const video = item.albumMedia[i].mediaURL.split('/', 7);
-                    pic = 'https://rekall-storage.s3.amazonaws.com/' + video[3] + '/Thumbnails/' + video[5].slice(0, -4) + '.png';
-
-                    if (i == 0) {
-                        thumbnail = pic;
-                        console.log(thumbnail)
+        let albumID = item._id.toString();
+        if (item.albumMedia !== []){
+            try {
+                for(let i = 0; i < item.albumMedia.length; i++) {
+                    // might need to change this part up for YouTube links, pending testing
+                    if (item.albumMedia[i].mediaType == "mp4") {
+                        let pic = null;
+                        const video = item.albumMedia[i].mediaURL.split('/', 7);
+                        pic = 'https://rekall-storage.s3.amazonaws.com/' + video[3] + '/Thumbnails/' + video[5].slice(0, -4) + '.png';
+    
+                        if (i == 0) {
+                            thumbnail = pic;
+                            console.log(thumbnail)
+                        }
+    
+                        media.push({uri: pic})
+                    }
+                    // https://i3.ytimg.com/vi/0-q1KafFCLU/maxresdefault.jpg
+                    else if (item.albumMedia[i].mediaType == "YouTube") {
+                        let pic = null;
+                        const video = item.albumMedia[i].mediaURL.split('=', 2);
+                        pic = 'https://i3.ytimg.com/vi/' + video[1] + '/maxresdefault.jpg';
+    
+                        if (i == 0) {
+                            thumbnail = pic;
+                            console.log(thumbnail)
+                        }
+    
+                        media.push({uri: pic})
                     }
 
-                    media.push({uri: pic})
-                }
-
-                else {
-                    media.push({uri: item.albumMedia[i].mediaURL})
+                    else {
+                        media.push({uri: item.albumMedia[i].mediaURL})
+                    }
                 }
             }
+            catch(e) {
+                console.log("Album has not populated yet")
+            }
         }
-        catch(e) {
-            console.log("Album has not populated yet")
-        }
-        let albumID = item._id.toString();
+        
         return (
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Gallery", {
                 screen: 'AlbumDetail', 

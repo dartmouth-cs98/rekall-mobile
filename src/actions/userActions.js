@@ -77,6 +77,7 @@ export const newVRCode = (userId) => {
       }
     })
     .then((res) => {
+      console.log("New VR code: " + randCode);
       resolve();
     })
     .catch((e) => {

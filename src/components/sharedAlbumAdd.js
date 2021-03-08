@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { requestFriend } from '../actions/friendActions';
 import { fetchUserInfo } from '../actions/userActions';
+import { getAlbums, getSharedAlbums } from '../actions/albumActions';
 import {Button} from 'react-native-paper';
 import axios from 'axios';
 
@@ -32,7 +33,43 @@ class SharedAlbumRoute extends Component{
                 albumList: this.props.user.sharedAlbums,
             });
         });
+        await this.props.getAlbums(this.props.user.uid);
+        await this.props.getSharedAlbums(this.props.user.uid);
         this.getCurrentAlbums();
+    }
+
+    addToGallery = async () => {
+        console.log(this.state.updateAlbums);
+        var url = `${API}/album/addMediaToShared`
+        let promises = [];
+        
+        axios.put(`${API}/album/addMediaToLibrary`,
+            { 
+                "_id": this.props.user.uid,
+                "mediaURL": 'https://www.youtube.com/watch?v=' + this.props.video,
+                "mediaType": 'YouTube'
+            }).then((res) => {
+                let mediaid = res.data._id;
+
+                for(let i = 0; i < this.state.updateAlbums.length; i++) {
+                    promises.push(axios.put(url,
+                        { 
+                            "album": {
+                                "_id": this.state.updateAlbums[i].toString(),
+                            },
+                            "media": {
+                                "_id": mediaid,
+                            },
+                        },
+                    ));
+                }
+                Promise.all(promises).then(() => {
+                    this.loadData();
+                    this.props.navigation.navigate('Drawer', { screen: 'EXPLORE' });
+                })
+            }).catch((e) => {
+                console.log(`Error putting media: ` + JSON.stringify(e));
+            });
     }
 
     getCurrentAlbums(){
@@ -51,14 +88,9 @@ class SharedAlbumRoute extends Component{
         });
     }
 
-    addToGallery = async (albumType) => {
+    addToGallery = async () => {
         console.log(this.state.updateAlbums);
-        if (albumType == "User") {
-            var url = `${API}/album/addMediaToAlbum`
-        }
-        else {
-            var url = `${API}/album/addMediaToShared`
-        }
+        var url = `${API}/album/addMediaToShared`
         let promises = [];
         
         axios.put(`${API}/album/addMediaToLibrary`,
@@ -101,7 +133,7 @@ class SharedAlbumRoute extends Component{
                 </View>
             )
         }
-
+        
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}
@@ -131,7 +163,7 @@ class SharedAlbumRoute extends Component{
                         </View>
                     </View>
                     <View style={styles.addButtonBox}>
-                        <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery('Shared')} >
+                        <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery()} >
                             Add to Gallery
                         </Button>
                     </View>  
@@ -169,7 +201,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
-        requestFriend: (uid, friendEmail) => dispatch(requestFriend(uid, friendEmail))
+        requestFriend: (uid, friendEmail) => dispatch(requestFriend(uid, friendEmail)),
+        getAlbums: (userID) => dispatch(getAlbums(userID)),
+        getSharedAlbums: (userID) => dispatch(getSharedAlbums(userID))
     };
 };
   

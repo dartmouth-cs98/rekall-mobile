@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { requestFriend } from '../actions/friendActions';
 import { fetchUserInfo } from '../actions/userActions';
+import { getAlbums, getSharedAlbums } from '../actions/albumActions';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import axios from 'axios';
@@ -13,6 +14,7 @@ import axios from 'axios';
 const API = 'https://rekall-server.herokuapp.com';
 
 class MyAlbumRoute extends Component{
+
     constructor(props){
         super(props);
         this.state = {
@@ -35,9 +37,43 @@ class MyAlbumRoute extends Component{
                 albumList: this.props.user.userAlbums,
             });
         });
+        await this.props.getAlbums(this.props.user.uid);
+        await this.props.getSharedAlbums(this.props.user.uid);
         this.getCurrentAlbums();
     }
 
+    addToGallery = async () => {
+        var url = `${API}/album/addMediaToAlbum`
+        let promises = [];
+        
+        axios.put(`${API}/album/addMediaToLibrary`,
+            { 
+                "_id": this.props.user.uid,
+                "mediaURL": 'https://www.youtube.com/watch?v=' + this.props.video,
+                "mediaType": 'YouTube'
+            }).then((res) => {
+                let mediaid = res.data._id;
+
+                for(let i = 0; i < this.state.updateAlbums.length; i++) {
+                    promises.push(axios.put(url,
+                        { 
+                            "album": {
+                                "_id": this.state.updateAlbums[i].toString(),
+                            },
+                            "media": {
+                                "_id": mediaid,
+                            },
+                        },
+                    ));
+                }
+                Promise.all(promises).then(() => {
+                    this.loadData();
+                    this.props.navigation.goBack();
+                })
+            }).catch((e) => {
+                console.log(`Error putting media: ` + JSON.stringify(e));
+            });
+    }
 
     getCurrentAlbums(){
         var albumList = this.state.albumList;
@@ -104,7 +140,6 @@ class MyAlbumRoute extends Component{
             )
         }
 
-
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}
@@ -134,7 +169,7 @@ class MyAlbumRoute extends Component{
                             />            
                         </View>
                         <View style={styles.addButtonBox}>
-                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery('User')} >
+                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery()} >
                                 Add to Gallery
                             </Button>
                         </View>  
@@ -175,7 +210,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
-        requestFriend: (uid, friendEmail) => dispatch(requestFriend(uid, friendEmail))
+        requestFriend: (uid, friendEmail) => dispatch(requestFriend(uid, friendEmail)),
+        getAlbums: (userID) => dispatch(getAlbums(userID)),
+        getSharedAlbums: (userID) => dispatch(getSharedAlbums(userID))
     };
 };
   

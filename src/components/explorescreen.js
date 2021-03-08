@@ -29,7 +29,8 @@ class ExploreScreen extends Component {
             activeIndex:0,
             videos: [],
             pics: [],
-            allAlbums: [],
+            myAlbums: [],
+            sharedAlbums: []
         }
         this.renderVideoCard = this.renderVideoCard.bind(this);
     }
@@ -136,20 +137,29 @@ class ExploreScreen extends Component {
         // console.log("In getCurrentAlbums!!!!");
         var albumList = this.props.user.userAlbums;
         var sharedAlbumList = this.props.user.sharedAlbums;
-        albumList.push(...sharedAlbumList);
+        // albumList.push(...sharedAlbumList);
         //console.log(album);
-        var albumObjs = [];
-        //var albumObj = {};
+        var myalbumObjs = [];
+        var sharedalbumObjs = [];
         for (var i=0; i < albumList.length; i++){
             var albumObj = {};
             albumObj["label"] = albumList[i].albumName;
             albumObj["value"] = albumList[i]._id;
             // albumObj["albumid"] = albumList[i]._id;
             // albumObj["userid"] = albumList[i].userID;
-            albumObjs.push(albumObj);
+            myalbumObjs.push(albumObj);
+        }
+        for (var i=0; i < sharedAlbumList.length; i++){
+            var albumObj = {};
+            albumObj["label"] = sharedAlbumList[i].albumName;
+            albumObj["value"] = sharedAlbumList[i]._id;
+            // albumObj["albumid"] = albumList[i]._id;
+            // albumObj["userid"] = albumList[i].userID;
+            sharedalbumObjs.push(albumObj);
         }
         this.setState({
-            allAlbums: albumObjs,
+            myAlbums: myalbumObjs,
+            sharedAlbums: sharedalbumObjs
         });
         // console.log("ALBUM OBJS");
         // console.log(albumObjs);
@@ -200,7 +210,7 @@ class ExploreScreen extends Component {
         
         if (item.title !== null){
           return (
-            <TouchableOpacity onPress={()=> this.props.navigation.navigate("Explore", {screen: 'vidDetail', params:{video: item, albums: this.state.allAlbums, title: item.snippet.title}})}>
+            <TouchableOpacity onPress={()=> this.props.navigation.navigate("Explore", {screen: 'vidDetail', params:{video: item, myalbums: this.state.myAlbums, sharedalbums: this.state.sharedAlbums, title: item.snippet.title}})}>
                 <View style={styles.videoContainer}>
                     <View style={styles.videoImage}>
                         <Image

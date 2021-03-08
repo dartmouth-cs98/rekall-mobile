@@ -26,7 +26,8 @@ class VideoDetail extends Component {
         super(props);
         this.state={
             video: this.props.route.params.video,
-            albumNames: this.props.route.params.albums,
+            myalbumNames: this.props.route.params.myalbums,
+            sharedalbumNames: this.props.route.params.sharedalbums,
             title: this.props.route.params.title,
             //albums: [],
             showAlbums: false,
@@ -75,52 +76,9 @@ class VideoDetail extends Component {
         );
     }
 
-    addToGallery = async (albumType) => {
-        console.log(this.state.updateAlbums);
-        if (albumType == "User") {
-            var url = `${API}/album/addMediaToAlbum`
-        }
-        else {
-            var url = `${API}/album/addMediaToShared`
-        }
-        let promises = [];
-        
-        axios.put(`${API}/album/addMediaToLibrary`,
-            { 
-                "_id": this.props.user.uid,
-                "mediaURL": 'https://www.youtube.com/watch?v=' + this.state.video.id.videoId,
-                "mediaType": 'YouTube'
-            }).then((res) => {
-                let mediaid = res.data._id;
-
-                for(let i = 0; i < this.state.updateAlbums.length; i++) {
-                    promises.push(axios.put(url,
-                        { 
-                            "album": {
-                                "_id": this.state.updateAlbums[i].toString(),
-                            },
-                            "media": {
-                                "_id": mediaid,
-                            },
-                        },
-                    ));
-                }
-                Promise.all(promises).then(() => {
-                    this.loadData();
-                    this.props.navigation.goBack();
-                })
-            }).catch((e) => {
-                console.log(`Error putting media: ${e}`);
-            });
-    }
-
-
     render(){
-        //console.log(this.props);
         const { videoId } = this.state.video.id
-        console.log(this.state.video.id);
-        //console.log(this.state.title)
-        //console.log(this.state.albums);
+
         return(
             <LinearGradient
             colors={['#FFFFFF', '#D9D9D9']}

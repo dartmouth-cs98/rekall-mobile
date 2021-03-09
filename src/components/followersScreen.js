@@ -7,7 +7,7 @@ import { Icon } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { fetchUserInfo } from '../actions/userActions';
-import { removeFriend } from '../actions/friendActions';
+import { removeFriend, banFriend } from '../actions/friendActions';
 
 // const uid = "6010a60b2903ce360163ca10"
 
@@ -64,7 +64,13 @@ class FollowersScreen extends Component{
                                         </View>
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity  onPress={() => console.log("Block Friend")}>
+                                    <TouchableOpacity  onPress={() => this.props.banFriend(this.props.user.uid, item.email).then(() => {
+                                        this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                                            this.setState({
+                                                testRows: this.props.user.friends
+                                            });
+                                        });
+                                    })}>
                                         <View style={styles.buttonBackground}>
                                             <Text style={styles.buttonText}>Block</Text>
                                         </View>
@@ -192,7 +198,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchUserInfo: (userID) => dispatch(fetchUserInfo(userID)),
-        removeFriend: (userID, email) => dispatch(removeFriend(userID, email))
+        removeFriend: (userID, email) => dispatch(removeFriend(userID, email)),
+        banFriend: (userID, email) => dispatch(banFriend(userID, email))
     };
 };
   

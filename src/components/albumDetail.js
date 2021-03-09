@@ -5,7 +5,7 @@ import { addUserAlbum, addSharedAlbum, getAlbums, getSharedAlbums } from '../act
 import { banVideo } from '../actions/friendActions';
 //import FontAwesome from 'FontAwesome';
 // import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, ImageBackground, ActivityIndicator,
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Animated, ImageBackground, ActivityIndicator,
     PanResponder, Alert, ActionSheetIOS} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {Button, TextInput} from 'react-native-paper';
@@ -22,6 +22,8 @@ import * as Permissions from 'expo-permissions';
 import { RNS3 } from 'react-native-aws3';
 import axios from 'axios';
 import * as VideoThumbnails from 'expo-video-thumbnails';
+import SmartGallery from "react-native-smart-gallery";
+// import ImageLayout from "react-native-image-layout";
 import { arrayOf } from 'prop-types';
 
 const API = 'https://rekall-server.herokuapp.com';
@@ -43,6 +45,7 @@ class MyAlbumDetail extends Component {
             isModalVisible: false,
             countries: ['uk'],
             refresh: true,
+            animatedValue: null,
         }
     }
 
@@ -361,6 +364,25 @@ class MyAlbumDetail extends Component {
         }
     }
 
+
+    _renderPageFooter =(item, index, onClose) => {
+        return(
+            <View style={styles.imageContainer}>
+                {/* <View style={styles.imageBox}>
+                    <Image source={image}></Image>
+                </View> */}
+                <View style={styles.optionsBox}>
+                    <TouchableOpacity onPress={()=> {onClose();}}>
+                        <Icon name="close" size={60} type='evilicon' color="#FFFFFF" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=> {onClose();}}>
+                        <Icon name="trash" size={60} type='evilicon' color="#FFFFFF" />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    }
+
     render(){
         return(
         <LinearGradient
@@ -372,9 +394,14 @@ class MyAlbumDetail extends Component {
                         <Text style={styles.headerText}>{this.state.albumName}</Text>
                     </View>
                 </View>
+                {/* <SmartGallery
+                    images={this.state.albumMedia}
+                    resizeMode="center"
+                /> */}
                 <CameraRollGallery
                     enableCameraRoll={false} // default true
                     assetType={"All"}
+                    renderPageHeader={this._renderPageFooter}
                     // Get data logic goes here.
                     // This will get trigger initially
                     // and when it reached the end
@@ -404,7 +431,11 @@ class MyAlbumDetail extends Component {
                             }
                         });
                     }}
-                    height={800}
+                    // height={800}
+                    enableScale={true}
+                    enableVerticalExit={false}
+                    resizeMode="contain"
+                    
                 />
                 <View>{this.renderBottomContainer()}</View>
             </View>
@@ -599,6 +630,19 @@ const styles = StyleSheet.create({
           textAlign: 'center',
           fontFamily: 'AppleSDGothicNeo-Bold',
       },
+      imageContainer:{
+          //backgroundColor: 'white',
+          //height: 100,
+          justifyContent: 'center',
+      },
+      optionsBox:{
+          paddingTop: 10,
+          backgroundColor: 'black',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+      }
+
 
 });
 

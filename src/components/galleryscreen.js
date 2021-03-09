@@ -155,8 +155,8 @@ class GalleryScreen extends Component {
                                     thumbnail = pic;
                                     // console.log(thumbnail)
                                 }
-
-                                media.push({uri: pic});
+                                // console.log(item.albumMedia[i]._id)
+                                media.push({uri: pic, id: item.albumMedia[i]._id});
                             }
 
                             else if (item.albumMedia[i].mediaType == "YouTube") {
@@ -169,11 +169,11 @@ class GalleryScreen extends Component {
                                     // console.log(thumbnail)
                                 }
             
-                                media.push({uri: pic})
+                                media.push({uri: pic, id: item.albumMedia[i]._id})
                             }
 
                             else {
-                                media.push({uri: item.albumMedia[i].mediaURL})
+                                media.push({uri: item.albumMedia[i].mediaURL, id: item.albumMedia[i]._id})
                             }
                         }
                     }

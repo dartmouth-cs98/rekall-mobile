@@ -46,6 +46,7 @@ class MyAlbumDetail extends Component {
             countries: ['uk'],
             refresh: true,
             animatedValue: null,
+            deletelink: null
         }
     }
 
@@ -71,7 +72,8 @@ class MyAlbumDetail extends Component {
             this.setState({
                 isSharedAlbum: true,
                 albumType: "Shared",
-                url: `${API}/album/addMediaToShared`
+                url: `${API}/album/addMediaToShared`,
+                deletelink: `${API}/album/deleteSharedMedia`
             });
             let sharedAlbum = sharedAlbums.find( album => album['albumName'] === albumName );
             this.setState({
@@ -82,7 +84,8 @@ class MyAlbumDetail extends Component {
             this.setState({
                 isSharedAlbum: false,
                 albumType: "User",
-                url: `${API}/album/addMediaToAlbum`
+                url: `${API}/album/addMediaToAlbum`,
+                deletelink: `${API}/album/deleteAlbumMedia`
             });
         };
     }
@@ -364,8 +367,27 @@ class MyAlbumDetail extends Component {
         }
     }
 
+    deleteMedia = async (mediaID) => {
+        axios.post(this.state.deletelink,
+            { 
+                "aid": this.state.albumID,
+                "mid": mediaID,
+            }).catch((e) => {
+                console.log(`Error deleting media: ${e}`);
+            });
+    }
+
+    _mediafilter = (url) => {
+        for (let i = 0; i < this.state.albumMedia.length; i++) {
+            if (this.state.albumMedia[i].uri == url) {
+                return (this.state.albumMedia[i].id)
+            }
+        }
+    }
 
     _renderPageFooter =(item, index, onClose) => {
+        let _id = this._mediafilter(item.uri)
+
         return(
             <View style={styles.imageContainer}>
                 {/* <View style={styles.imageBox}>
@@ -375,7 +397,14 @@ class MyAlbumDetail extends Component {
                     <TouchableOpacity onPress={()=> {onClose();}}>
                         <Icon name="close" size={60} type='evilicon' color="#FFFFFF" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=> {onClose();}}>
+                    <TouchableOpacity onPress={()=> { 
+                            this.deleteMedia(_id).then(() => {
+                                console.log("Deleted!")
+                                this.loadData().then(() => {
+                                    this.props.navigation.goBack();
+                                });
+                            });
+                        }}>
                         <Icon name="trash" size={60} type='evilicon' color="#FFFFFF" />
                     </TouchableOpacity>
                 </View>

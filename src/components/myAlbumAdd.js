@@ -94,14 +94,9 @@ class MyAlbumRoute extends Component{
         });
     }
 
-    addToGallery = async (albumType) => {
+    addToGallery = async () => {
         console.log(this.state.updateAlbums);
-        if (albumType == "User") {
-            var url = `${API}/album/addMediaToAlbum`
-        }
-        else {
-            var url = `${API}/album/addMediaToShared`
-        }
+        var url = `${API}/album/addMediaToAlbum`
         let promises = [];
         
         axios.put(`${API}/album/addMediaToLibrary`,

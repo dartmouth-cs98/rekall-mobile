@@ -25,16 +25,21 @@ const VideoDetailTabs =(videoId, nav) => {
     { key: 'second', navigation: nav, title: 'Shared Albums', videoId: videoId},
   ]);
 
-  const renderScene = ({ route }) => {
-    switch (route.key) {
-      case 'first':
-        return <MyAlbumRoute video={props.videoid} />;
-      case 'second':
-        return <SharedAlbumRoute video={props.videoid} />;
-      default:
-        return null;
-    }
-  };
+  const renderScene = SceneMap({
+    first: MyAlbumRoute,
+    second: SharedAlbumRoute,
+  });
+
+  // const renderScene = ({ route }) => {
+  //   switch (route.key) {
+  //     case 'first':
+  //       return <MyAlbumRoute video={props.videoid} />;
+  //     case 'second':
+  //       return <SharedAlbumRoute video={props.videoid} />;
+  //     default:
+  //       return null;
+  //   }
+  
 
   return (
     <TabView

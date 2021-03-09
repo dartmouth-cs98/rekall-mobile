@@ -48,19 +48,32 @@ class FollowersScreen extends Component{
                                     <Text style={styles.friendName}>{item.title}</Text>
                                 </View>
                             </TouchableHighlight>
-                            <View style={styles.removeButtonBox}>
-                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => this.props.removeFriend(this.props.user.uid, item.email).then(() => {
-                                    this.props.fetchUserInfo(this.props.user.uid).then(() => {
-                                        this.setState({
-                                            testRows: this.props.user.friends
+
+                            <View style={styles.buttonContainer}>
+                                <View style={styles.buttonBox}>
+                                    <TouchableOpacity onPress={() => this.props.removeFriend(this.props.user.uid, item.email).then(() => {
+                                        this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                                            this.setState({
+                                                testRows: this.props.user.friends
+                                            });
                                         });
-                                    });
-                                })}>
-                                    <View style={styles.removeButton}>
-                                        <Text style={styles.removeLabel}>Remove</Text>
-                                    </View>
-                                </TouchableHighlight>
+                                    })}>
+                                    
+                                        <View style={styles.buttonBackground}>
+                                            <Text style={styles.buttonText}>Remove</Text>
+                                        </View>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity  onPress={() => console.log("Block Friend")}>
+                                        <View style={styles.buttonBackground}>
+                                            <Text style={styles.buttonText}>Block</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+
                             </View>
+
+                            
                         </View>
                         {/* <View style={styles.separator} /> */}
                     </View>
@@ -98,7 +111,7 @@ const styles = StyleSheet.create({
         //marginVertical: 10,
     }, 
     friendNameBox: {
-        width: 230,
+        // width: 230,
         //backgroundColor: 'grey',
         height: 80,
         justifyContent: 'center',
@@ -110,26 +123,6 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         color: '#4F4F4F',
         //color: '#6A6A6A',
-    },
-    buttonBox:{
-        width: 200,
-        height: 100,
-        //backgroundColor: 'green',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        flexDirection: 'row',
-        alignContent: 'space-between',
-        paddingRight: 15,
-    },
-    buttonBackground:{
-        width: 50,
-        height: 60,
-        backgroundColor: '#BABABB',
-        borderRadius: 20,
-        shadowOffset:{  height: 1},
-        shadowColor: 'black',
-        shadowOpacity: 0.8,
-        justifyContent: 'center',
     },
     separator: {
         height: 1,
@@ -152,14 +145,25 @@ const styles = StyleSheet.create({
         borderWidth: 0.3,
         alignSelf: 'center',
     },
-    removeButtonBox: {
-        //paddingTop: 5,
-        width: 100,
+    buttonContainer:{
+        //backgroundColor: 'red',
+        width: 250,
+        display: 'flex',
+        alignItems: 'center',
+
+    },
+    buttonBox: {
+        width: 200,
         height: 80,
         //backgroundColor: 'lightgreen',
-        justifyContent: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        //marginHorizontal: 5,
+        //paddingLeft: 25,
+        //paddingHorizontal: 5,
     },
-    removeButton: {
+    buttonBackground: {
         width: 80,
         height: 40,
         //backgroundColor: 'white',
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
         //borderColor: 'darkgrey',
         //borderWidth: 2,
     },
-    removeLabel: {
+    buttonText: {
         textAlign: 'center',
         fontFamily: 'AppleSDGothicNeo-Bold',
     },

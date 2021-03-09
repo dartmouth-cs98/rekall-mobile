@@ -73,7 +73,7 @@ const MyDrawer = () => {
             fontWeight: "bold",
             textShadowColor: 'grey',
             textShadowOffset: { width: 1, height: 2},
-            textShadowRadius: 5}
+            textShadowRadius: 5},
         }}
         >
             <Drawer.Screen name="EXPLORE" component={ExploreScreen} />
@@ -91,13 +91,13 @@ function MyNav() {
     
     return (
         <NavigationContainer >
-            <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Navigator screenOptions={{headerShown: false}} navigationOptions={{gestureEnabled: false}} >
                 <Stack.Screen name="Entry" component={EntryScreen} />
                 <Stack.Screen name="Drawer" component={MyDrawer} />
                 <Stack.Screen name="Explore" component={MyExploreStack} />
                 <Stack.Screen name="Gallery" component={MyAlbumStack} />
                 <Stack.Screen name="Signup" component={Signup} />
-                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Login" component={Login}/>
             </Stack.Navigator>
         </NavigationContainer>
     )

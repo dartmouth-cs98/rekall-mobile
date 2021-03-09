@@ -69,7 +69,7 @@ class FriendsScreen extends Component{
         if (this.state.isModalVisible){
             return(
                 <View>
-                    <Modal isVisible={this.state.isModalVisible} onSwipeComplete={()=> this.toggleModal()} swipeDirection="up">
+                    <Modal isVisible={this.state.isModalVisible} onSwipeComplete={()=> this.toggleModal()} swipeDirection="down">
                         <View>
                             <View style={styles.modalContainer}>
                                 <View style={styles.modal}>

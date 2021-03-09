@@ -14,7 +14,7 @@ import axios from 'axios';
 const API = 'https://rekall-server.herokuapp.com';
 
 class MyAlbumRoute extends Component{
-
+    _isMounted = false
     constructor(props){
         super(props);
         this.state = {
@@ -25,6 +25,7 @@ class MyAlbumRoute extends Component{
     }
 
     componentDidMount() {
+        this._isMounted = true
         this.loadData();
         console.log("hello");
         console.log(this.props.route);
@@ -32,10 +33,12 @@ class MyAlbumRoute extends Component{
 
     async loadData() {
         await this.props.fetchUserInfo(this.props.user.uid).then(() => {
-            this.setState({
-                friends: this.props.user.friends,
-                albumList: this.props.user.userAlbums,
-            });
+            if (this._isMounted) {
+                this.setState({
+                    friends: this.props.user.friends,
+                    albumList: this.props.user.userAlbums,
+                });
+            }
         });
         await this.props.getAlbums(this.props.user.uid);
         await this.props.getSharedAlbums(this.props.user.uid);
@@ -122,8 +125,8 @@ class MyAlbumRoute extends Component{
                     ));
                 }
                 Promise.all(promises).then(() => {
-                    this.props.route.videoId.navigation.goBack();
                     this.loadData();
+                    this.props.route.videoId.navigation.goBack();
                 })
             }).catch((e) => {
                 console.log(`Error putting media: ${e}`);

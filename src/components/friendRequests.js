@@ -47,25 +47,26 @@ class FriendRequests extends Component{
                                 <Image style={styles.profileCircle} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
                             </View>
                             <View style={styles.friendNameBox}>
-                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => console.log("Friend pressed")}>
+                                <TouchableOpacity onPress={() => console.log("Friend pressed")}>
                                     <Text style={styles.friendName}>{item.title}</Text>
-                                </TouchableHighlight>
+                                </TouchableOpacity>
                             </View>
                             <View style={styles.buttonBox}>
-                                <TouchableHighlight underlayColor="#ffffff0" onPress={() => this.props.declineRequest(this.props.user.uid, item.email).then(() => {
+                                <TouchableOpacity onPress={() => this.props.declineRequest(this.props.user.uid, item.email).then(() => {
                                     this.loadData();
                                 })}>
                                     <View style={styles.buttonBackground}>
                                         <Text style={styles.buttonText}>Decline</Text>
                                     </View>
-                                </TouchableHighlight>
-                                <TouchableHighlight underlayColor="#ffffff0"  onPress={() => this.props.addFriend(this.props.user.uid, item.email).then(() => {
+                                </TouchableOpacity>
+
+                                <TouchableOpacity  onPress={() => this.props.addFriend(this.props.user.uid, item.email).then(() => {
                                     this.loadData();
                                 })}>
                                     <View style={styles.buttonBackground}>
                                         <Text style={styles.buttonText}>Accept</Text>
                                     </View>
-                                </TouchableHighlight>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>

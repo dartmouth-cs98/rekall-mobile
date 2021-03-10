@@ -340,8 +340,8 @@ class MyAlbumDetail extends Component {
                 <View>
                     <View style={styles.bottomContainer}>
                         <View style={styles.buttonBox}>
-                            <Icon name='arrow-left' size={70} type='evilicon' color='#686868'
-                            onPress={()=> this.props.navigation.goBack()}></Icon>
+                            <Icon name="trash" size={70} type='evilicon' color='#686868'
+                            onPress={()=> console.log("Delete album")} />
                             <Icon style={styles.plusIcon} name='plus' size={70} type='evilicon' color='#686868'
                             onPress={this._pickVideo}></Icon>
                             <Icon name='person-add-outline' size={50} type='ionicon' color='#686868'
@@ -356,8 +356,8 @@ class MyAlbumDetail extends Component {
                 <View>
                     <View style={styles.bottomContainer}>
                         <View style={styles.buttonBoxNoShare}>
-                            <Icon name='arrow-left' size={70} type='evilicon' color='#686868'
-                            onPress={()=> this.props.navigation.goBack()}></Icon>
+                            <Icon name="trash" size={70} type='evilicon' color='#686868'
+                            onPress={()=> console.log("Delete album")} />
                             <Icon style={styles.plusIcon} name='plus' size={70} type='evilicon' color='#686868'
                             onPress={this._pickVideo}></Icon>
                         </View>
@@ -419,15 +419,68 @@ class MyAlbumDetail extends Component {
         style={{flex: 1}}>
             <View style={styles.container}>
                 <View style={styles.firstContainer}>
-                    <View style={styles.menuBox}>
-                        <Text style={styles.headerText}>{this.state.albumName}</Text>
+                    <View style={styles.menuContainer}>
+                        <View style={styles.menuBox}>
+                            <View style={styles.backIconBox}>
+                                <Icon  name="chevron-left" size={60} type='evilicon' color="#686868"
+                                onPress={()=> this.props.navigation.goBack()}/>
+                            </View>
+                            <View style={styles.headerTextBox}>
+                                <Text style={styles.headerText}>{this.state.albumName}</Text>
+                            </View>
+                            <View style={styles.spaceBox}
+                            ></View>
+                        </View>
+
                     </View>
+                    
                 </View>
                 {/* <SmartGallery
                     images={this.state.albumMedia}
                     resizeMode="center"
                 /> */}
-                <CameraRollGallery
+                <View style={styles.secondContainer}>
+                    <CameraRollGallery
+                        enableCameraRoll={false} // default true
+                        assetType={"All"}
+                        renderPageHeader={this._renderPageFooter}
+                        // Get data logic goes here.
+                        // This will get trigger initially
+                        // and when it reached the end
+                        // if there is more.
+                        onGetData={(fetchParams, resolve) => {
+                            resolve({
+                                assets: this.state.albumMedia,
+                                // [
+                                //     // NOTE THIS IS WHERE YOU WOULD PUT THE MEDIA THAT NEEDS TO BE RENDERED. SO ALBUM MEDIA GOES HERE
+                                //     // Can be used with different image object fieldnames.
+                                //     // Ex. source, source.uri, uri, URI, url, URL
+                                //     { uri: "https://i.pinimg.com/originals/b2/ca/43/b2ca43656248156bb421f54594c397dc.jpg" },
+                                //     // { source: require("yourApp/image.png"),
+                                //     //     // IMPORTANT: It is REQUIRED for LOCAL IMAGES
+                                //     //     // to include a dimensions field with the
+                                //     //     // actual width and height of the image or
+                                //     //     // it will throw an error.
+                                //     //     dimensions: { width: 1080, height: 1920 } },
+                                //     { source: { uri: "https://www.wearethemighty.com/app/uploads/legacy/assets.rbl.ms/23229881/origin.png" } },
+                                //     { uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.melbournechildpsychology.com.au%2Fblog%2F5-productive-ways-for-parents-to-help-with-school-work%2F&psig=AOvVaw2Oa9U5l_2ZvmSIZm34Jhc_&ust=1614572481247000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjhx6zdi-8CFQAAAAAdAAAAABAD" },
+                                //     { URI: "https://cdn.vox-cdn.com/thumbor/9WQdjWjSF0bB0KYyBPcRXOZ1tL0=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/16204669/sb1.jpg" },
+                                //     { url: "https://www.vive.com/media/filer_public/vive/product-listing/hero-vive-cosmos.png" },
+                                //     { URL: "https://i.ytimg.com/vi/Kd0uT_0t3s4/maxresdefault.jpg" },
+                                // ],
+                                pageInfo: {
+                                    hasNextPage: false
+                                }
+                            });
+                        }}
+                        // height={800}
+                        enableScale={true}
+                        enableVerticalExit={false}
+                        resizeMode="contain"
+                        
+                    />
+                </View>
+                {/* <CameraRollGallery
                     enableCameraRoll={false} // default true
                     assetType={"All"}
                     renderPageHeader={this._renderPageFooter}
@@ -465,7 +518,7 @@ class MyAlbumDetail extends Component {
                     enableVerticalExit={false}
                     resizeMode="contain"
                     
-                />
+                /> */}
                 <View>{this.renderBottomContainer()}</View>
             </View>
         </LinearGradient>
@@ -477,27 +530,54 @@ class MyAlbumDetail extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: 'space-between',
+      //justifyContent: 'space-evenly',
       backgroundColor: '#F2F1F1',
     },
     firstContainer: {
-        display: 'flex',
         justifyContent: 'flex-end',
-        height: 150,
+        alignSelf: 'center',
+        height: '10%',
+        width: '100%',
         //backgroundColor: 'green',
-        alignContent: 'flex-end',
+        //flexDirection: 'row',
     },
-    menuBox:{
-        height: 100,
-        width: 380,
-        //backgroundColor: 'red',
+    menuContainer:{
+        //backgroundColor: 'purple',
         flexDirection: 'row',
         justifyContent: 'center',
-        alignSelf: 'center',
+        //alignSelf: 'flex-start',
+        //alignItems: 'flex-end',
+        
     },
-    
+    menuBox:{
+        //height: 100,
+        width: '100%',
+        //width: 380,
+        //backgroundColor: 'red',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        // alignSelf: 'flex-start',
+        alignItems: 'flex-end',
+    },
+    spaceBox: {
+        width: 50,
+        backgroundColor: 'blue',
+    },
+    headerTextBox: {
+        justifyContent: 'center',
+        
+        //backgroundColor: 'green',
+    },
+    backIconBox: {
+        
+        //alignSelf: 'flex-end',
+        //backgroundColor: 'lightblue',
+    },
     menuButton:{
-        alignSelf: 'center',
+        alignSelf: 'flex-start',
+    },
+    secondContainer: {
+        flex: 2,
     },
     image:{
         height: 60,
@@ -505,11 +585,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     headerText:{
-        alignSelf: 'center',
+        alignSelf: 'flex-end',
         fontFamily: 'AppleSDGothicNeo-Regular',
         color: '#2C2C2C',
         fontSize: 35,
-        paddingBottom: 5,
+        // paddingBottom: 5,
     },
     bottomContainer: {
         height:  150,

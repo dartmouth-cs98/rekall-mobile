@@ -344,7 +344,14 @@ class MyAlbumDetail extends Component {
                     <View style={styles.bottomContainer}>
                         <View style={styles.buttonBox}>
                             <Icon name="trash" size={70} type='evilicon' color='#686868'
-                            onPress={()=> console.log("Delete album")} />
+                            onPress={()=> {
+                                this.deleteAlbum().then(() => {
+                                    console.log("Deleted!");
+                                    this.loadData().then(() => {
+                                        this.props.navigation.goBack();
+                                    });
+                                });
+                                }} />
                             <Icon style={styles.plusIcon} name='plus' size={70} type='evilicon' color='#686868'
                             onPress={this._pickVideo}></Icon>
                             <Icon name='person-add-outline' size={50} type='ionicon' color='#686868'
@@ -360,7 +367,14 @@ class MyAlbumDetail extends Component {
                     <View style={styles.bottomContainer}>
                         <View style={styles.buttonBoxNoShare}>
                             <Icon name="trash" size={70} type='evilicon' color='#686868'
-                            onPress={()=> console.log("Delete album")} />
+                            onPress={()=> {
+                                this.deleteAlbum().then(() => {
+                                    console.log("Deleted!");
+                                    this.loadData().then(() => {
+                                        this.props.navigation.goBack();
+                                    });
+                                });
+                                }} />
                             <Icon style={styles.plusIcon} name='plus' size={70} type='evilicon' color='#686868'
                             onPress={this._pickVideo}></Icon>
                         </View>

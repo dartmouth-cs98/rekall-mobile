@@ -172,7 +172,7 @@ class MyAlbumRoute extends Component{
                             />            
                         </View>
                         <View style={styles.addButtonBox}>
-                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery()} >
+                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery("User")} >
                                 Add to Gallery
                             </Button>
                         </View>  

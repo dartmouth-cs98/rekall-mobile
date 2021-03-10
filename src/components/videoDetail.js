@@ -95,9 +95,12 @@ class VideoDetail extends Component {
                                 containerStyle={{flex: 0, height: 250}}
                             />
                         </View>
-                        <View style={styles.dropDownContainer}>
+                        {/* <View style={styles.dropDownContainer}>
                             <VideoDetailTabs videoId={videoId} navigation={this.props.navigation}/>
-                        </View>
+                        </View> */}
+                    </View>
+                    <View style={styles.dropDownContainer}>
+                        <VideoDetailTabs videoId={videoId} navigation={this.props.navigation}/>
                     </View>
                    {/* <View style={styles.secondContainer}>
                         <View style={styles.addButtonBox}>
@@ -132,9 +135,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     titleBox:{
-        height: '15%',
+        height: '20%',
+        width: '95%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
     },
     titleText:{
         fontFamily: 'AppleSDGothicNeo-Regular',

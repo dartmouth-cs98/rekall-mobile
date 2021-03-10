@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
     },
     buttonBox: {
         height: 60,
-        width: 400,
+        width: '95%',
         //backgroundColor: 'red',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -610,7 +610,8 @@ const styles = StyleSheet.create({
     },
     buttonBoxNoShare: {
         height: 60,
-        width: 400,
+        width: '95%',
+        //width: 400,
         //backgroundColor: 'red',
         flexDirection: 'row',
         justifyContent: 'space-between',

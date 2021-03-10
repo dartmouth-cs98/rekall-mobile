@@ -41,7 +41,7 @@ class FriendRequests extends Component{
 
         renderFriendRequest( {item} ){
             return(
-                    <View>
+                    <View style={styles.container}>
                         <View style={styles.rowContainer}>
                             <View style={styles.profilePicBox}>
                                 <Image style={styles.profileCircle} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
@@ -94,18 +94,20 @@ class FriendRequests extends Component{
 
 const styles = StyleSheet.create({
     container: {
-      display:'flex',
+      flex: 1,
     },
     rowContainer:{
         height: 80,
         //backgroundColor: 'lightblue',
-        display: 'flex',
+        // display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'space-evenly',
         //marginVertical: 10,
     }, 
     friendNameBox: {
-        width: 150,
+        //width: 150,
         //backgroundColor: 'grey',
+        width: '30%',
         height: 80,
         justifyContent: 'center',
     },
@@ -113,12 +115,11 @@ const styles = StyleSheet.create({
         fontFamily: 'AppleSDGothicNeo-Bold',
         fontSize: 20,
         flexWrap: 'wrap',
-        paddingLeft: 15,
+        //paddingLeft: 15,
         color: '#4F4F4F',
         //color: '#6A6A6A',
     },
     profilePicBox: {
-        display: 'flex',
         height: 80,
         width: 80,
         //backgroundColor: 'red',
@@ -134,7 +135,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     buttonBox: {
-        width: 200,
+        //width: 200,
+        width: '45%',
         height: 80,
         //backgroundColor: 'lightgreen',
         flexDirection: 'row',

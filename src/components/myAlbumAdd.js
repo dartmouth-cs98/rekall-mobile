@@ -143,7 +143,7 @@ class MyAlbumRoute extends Component{
             colors={['#FFFFFF', '#D9D9D9']}
             style={{flex: 1}}>
                 <View style={styles.container}>
-                    <View style={styles.secondContainer}>
+                    {/* <View style={styles.secondContainer}> */}
                         <View style={styles.addToGalleryContainter}>
                             <DropDownPicker
                                         items={this.state.myAlbumObjs}
@@ -174,7 +174,7 @@ class MyAlbumRoute extends Component{
 
                         
                     </View>
-                </View>
+                {/* </View> */}
             </LinearGradient>
         );
     }
@@ -182,19 +182,23 @@ class MyAlbumRoute extends Component{
 
 const styles = StyleSheet.create({
     container: {
-      display:'flex',
+        flex: 1,
     },
     secondContainer: {
-        paddingTop: 0,
+        // paddingTop: 0,
+        flex:0,
         flexDirection: 'column',
         justifyContent: 'space-between',
     },
     addToGalleryContainter: {
-        height: 350,
+        //height: 350,
+        flex: 1,
     },
     addButtonBox: {
-        width: '50%',
+        //width: '50%',
+        flex: 0,
         alignSelf: 'center',
+        height: '20%',
     },
 });
 

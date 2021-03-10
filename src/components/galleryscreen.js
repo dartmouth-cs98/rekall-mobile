@@ -110,10 +110,13 @@ class GalleryScreen extends Component {
         if (this.state.isModalVisible){
             return(
                 <View>
-                    <Modal isVisible={this.state.isModalVisible} onSwipeComplete={()=> this.toggleModal()} swipeDirection="down">
+                    <Modal isVisible={this.state.isModalVisible}>
                         <View>
                             <View style={styles.modalContainer}>
                                 <View style={styles.modal}>
+                                    <View style={styles.closeButton}>
+                                        <Icon name="close" size={35} type='evilicon' color="#3B3B3B" onPress={()=> this.toggleModal()}/>
+                                    </View>
                                     <Text style={styles.modalText}>Create new album and select album group</Text>
                                     <TextInput label="Enter Album Name...." mode='flat'  value={this.state.newAlbumName} onChangeText={(text) => this.setState({newAlbumName: text})}></TextInput>
                                     <View style={styles.modalButtonBox}>
@@ -292,10 +295,14 @@ class GalleryScreen extends Component {
                             </TouchableOpacity> 
                         </View>
                     </View>
+                    <View style={styles.secondContainer}> 
                     { this.getAlbums()}
+                    </View>
+                    <View style={styles.thirdContainer}> 
                     {this.getSharedAlbums()}
+                    </View>
                     <View style={styles.bottomContainer}>
-                        <Icon style={styles.plusIcon} name='plus' size={60} type='evilicon' color='#686868'
+                        <Icon style={styles.plusIcon} name='plus' size={70} type='evilicon' color='#686868'
                         onPress={()=> this.toggleModal()}></Icon>
                     </View>
                 </View>
@@ -308,10 +315,9 @@ class GalleryScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      display:'flex',
+      flex: 1,
     },
     firstContainer: {
-        display: 'flex',
         justifyContent: 'flex-end',
         height: 150,
         //backgroundColor: 'green',
@@ -320,20 +326,11 @@ const styles = StyleSheet.create({
     menuBox:{
         display: 'flex',
         height: 100,
-        width: 380,
+        width: '95%',
         //backgroundColor: 'red',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignSelf: 'center',
-    },
-    albumsContainer: {
-        height: 300,
-        //backgroundColor: 'teal',
-    },
-    bottomContainer: {
-        height:  400,
-        backgroundColor: '#838484',
-        opacity: 0.6,
     },
     menuButton:{
         alignSelf: 'center',
@@ -354,22 +351,37 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 4},
         textShadowRadius: 5,
     },
+    albumsContainer: {
+        height: 300,
+        //backgroundColor: 'teal',
+    },
+    secondContainer: {
+        flex: 2,
+        //backgroundColor: 'lightblue',
+    },
+    thirdContainer: {
+        flex: 2,
+        //backgroundColor: 'green',
+    },
     bottomContainer: {
-        height:  40,
+        flex: 0,
+        //flex: 1,
+        // height:  40,
         //backgroundColor: '#C4C4C4',
         justifyContent: 'flex-end',
         //opacity: 0.6,
-        paddingRight: 20,
+        //paddingRight: 20,
     },
     plusIcon:{
-        height: 50,
-        width: 60,
+        height: 100,
+        width: '20%',
+        justifyContent: 'center',
         alignSelf: 'flex-end',
         //backgroundColor: 'red',
     },
     myAlbumsContainer:{
-        paddingTop: 20,
-        height: 350,
+        //paddingTop: 20,
+        //height: 350,
         //backgroundColor: 'teal',
     },
     albumHeaderBox:{
@@ -387,8 +399,8 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
     },
     sharedAlbumsContainer:{
-        paddingTop: 20,
-        height: 350,
+        //paddingTop: 20,
+        //height: 350,
         //backgroundColor: 'lightblue'
     },
     // friendTitle:{
@@ -397,7 +409,7 @@ const styles = StyleSheet.create({
     //     paddingLeft: 15,
     // },
     friendsListBox:{
-        height: 300,
+        height: 350,
         //backgroundColor: 'darkgreen',
     },
     friendContainer:{
@@ -405,7 +417,7 @@ const styles = StyleSheet.create({
         //backgroundColor:'floralwhite',
         backgroundColor: '#BABABB',
         borderRadius: 10,
-        height: 250,
+        height: 200,
         // padding: 50,
         // marginLeft: 25,
         // marginRight: 25,
@@ -415,7 +427,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
     },
     friendImage:{
-        height: 200,
+        height: 150,
         backgroundColor: '#BABABB',
         //borderRadius: 10,
     },
@@ -431,12 +443,13 @@ const styles = StyleSheet.create({
         // paddingLeft: 15,
     },
     modalContainer: {
-        display: 'flex',
+        // display: 'flex',
+        flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        width: 400,
-        height: 800,
+        // width: 400,
+        // height: 800,
     },
     modal: {
         borderRadius: 10,
@@ -445,6 +458,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: 300,
         height: 250,
+    },
+    closeButton:{
+        flexDirection: 'row',
+        alignSelf: 'flex-end',
     },
     modalButtonBox:{
         flexDirection: 'row',

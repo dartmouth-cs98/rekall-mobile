@@ -198,7 +198,7 @@ class ProfileScreen extends Component {
     renderProfileInfo(){
         if (this.state.isEditing){
             return(
-                <View style={styles.secondContainer}>
+                <View>
                     <View style={styles.profilePicBox}>
                         <TouchableOpacity onPress={this._pickImage}>
                             <View style={styles.profileCircle}>
@@ -218,7 +218,7 @@ class ProfileScreen extends Component {
         }
         else{
             return(
-                <View style={styles.secondContainer}>
+                <View>
                     <View style={styles.profilePicBox}>
                         <Image source={this.state.profilePic ? {uri: this.state.profilePic} : null} style={styles.profileCircle}></Image>
                     </View>
@@ -290,7 +290,7 @@ class ProfileScreen extends Component {
                         />
                     </TouchableOpacity> 
                 </View>
-                <View>
+                <View style={styles.secondContainer}>
                     {this.renderProfileInfo()}
                 </View>
                 <View style={styles.vrCodeBox}>
@@ -333,23 +333,23 @@ const styles = StyleSheet.create({
     },
     menuBox:{
         display: 'flex',
-        height: 210,
-        width: 380,
+        height: '15%',
+        width: '95%',
         //backgroundColor: 'red',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignSelf: 'center',
     },
     menuButton:{
-        alignSelf: 'center',
+        alignSelf: 'flex-end',
     },
     navimage:{
         height: 60,
         width: 50,
-        alignSelf: 'center',
+        alignSelf: 'flex-end',
     },
     headerText:{
-        alignSelf: 'center',
+        alignSelf: 'flex-end',
         fontFamily: 'AppleSDGothicNeo-Bold',
         color: '#2C2C2C',
         fontSize: 22,
@@ -360,7 +360,8 @@ const styles = StyleSheet.create({
         textShadowRadius: 5,
     },
     secondContainer:{
-        height: 250,
+        //height: 250,
+        flex: 2,
         //backgroundColor: 'teal',
         justifyContent: 'center',
         alignContent: 'center',
@@ -368,9 +369,9 @@ const styles = StyleSheet.create({
     },
     profilePicBox: {
         display: 'flex',
-        height: 130,
+        //height: 130,
         width: 410,
-        // backgroundColor: 'red',
+        //backgroundColor: 'green',
         // opacity: 0.1,
         alignSelf: 'center',
     },
@@ -384,12 +385,12 @@ const styles = StyleSheet.create({
         borderWidth: 0.3,
     },
     profileInfoBox:{
-        width: 420,
-        height: 150,
-        //backgroundColor: 'green',
+        width: '100%',
+        //height: 150,
+        //backgroundColor: 'lightblue',
         alignSelf: 'center',
         //opacity: 0.3,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         flexDirection: 'column',
     },
     profileName:{
@@ -427,12 +428,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     thirdContainer:{
-        height: 300,
+        //height: 300,
         //backgroundColor: 'pink',
+        flex: 3,
         justifyContent: 'center',
     },
     fourthContainer: {
-        height: 100,
+        //height: 100,
+        flex: 1,
         //backgroundColor: 'lightgreen',
         justifyContent: 'center',
         

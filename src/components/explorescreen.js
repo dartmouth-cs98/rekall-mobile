@@ -184,10 +184,13 @@ class ExploreScreen extends Component {
         if (this.state.modalVisible){
             return(
                 <View style={{flex:1}}>
-                    <Modal isVisible={this.state.modalVisible} onSwipeComplete={()=> this.toggleSearch()} swipeDirection="down">
+                    <Modal isVisible={this.state.modalVisible}>
                         <View>
                             <View style={styles.modalContainer}>
                                 <View style={styles.modal}>
+                                    <View style={styles.closeButton}>
+                                        <Icon name="close" size={35} type='evilicon' color="#3B3B3B" onPress={()=> this.toggleSearch()}/>
+                                    </View>
                                     <Text style={styles.modalText}>Search 360 videos or pictures</Text>
                                     <TextInput style={styles.searchBox} label="Search..." mode='outline' value={this.state.querySearch} onChangeText={(text) => this.setState({ querySearch: text})}></TextInput>
                                     <View style={styles.modalButtonBox}>
@@ -338,8 +341,12 @@ class ExploreScreen extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    <View style={styles.secondContainer}> 
                     {this.get360videos()}
+                    </View>
+                    <View style={styles.thirdContainer}> 
                     {this.get360Pictures()}
+                    </View>
                     <View style={styles.bottomContainer}>
                         <View style={styles.searchCircle}>
                             <Icon style={styles.searchIcon} name='search' size={50} type='material-icons' color='#686868'
@@ -356,66 +363,60 @@ class ExploreScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
+        flex: 1,
+        justifyContent: 'space-evenly',
+      },
+      firstContainer: {
+          justifyContent: 'flex-end',
+          height: 150,
+          //backgroundColor: 'green',
+          alignContent: 'flex-end',
+      },
+      menuBox:{
+          display: 'flex',
+          height: 100,
+          width: '95%',
+          //backgroundColor: 'red',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignSelf: 'center',
+      },
+      menuButton:{
+          alignSelf: 'center',
+      },
+      image:{
+          height: 60,
+          width: 50,
+          alignSelf: 'center',
+      },
+      headerText:{
+          alignSelf: 'center',
+          fontFamily: 'AppleSDGothicNeo-Bold',
+          color: '#2C2C2C',
+          fontSize: 22,
+          paddingBottom: 5,
+          fontWeight: "bold",
+          textShadowColor: 'grey',
+          textShadowOffset: { width: 1, height: 4},
+          textShadowRadius: 5,
     },
-    firstContainer: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        height: 150,
+    secondContainer:{
+        flex: 2,
+        //backgroundColor: 'lightblue',
+    },
+    thirdContainer:{
+        flex: 2,
         //backgroundColor: 'green',
-        alignContent: 'flex-end',
     },
-    menuBox:{
-        display: 'flex',
-        height: 100,
-        width: 380,
-        //backgroundColor: 'red',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignSelf: 'center',
-    },
-    menuButton:{
-        alignSelf: 'center',
-    },
-    image:{
-        height: 60,
-        width: 50,
-        alignSelf: 'center',
-    },
-    headerText:{
-        alignSelf: 'center',
-        fontFamily: 'AppleSDGothicNeo-Bold',
-        color: '#2C2C2C',
-        fontSize: 22,
-        paddingBottom: 5,
-        fontWeight: "bold",
-        textShadowColor: 'grey',
-        textShadowOffset: { width: 1, height: 4},
-        textShadowRadius: 5,
-    },
-    // video360Container:{
-    //     paddingTop: 20,
-    //     height: 350,
-    //     //backgroundColor: 'teal',
-    // }, 
     video360HeaderBox:{
         height: 50,
         //backgroundColor: 'lightblue',
         justifyContent: 'flex-start',
     },
-    // video360Container: {
-    //     //height: 350,
-    //     //backgroundColor: 'teal',
-    // },
     videoTitle:{
         fontFamily: 'AppleSDGothicNeo-SemiBold',
         fontSize: 15,
         paddingLeft: 15,
-    },
-    video360Container:{
-        paddingTop: 20,
-        height: 350,
-        //backgroundColor: 'lightblue'
     },
     videoTitle:{
         fontFamily: 'AppleSDGothicNeo-Bold',
@@ -423,7 +424,7 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
     },
     video360ListBox:{
-        height: 300,
+        height: 250,
         //backgroundColor: 'darkgreen',
     },
     videoContainer:{
@@ -431,7 +432,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#F8F5F5',
         //backgroundColor: '#BABABB',
         borderRadius: 10,
-        height: 250,
+        height: 200,
         // padding: 50,
         // marginLeft: 25,
         // marginRight: 25,
@@ -441,7 +442,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
     },
     videoImage:{
-        height: 180,
+        height: 150,
         backgroundColor: '#BABABB',
         borderRadius: 2,
     },
@@ -461,10 +462,14 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     bottomContainer: {
-        height:  40,
+        //flex: 0,
+        height: '15%',
+        //flex: 1,
+        // height:  40,
+        //backgroundColor: 'red',
         //backgroundColor: '#C4C4C4',
         alignItems: 'flex-end',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         //opacity: 0.6,
         paddingRight: 20,
     },
@@ -485,14 +490,6 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         //backgroundColor: 'red',
     },
-    plusIcon: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-    },
-    plusIconBox:{
-        //backgroundColor: 'green',
-        justifyContent: 'center',
-    },
     loading: {
         flex: 1,
         justifyContent: 'center',
@@ -502,12 +499,12 @@ const styles = StyleSheet.create({
         width: 250,
     },
     modalContainer: {
-        display: 'flex',
+        flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        width: 400,
-        height: 800,
+        // width: 400,
+        // height: 800,
     },
     modal: {
         borderRadius: 10,
@@ -516,6 +513,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: 300,
         height: 200,
+    },
+    closeButton:{
+        flexDirection: 'row',
+        alignSelf: 'flex-end',
     },
     modalButtonBox:{
         flexDirection: 'row',

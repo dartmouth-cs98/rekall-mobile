@@ -46,7 +46,8 @@ class MyAlbumDetail extends Component {
             countries: ['uk'],
             refresh: true,
             animatedValue: null,
-            deletelink: null
+            deletelink: null,
+            deletealbum: null
         }
     }
 
@@ -73,7 +74,8 @@ class MyAlbumDetail extends Component {
                 isSharedAlbum: true,
                 albumType: "Shared",
                 url: `${API}/album/addMediaToShared`,
-                deletelink: `${API}/album/deleteSharedMedia`
+                deletelink: `${API}/album/deleteSharedMedia`,
+                deletealbum: `${API}/album/deleteShared`
             });
             let sharedAlbum = sharedAlbums.find( album => album['albumName'] === albumName );
             this.setState({
@@ -85,7 +87,8 @@ class MyAlbumDetail extends Component {
                 isSharedAlbum: false,
                 albumType: "User",
                 url: `${API}/album/addMediaToAlbum`,
-                deletelink: `${API}/album/deleteAlbumMedia`
+                deletelink: `${API}/album/deleteAlbumMedia`,
+                deletealbum: `${API}/album/deleteAlbum`
             });
         };
     }
@@ -374,6 +377,15 @@ class MyAlbumDetail extends Component {
                 "mid": mediaID,
             }).catch((e) => {
                 console.log(`Error deleting media: ${e}`);
+            });
+    }
+
+    deleteAlbum = async () => {
+        axios.post(this.state.deletealbum,
+            { 
+                "aid": this.state.albumID,
+            }).catch((e) => {
+                console.log(`Error deleting album: ${e}`);
             });
     }
 

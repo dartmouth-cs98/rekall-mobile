@@ -63,11 +63,13 @@ class GalleryScreen extends Component {
         console.log("In toggleModal")
         if (this.state.isModalVisible){
             this.setState({isModalVisible: false});
+            this.setState({newAlbumName: " "});
             console.log(this.state.isModalVisible)
             console.log(this.state.newAlbumName)
         }
         else{
             this.setState({isModalVisible: true})
+            this.setState({newAlbumName: " "});
             console.log(this.state.isModalVisible)
             console.log(this.state.newAlbumName)
         }

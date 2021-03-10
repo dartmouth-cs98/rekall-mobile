@@ -447,10 +447,12 @@ const styles = StyleSheet.create({
         borderRadius: 2,
     },
     videoCardBottom:{
-        height: 70,
+        //height: 70,
+        flex:1,
         flexDirection: 'row',
+        flexWrap: 'wrap',
         //backgroundColor :'red',
-        justifyContent: 'space-between',
+        //justifyContent: 'space-between',
     },
     videoNameText:{
         fontFamily: 'AppleSDGothicNeo-Regular',

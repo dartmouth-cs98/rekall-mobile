@@ -135,8 +135,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     titleBox:{
-        height: '20%',
+        height: '25%',
         width: '95%',
+        alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'flex-end',
     },

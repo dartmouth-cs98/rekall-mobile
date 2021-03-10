@@ -37,12 +37,16 @@ class MyAlbumDetail extends Component {
             albumID: this.props.route.params.albumID,
             useralbums: this.props.route.params.useralbums,
             sharedalbums: this.props.route.params.sharedalbums,
+            curMediaID: null,
             friends: null,
             sharedWith: [],
             isSharedAlbum: false,
+            isUploading: false,
             albumType: null,
             url: null,
             isModalVisible: false,
+            itemModalVisible: false,
+            isTrashModalVisible: false,
             countries: ['uk'],
             refresh: true,
             animatedValue: null,
@@ -71,6 +75,7 @@ class MyAlbumDetail extends Component {
         var albumName = this.props.route.params.albumName;
         if (sharedAlbums.some(e => e.albumName === albumName)) {
             this.setState({
+                isUploading: false,
                 isSharedAlbum: true,
                 albumType: "Shared",
                 url: `${API}/album/addMediaToShared`,
@@ -84,6 +89,7 @@ class MyAlbumDetail extends Component {
         }
         else{
             this.setState({
+                isUploading: false,
                 isSharedAlbum: false,
                 albumType: "User",
                 url: `${API}/album/addMediaToAlbum`,
@@ -132,6 +138,7 @@ class MyAlbumDetail extends Component {
         
         if (!result.cancelled) {
             let temp_thumbnail = await VideoThumbnails.getThumbnailAsync(result.uri, { time: 3000, });
+            this.setState({isUploading: true});
             const file = {
                 uri: result.uri,
                 name: `${name}.mov`,
@@ -216,6 +223,33 @@ class MyAlbumDetail extends Component {
         }
     }
 
+
+    toggleTrashModal(){
+        console.log("In toggleTrashModal")
+        if (this.state.isTrashModalVisible){
+            this.setState({isTrashModalVisible: false});
+            //console.log(this.state.isModalVisible)
+        }
+        else{
+            this.setState({isTrashModalVisible: true})
+            //console.log(this.state.isModalVisible)
+        }
+    }
+
+    toggleTrashItem(_id){
+        console.log("In toggleTrashItem")
+        if (this.state.itemModalVisible){
+            this.setState({itemModalVisible: false});
+            this.setState({curMediaID: _id});
+            //console.log(this.state.isModalVisible)
+        }
+        else{
+            this.setState({itemModalVisible: true})
+            this.setState({curMediaID: _id});
+            //console.log(this.state.isModalVisible)
+        }
+    }
+
     addSharedWith = async (albumID, friendEmail, userID) => {
         axios.put(`${API}/album/addSharedWith`,
             { 
@@ -227,22 +261,79 @@ class MyAlbumDetail extends Component {
             });
     }
 
+    renderTrashModal(){
+        //console.log("In renderModal")
+        if (this.state.isTrashModalVisible){
+            return(
+                <View style={{flex:1}}>
+                    <Modal isVisible={this.state.isTrashModalVisible}>
+                        <View>
+                            <View style={styles.trashModalContainer}>
+                                <View style={styles.trashModal}>
+                                    <Text style={styles.trashModalText}>Are you sure you want to delete this album?</Text>
+                                    <View style={styles.trashModalButtonBox}>
+                                        <Button mode='text' onPress={() => this.toggleTrashModal()} color="#3B3B3B">Cancel</Button>
+                                        <Button mode='text' onPress={() => this.deleteAlbum().then(() => {
+                                            console.log("Deleted!");
+                                            this.loadData().then(() => {
+                                                this.props.navigation.goBack();});
+                                            })} color="#3B3B3B">Delete</Button>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+            )
+        }
+        if (this.state.itemModalVisible){
+            return(
+                <View style={{flex:1}}>
+                    <Modal isVisible={this.state.itemModalVisible}>
+                        <View>
+                            <View style={styles.trashModalContainer}>
+                                <View style={styles.trashModal}>
+                                    <Text style={styles.trashModalText}>Are you sure you want to delete this item?</Text>
+                                    <View style={styles.trashModalButtonBox}>
+                                        <Button mode='text' onPress={() => this.toggleTrashItem()} color="#3B3B3B">Cancel</Button>
+                                        <Button mode='text' onPress={()=> { 
+                                                 this.deleteMedia(this.state.curMediaID).then(() => {
+                                                     console.log("Deleted!")
+                                                     this.loadData().then(() => {
+                                                        this.props.navigation.goBack()})})}}
+                                                        color="#3B3B3B">Delete</Button>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+            )
+        }
+        
+    }
+
+
+    
+
     renderFriend( {item} ){
         console.log("In renderFriend");
         var sharedFriends = this.state.sharedWith;
         if (sharedFriends.includes(item.uid)) {
             // console.log("TRUE");
             return(
-                <View>
+                <View style={styles.container}>
                     <View style={styles.rowContainer}>
                         <View style={styles.profilePicBox}>
                             <Image style={styles.profileCircle} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
                         </View>
-                        <TouchableOpacity underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
-                            <View style={styles.friendNameBox}>
+                       
+                        <View style={styles.friendNameBox}>
+                            <TouchableOpacity underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
                                 <Text style={styles.friendName}>{item.title}</Text>
-                            </View>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        </View>
+                        
                         <View style={styles.friendShareButtonBox}>
                             <TouchableOpacity onPress={() => this.addSharedWith(this.state.albumID, item.email, this.props.user.uid)}>
                                 <View style={styles.friendSharedButton}>
@@ -251,22 +342,24 @@ class MyAlbumDetail extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    {/* <View style={styles.separator} /> */}
+                    
                 </View>
             )
         }else{
             // console.log("FALSE AS HELL");
             return(
-                <View>
+                <View style={styles.container}>
                     <View style={styles.rowContainer}>
                         <View style={styles.profilePicBox}>
                             <Image style={styles.profileCircle} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
                         </View>
-                        <TouchableOpacity underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
-                            <View style={styles.friendNameBox}>
+                        
+                        <View style={styles.friendNameBox}>
+                            <TouchableOpacity underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
                                 <Text style={styles.friendName}>{item.title}</Text>
-                            </View>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        </View>
+                        
                         <View style={styles.friendShareButtonBox}>
                             <TouchableOpacity onPress={() => this.addSharedWith(this.state.albumID, item.email, this.props.user.uid)}>
                                 <View style={styles.friendShareButton}>
@@ -275,7 +368,7 @@ class MyAlbumDetail extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    {/* <View style={styles.separator} /> */}
+                    
                 </View>
         
         );}
@@ -284,59 +377,37 @@ class MyAlbumDetail extends Component {
 
     renderSharingModal(){
         return(
-            <View style={{flex: 1}}>
-                <View style={styles.modalContainer}>
-                    <Modal isVisible={this.state.isModalVisible}
+                
+            <View style={styles.modalContainer}>
+                <Modal isVisible={this.state.isModalVisible}
                     backdropColor="#F2F1F1"
                     backdropOpacity={1} 
                     swipeDirection="down">
-                        <View style={styles.exitButtonBox}>
-                            <Icon name='close' size={50} type='evilicon' color='#686868'
-                                onPress={()=> this.toggleModal()}></Icon>
-                        </View>
-                        <View style={styles.shareTextBox}>
-                            <Text style={styles.shareText}>Share Album</Text>
-                        </View>
-                        <View style={styles.shareListBox}>
-                            <FlatList
-                                data={this.props.user.friends}
-                                renderItem={({item}) => this.renderFriend({item})}
-                                keyExtractor={item => item.id}
-                            ></FlatList>
-                        </View>   
+                    <View style={styles.exitButtonBox}>
+                        <Icon name='close' size={50} type='evilicon' color='#686868'
+                            onPress={()=> this.toggleModal()}></Icon>
+                    </View>
+                    <View style={styles.shareTextBox}>
+                        <Text style={styles.shareText}>Share Album</Text>
+                    </View>
+                    <View>
+                        <FlatList
+                            data={this.props.user.friends}
+                            renderItem={({item}) => this.renderFriend({item})}
+                            keyExtractor={item => item.id}
+                        ></FlatList>
+                    </View>   
 
-                        {/* <DropDownPicker
-                            items={[
-                                {label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900" />},
-                                {label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" />},
-                            ]}
+                    <Button title="Hide modal" onPress={() => this.toggleModal()} />
+                </Modal>
 
-                            multiple={true}
-                            multipleText="%d items have been selected."
-                            min={0}
-                            max={10}
-
-                            defaultValue={this.state.countries}
-                            containerStyle={{height: 40}}
-                            itemStyle={{
-                                justifyContent: 'flex-start'
-                            }}
-                            onChangeItem={item => this.setState({
-                                countries: item // an array of the selected items
-                            })}
-                        />                */}
-
-                        <Button title="Hide modal" onPress={() => this.toggleModal()} />
-                    </Modal>
-
-                </View>
-                
             </View>
         )
     }
-    // renderSharingOptions(){
 
-    // }
+
+
+    
     renderBottomContainer(){
         if (this.state.isSharedAlbum){
             return(
@@ -344,14 +415,7 @@ class MyAlbumDetail extends Component {
                     <View style={styles.bottomContainer}>
                         <View style={styles.buttonBox}>
                             <Icon name="trash" size={70} type='evilicon' color='#686868'
-                            onPress={()=> {
-                                this.deleteAlbum().then(() => {
-                                    console.log("Deleted!");
-                                    this.loadData().then(() => {
-                                        this.props.navigation.goBack();
-                                    });
-                                });
-                                }} />
+                            onPress={()=> this.toggleTrashModal()}/>
                             <Icon style={styles.plusIcon} name='plus' size={70} type='evilicon' color='#686868'
                             onPress={this._pickVideo}></Icon>
                             <Icon name='person-add-outline' size={50} type='ionicon' color='#686868'
@@ -359,6 +423,7 @@ class MyAlbumDetail extends Component {
                         </View>
                     </View>
                     <View>{this.renderSharingModal()}</View>
+                    <View>{this.renderTrashModal()}</View>
                 </View>
             )
         }else{
@@ -367,18 +432,12 @@ class MyAlbumDetail extends Component {
                     <View style={styles.bottomContainer}>
                         <View style={styles.buttonBoxNoShare}>
                             <Icon name="trash" size={70} type='evilicon' color='#686868'
-                            onPress={()=> {
-                                this.deleteAlbum().then(() => {
-                                    console.log("Deleted!");
-                                    this.loadData().then(() => {
-                                        this.props.navigation.goBack();
-                                    });
-                                });
-                                }} />
+                            onPress={()=> this.toggleTrashModal()} />
                             <Icon style={styles.plusIcon} name='plus' size={70} type='evilicon' color='#686868'
                             onPress={this._pickVideo}></Icon>
                         </View>
                     </View>
+                    <View>{this.renderTrashModal()}</View>
                 </View>
             )
         }
@@ -411,9 +470,11 @@ class MyAlbumDetail extends Component {
         }
     }
 
-    _renderPageFooter =(item, index, onClose) => {
-        let _id = this._mediafilter(item.uri)
+    
 
+    _renderPageHeader =(item, index, onClose) => {
+        let _id = this._mediafilter(item.uri)
+        
         return(
             <View style={styles.imageContainer}>
                 {/* <View style={styles.imageBox}>
@@ -423,19 +484,44 @@ class MyAlbumDetail extends Component {
                     <TouchableOpacity onPress={()=> {onClose();}}>
                         <Icon name="close" size={60} type='evilicon' color="#FFFFFF" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=> { 
-                            this.deleteMedia(_id).then(() => {
-                                console.log("Deleted!")
-                                this.loadData().then(() => {
-                                    this.props.navigation.goBack();
-                                });
-                            });
-                        }}>
+                    <TouchableOpacity onPress={()=> this.toggleTrashItem(_id)}>
                         <Icon name="trash" size={60} type='evilicon' color="#FFFFFF" />
                     </TouchableOpacity>
                 </View>
             </View>
         )
+    }
+
+    renderGallery(){
+        if (this.state.isUploading){
+            return(
+                <View style={styles.preloader}>
+                  <ActivityIndicator size="large" color="#9E9E9E"/>
+                </View>
+            )
+        }
+        else{
+            return(
+                <CameraRollGallery
+                        enableCameraRoll={false} // default true
+                        assetType={"All"}
+                        renderPageHeader={this._renderPageHeader}
+                        onGetData={(fetchParams, resolve) => {
+                            resolve({
+                                assets: this.state.albumMedia,
+                                pageInfo: {
+                                    hasNextPage: false
+                                }
+                            });
+                        }}
+                        // height={800}
+                        enableScale={true}
+                        enableVerticalExit={false}
+                        resizeMode="contain"
+                        
+                />
+            )
+        }
     }
 
     render(){
@@ -461,39 +547,15 @@ class MyAlbumDetail extends Component {
                     </View>
                     
                 </View>
-                {/* <SmartGallery
-                    images={this.state.albumMedia}
-                    resizeMode="center"
-                /> */}
                 <View style={styles.secondContainer}>
-                    <CameraRollGallery
+                    {this.renderGallery()}
+                    {/* <CameraRollGallery
                         enableCameraRoll={false} // default true
                         assetType={"All"}
-                        renderPageHeader={this._renderPageFooter}
-                        // Get data logic goes here.
-                        // This will get trigger initially
-                        // and when it reached the end
-                        // if there is more.
+                        renderPageHeader={this._renderPageHeader}
                         onGetData={(fetchParams, resolve) => {
                             resolve({
                                 assets: this.state.albumMedia,
-                                // [
-                                //     // NOTE THIS IS WHERE YOU WOULD PUT THE MEDIA THAT NEEDS TO BE RENDERED. SO ALBUM MEDIA GOES HERE
-                                //     // Can be used with different image object fieldnames.
-                                //     // Ex. source, source.uri, uri, URI, url, URL
-                                //     { uri: "https://i.pinimg.com/originals/b2/ca/43/b2ca43656248156bb421f54594c397dc.jpg" },
-                                //     // { source: require("yourApp/image.png"),
-                                //     //     // IMPORTANT: It is REQUIRED for LOCAL IMAGES
-                                //     //     // to include a dimensions field with the
-                                //     //     // actual width and height of the image or
-                                //     //     // it will throw an error.
-                                //     //     dimensions: { width: 1080, height: 1920 } },
-                                //     { source: { uri: "https://www.wearethemighty.com/app/uploads/legacy/assets.rbl.ms/23229881/origin.png" } },
-                                //     { uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.melbournechildpsychology.com.au%2Fblog%2F5-productive-ways-for-parents-to-help-with-school-work%2F&psig=AOvVaw2Oa9U5l_2ZvmSIZm34Jhc_&ust=1614572481247000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjhx6zdi-8CFQAAAAAdAAAAABAD" },
-                                //     { URI: "https://cdn.vox-cdn.com/thumbor/9WQdjWjSF0bB0KYyBPcRXOZ1tL0=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/16204669/sb1.jpg" },
-                                //     { url: "https://www.vive.com/media/filer_public/vive/product-listing/hero-vive-cosmos.png" },
-                                //     { URL: "https://i.ytimg.com/vi/Kd0uT_0t3s4/maxresdefault.jpg" },
-                                // ],
                                 pageInfo: {
                                     hasNextPage: false
                                 }
@@ -504,47 +566,8 @@ class MyAlbumDetail extends Component {
                         enableVerticalExit={false}
                         resizeMode="contain"
                         
-                    />
+                    /> */}
                 </View>
-                {/* <CameraRollGallery
-                    enableCameraRoll={false} // default true
-                    assetType={"All"}
-                    renderPageHeader={this._renderPageFooter}
-                    // Get data logic goes here.
-                    // This will get trigger initially
-                    // and when it reached the end
-                    // if there is more.
-                    onGetData={(fetchParams, resolve) => {
-                        resolve({
-                            assets: this.state.albumMedia,
-                            // [
-                            //     // NOTE THIS IS WHERE YOU WOULD PUT THE MEDIA THAT NEEDS TO BE RENDERED. SO ALBUM MEDIA GOES HERE
-                            //     // Can be used with different image object fieldnames.
-                            //     // Ex. source, source.uri, uri, URI, url, URL
-                            //     { uri: "https://i.pinimg.com/originals/b2/ca/43/b2ca43656248156bb421f54594c397dc.jpg" },
-                            //     // { source: require("yourApp/image.png"),
-                            //     //     // IMPORTANT: It is REQUIRED for LOCAL IMAGES
-                            //     //     // to include a dimensions field with the
-                            //     //     // actual width and height of the image or
-                            //     //     // it will throw an error.
-                            //     //     dimensions: { width: 1080, height: 1920 } },
-                            //     { source: { uri: "https://www.wearethemighty.com/app/uploads/legacy/assets.rbl.ms/23229881/origin.png" } },
-                            //     { uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.melbournechildpsychology.com.au%2Fblog%2F5-productive-ways-for-parents-to-help-with-school-work%2F&psig=AOvVaw2Oa9U5l_2ZvmSIZm34Jhc_&ust=1614572481247000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjhx6zdi-8CFQAAAAAdAAAAABAD" },
-                            //     { URI: "https://cdn.vox-cdn.com/thumbor/9WQdjWjSF0bB0KYyBPcRXOZ1tL0=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/16204669/sb1.jpg" },
-                            //     { url: "https://www.vive.com/media/filer_public/vive/product-listing/hero-vive-cosmos.png" },
-                            //     { URL: "https://i.ytimg.com/vi/Kd0uT_0t3s4/maxresdefault.jpg" },
-                            // ],
-                            pageInfo: {
-                                hasNextPage: false
-                            }
-                        });
-                    }}
-                    // height={800}
-                    enableScale={true}
-                    enableVerticalExit={false}
-                    resizeMode="contain"
-                    
-                /> */}
                 <View>{this.renderBottomContainer()}</View>
             </View>
         </LinearGradient>
@@ -594,11 +617,6 @@ const styles = StyleSheet.create({
         
         //backgroundColor: 'green',
     },
-    backIconBox: {
-        
-        //alignSelf: 'flex-end',
-        //backgroundColor: 'lightblue',
-    },
     menuButton:{
         alignSelf: 'flex-start',
     },
@@ -644,34 +662,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
     },
-    plusIcon:{
-        // height: 50,
-        // width: 60,
-        //backgroundColor: 'red',
-        // alignSelf: 'center',
-        // shadowOffset:{  width: 1, height: 4},
-        // shadowColor: 'black',
-        // shadowOpacity: 0.8,
-        // shadowColor: 'grey',
-        // shadowOffset: { width: 1, height: 4},
-        // shadowRadius: 5,
-    },
     modalContainer: {
-        display:'flex',
+        flex: 1,
         flexDirection: 'column',
         backgroundColor: 'green',
-        width: '100%',
-        height: '100%',
+        // width: '100%',
+        //height: '100%',
+        
       },
       exitButtonBox:{
         flexDirection: 'row',
         justifyContent: 'flex-end',
       },
       shareListBox:{
-          height: 600,
+          flex: 0,
       },
       shareTextBox: {
-        height: 80,
+        //flex: 1,
+        //height: 80,
         //backgroundColor: 'lightblue',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -685,11 +693,12 @@ const styles = StyleSheet.create({
           //backgroundColor: 'lightblue',
           display: 'flex',
           flexDirection: 'row',
+          justifyContent: 'space-evenly',
           //marginVertical: 10,
       }, 
       friendNameBox: {
-          width: 200,
           //backgroundColor: 'grey',
+          width: '40%',
           height: 80,
           justifyContent: 'center',
       },
@@ -712,7 +721,6 @@ const styles = StyleSheet.create({
           justifyContent: 'center',
       },
       profilePicBox: {
-          display: 'flex',
           height: 80,
           width: 80,
           //backgroundColor: 'red',
@@ -728,11 +736,13 @@ const styles = StyleSheet.create({
           alignSelf: 'center',
       },
       friendShareButtonBox: {
-          //paddingTop: 5,
-          width: 100,
-          height: 80,
-          //backgroundColor: 'lightgreen',
-          justifyContent: 'center',
+        width: '30%',
+        height: 80,
+        //backgroundColor: 'lightgreen',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignSelf: 'flex-end',
+        alignItems: 'center',
       },
       friendShareButton: {
           width: 80,
@@ -777,7 +787,39 @@ const styles = StyleSheet.create({
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-      }
+      },
+      trashModalContainer: {
+        // display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        // width: 400,
+        // height: 800,
+    },
+    trashModal: {
+        borderRadius: 10,
+        justifyContent: 'space-around',
+        // alignContent: 'center',
+        backgroundColor: 'white',
+        width: 250,
+        height: 200,
+    },
+    trashModalButtonBox:{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
+    trashModalText:{
+        textAlign: 'center',
+        fontSize: 20,
+        fontFamily: 'AppleSDGothicNeo-Bold',
+    },
+    preloader: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 
 
 });

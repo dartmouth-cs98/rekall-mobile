@@ -104,11 +104,8 @@ class Login extends Component {
               Don't have account? Click here to signup
             </Text>
           </View>
-        
-        
-
         <View style = {styles.error}>
-        <Text>{this.state.errorMessage}</Text>
+          <Text>{this.state.errorMessage}</Text>
         </View>
       </View>
     );
@@ -192,6 +189,7 @@ const styles = StyleSheet.create({
   error: {
     color: '#ff0000',
     marginTop: 25,
+    alignSelf: 'center',
     textAlign: 'center'
   },
   preloader: {

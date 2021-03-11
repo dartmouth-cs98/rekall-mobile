@@ -10,6 +10,8 @@ import { getAlbums, getSharedAlbums } from '../actions/albumActions';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import axios from 'axios';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(["Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method."]); // Ignore log notification by message
 
 const API = 'https://rekall-server.herokuapp.com';
 

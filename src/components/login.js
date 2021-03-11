@@ -41,11 +41,11 @@ class Login extends Component {
             email: '', 
             password: ''
           })
+        })
+        .then(() => {
+          newVRCode(this.props.user.uid);
           this.props.navigation.navigate('Drawer', { screen: 'EXPLORE' })
         });
-      })
-      .then(() => {
-        newVRCode(this.props.user.uid);
       })
       .catch(error => this.setState({ 
         errorMessage: error.message,

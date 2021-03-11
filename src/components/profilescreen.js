@@ -293,6 +293,7 @@ class ProfileScreen extends Component {
                 <View style={styles.secondContainer}>
                     {this.renderProfileInfo()}
                 </View>
+                <View style={styles.vrCodeLabel}><Text style={styles.vrLabel}>VR Code</Text></View>
                 <View style={styles.vrCodeBox}>
                     <Text style={styles.vrCode}>{this.state.vrcode}</Text>
                 </View>
@@ -420,6 +421,19 @@ const styles = StyleSheet.create({
         backgroundColor: 'darkgrey',
         alignSelf: 'center',
         justifyContent: 'center',
+    },
+    vrCodeLabel: {
+        width: 80,
+        height: 20,
+        //backgroundColor: 'darkgrey',
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    vrLabel: {
+        fontFamily: 'AppleSDGothicNeo-Bold',
+        fontSize: 15,
+        textAlign: 'center',
+        color: '#4A4A4B',
     },
     vrCode:{
         color: '#FFFFFF',

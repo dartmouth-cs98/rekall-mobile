@@ -134,15 +134,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: 100,
   },
-  
-  // container: {
-  //   flex: 1,
-  //   display: "flex",
-  //   flexDirection: "column",
-  //   justifyContent: "center",
-  //   padding: 35,
-  //   backgroundColor: '#fff'
-  // },
   inputContainer: {
     height: 250,
     //backgroundColor: 'blue',

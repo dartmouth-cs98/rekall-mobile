@@ -93,12 +93,6 @@ class VideoDetail extends Component {
                 
             </LinearGradient>
         )
-        
-            
-            // <TouchableOpacity onPress={() => this.props.navigation.navigate.goBack()} >
-            //     <View style={styles.container}><Text style={styles.dummyText}>Video Detail!</Text></View>
-            // </TouchableOpacity>
-        
     }
 }
 

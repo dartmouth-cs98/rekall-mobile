@@ -120,19 +120,6 @@ class ExploreScreen extends Component {
         }
     }
 
-    // async loadData() {
-    //     await this.props.getAlbums(this.props.user.uid).then(() => {
-    //         this.setState({
-    //             myAlbums: this.props.user.userAlbums,
-    //         });
-    //     });
-
-    //     await this.props.getSharedAlbums(this.props.user.uid).then(() => {
-    //         this.setState({
-    //             sharedAlbums: this.props.user.sharedAlbums,
-    //         });
-        
-
     getCurrentAlbums(){
         // console.log("In getCurrentAlbums!!!!");
         var albumList = this.props.user.userAlbums;

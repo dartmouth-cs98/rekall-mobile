@@ -51,7 +51,7 @@ const MyAlbumStack = () => {
 
 const MyExploreStack = () => {
     return(
-        <ExploreStack.Navigator screenOptions={{headerShown: false}}>
+        <ExploreStack.Navigator screenOptions={{headerShown: false}} >
             <ExploreStack.Screen name="ExploreScreen" component={ExploreScreen} />
             <ExploreStack.Screen name="vidDetail" component={VideoDetail} />
         </ExploreStack.Navigator>
@@ -91,13 +91,13 @@ function MyNav() {
     
     return (
         <NavigationContainer >
-            <Stack.Navigator screenOptions={{headerShown: false}} navigationOptions={{gestureEnabled: false}} >
+            <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}} navigationOptions={{gestureEnabled: false, swipeEnabled: false}} >
                 <Stack.Screen name="Entry" component={EntryScreen} />
                 <Stack.Screen name="Drawer" component={MyDrawer} />
                 <Stack.Screen name="Explore" component={MyExploreStack} />
                 <Stack.Screen name="Gallery" component={MyAlbumStack} />
                 <Stack.Screen name="Signup" component={Signup} />
-                <Stack.Screen name="Login" component={Login}/>
+                <Stack.Screen name="Login"  options={{gestureEnabled: false, swipeEnabled: false}} component={Login}/>
             </Stack.Navigator>
         </NavigationContainer>
     )

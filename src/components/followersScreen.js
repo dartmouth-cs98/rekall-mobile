@@ -38,46 +38,48 @@ class FollowersScreen extends Component{
 
         renderFriendRequest( {item} ){
             return(
-                    <View>
+                    <View style={styles.container}>
                         <View style={styles.rowContainer}>
                             <View style={styles.profilePicBox}>
                                 <Image style={styles.profileCircle} source={item.profilePic ? {uri: item.profilePic} : null}></Image>
                             </View>
-                            <TouchableHighlight underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
-                                <View style={styles.friendNameBox}>
+                            
+                            <View style={styles.friendNameBox}>
+                                <TouchableHighlight underlayColor="#ffffff0"  onPress={() => console.log("Friend pressed")}>
                                     <Text style={styles.friendName}>{item.title}</Text>
-                                </View>
-                            </TouchableHighlight>
-
-                            <View style={styles.buttonContainer}>
-                                <View style={styles.buttonBox}>
-                                    <TouchableOpacity onPress={() => this.props.removeFriend(this.props.user.uid, item.email).then(() => {
-                                        this.props.fetchUserInfo(this.props.user.uid).then(() => {
-                                            this.setState({
-                                                testRows: this.props.user.friends
-                                            });
-                                        });
-                                    })}>
-                                    
-                                        <View style={styles.buttonBackground}>
-                                            <Text style={styles.buttonText}>Remove</Text>
-                                        </View>
-                                    </TouchableOpacity>
-
-                                    <TouchableOpacity  onPress={() => this.props.banFriend(this.props.user.uid, item.email).then(() => {
-                                        this.props.fetchUserInfo(this.props.user.uid).then(() => {
-                                            this.setState({
-                                                testRows: this.props.user.friends
-                                            });
-                                        });
-                                    })}>
-                                        <View style={styles.buttonBackground}>
-                                            <Text style={styles.buttonText}>Block</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-
+                                </TouchableHighlight>
                             </View>
+                            
+
+                            
+                            <View style={styles.buttonBox}>
+                                <TouchableOpacity onPress={() => this.props.removeFriend(this.props.user.uid, item.email).then(() => {
+                                    this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                                        this.setState({
+                                            testRows: this.props.user.friends
+                                        });
+                                    });
+                                })}>
+                                    
+                                    <View style={styles.buttonBackground}>
+                                        <Text style={styles.buttonText}>Remove</Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity  onPress={() => this.props.banFriend(this.props.user.uid, item.email).then(() => {
+                                        this.props.fetchUserInfo(this.props.user.uid).then(() => {
+                                            this.setState({
+                                                testRows: this.props.user.friends
+                                            });
+                                        });
+                                })}>
+                                    <View style={styles.buttonBackground}>
+                                        <Text style={styles.buttonText}>Block</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+
+                            
 
                             
                         </View>
@@ -107,17 +109,19 @@ class FollowersScreen extends Component{
 
 const styles = StyleSheet.create({
     container: {
-      display:'flex',
+      flex: 1,
     },
     rowContainer:{
         height: 80,
         //backgroundColor: 'lightblue',
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'space-evenly',
         //marginVertical: 10,
     }, 
     friendNameBox: {
         // width: 230,
+        width: '30%',
         //backgroundColor: 'grey',
         height: 80,
         justifyContent: 'center',
@@ -126,7 +130,7 @@ const styles = StyleSheet.create({
         fontFamily: 'AppleSDGothicNeo-Bold',
         fontSize: 20,
         flexWrap: 'wrap',
-        paddingLeft: 15,
+        //paddingLeft: 15,
         color: '#4F4F4F',
         //color: '#6A6A6A',
     },
@@ -153,13 +157,15 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         //backgroundColor: 'red',
-        width: 250,
+        //width: 250,
         display: 'flex',
         alignItems: 'center',
 
     },
     buttonBox: {
-        width: 200,
+        // width: 200,
+        // height: 80,
+        width: '45%',
         height: 80,
         //backgroundColor: 'lightgreen',
         flexDirection: 'row',

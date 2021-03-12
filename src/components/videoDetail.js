@@ -35,24 +35,6 @@ class VideoDetail extends Component {
         }
     }
 
-    // getAlbumNames(){
-    //     var albums = this.state.albumNames;
-    //     console.log(albums);
-    //     var albumObjs = [];
-    //     //var albumObj = {};
-    //     for (var i=0; i < albums.length; i++){
-    //         var albumObj = {};
-    //         albumObj["label"] = albums[i].albumName;
-    //         albumObj["value"] = albums[i].albumName;
-    //         albumObjs.push(albumObj);
-    //     };
-    //     this.setState({
-    //         albums: albumObjs,
-    //     });
-    // 
-
-   
-
     async loadData() {
         await this.props.getAlbums(this.props.user.uid).then(() => {
             this.setState({
@@ -85,7 +67,15 @@ class VideoDetail extends Component {
             style={{flex: 1}}>
                 <View style={styles.container}>
                     <View style={styles.firstContainer}>
-                        <View style={styles.titleBox}><Text style={styles.titleText}>{this.state.title}</Text></View>
+                        <View style={styles.backIconBox}>
+                                <Icon  style={styles.backIcon} name="chevron-left" size={60} type='evilicon' color="#686868"
+                                onPress={()=> this.props.navigation.goBack()}/>
+                        </View>
+                        <View style={styles.titleBox}>
+                            <Text style={styles.titleText}>{this.state.title}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.youtubeContainer}>
                         <View style={styles.videoContainer}>
                             <WebView
                                 source={{ uri: `https://www.youtube.com/embed/${videoId}` }}
@@ -95,28 +85,14 @@ class VideoDetail extends Component {
                                 containerStyle={{flex: 0, height: 250}}
                             />
                         </View>
-                        <View style={styles.dropDownContainer}>
-                            <VideoDetailTabs videoId={videoId} navigation={this.props.navigation}/>
-                        </View>
                     </View>
-                   {/* <View style={styles.secondContainer}>
-                        <View style={styles.addButtonBox}>
-                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery('User')} >
-                                Add to Gallery
-                            </Button>
-                        </View>
-                   </View> */}
-                    
+                    <View style={styles.dropDownContainer}>
+                        <VideoDetailTabs videoId={videoId} navigation={this.props.navigation}/>
+                    </View>
                 </View>
                 
             </LinearGradient>
         )
-        
-            
-            // <TouchableOpacity onPress={() => this.props.navigation.navigate.goBack()} >
-            //     <View style={styles.container}><Text style={styles.dummyText}>Video Detail!</Text></View>
-            // </TouchableOpacity>
-        
     }
 }
 
@@ -126,25 +102,47 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-around',
     },
-
     firstContainer: {
+        flex: 1,
         flexDirection: 'column',
-        justifyContent: 'space-around',
+        //backgroundColor: 'green',
+        justifyContent: 'flex-end',
+        //flexDirection: 'row',
+    },
+    backIconBox:{
+        flex: 0,
+        //width: '15%',
+        //height: '20%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignSelf: 'flex-start',
+        //backgroundColor: 'lightgreen',
+    },
+    backIcon:{
+        //paddingRight: 30,
+        alignSelf: 'center',
+        // alignSelf: 'flex-start',
     },
     titleBox:{
-        height: '15%',
+        flex: 0,
+        // height: '15%',
+        //width: '95%',
+        flexDirection: 'column',
+        alignSelf: 'center',
         alignItems: 'center',
-        justifyContent: 'center',
     },
     titleText:{
         fontFamily: 'AppleSDGothicNeo-Regular',
         fontSize: 20,
-        
+        textAlign: 'center',
     },
     dropDownContainer:{
         //backgroundColor: 'red',
         height: '52%',
         // height: '45%',
+    },
+    youtubeContainer: {
+        flex: 0,
     },
     videoContainer: {
         //height: 500,
@@ -168,12 +166,7 @@ const styles = StyleSheet.create({
         fontFamily: 'AppleSDGothicNeo-Regular',
         fontSize: 20,
     },
-    // addToGalleryContainter:{
-    //     //height: 500,
-    //     //backgroundColor: 'red',
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-evenly',
-    // }
+    
 })
 
 const mapStateToProps = (state) => {

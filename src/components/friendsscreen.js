@@ -69,10 +69,13 @@ class FriendsScreen extends Component{
         if (this.state.isModalVisible){
             return(
                 <View>
-                    <Modal isVisible={this.state.isModalVisible} onSwipeComplete={()=> this.toggleModal()} swipeDirection="down">
+                    <Modal isVisible={this.state.isModalVisible}>
                         <View>
                             <View style={styles.modalContainer}>
                                 <View style={styles.modal}>
+                                    <View style={styles.closeButton}>
+                                        <Icon name="close" size={35} type='evilicon' color="#3B3B3B" onPress={()=> this.toggleModal()}/>
+                                    </View>
                                     <Text style={styles.modalText}>Add new friend's email</Text>
                                     <TextInput label="Enter friend email...." mode='flat'  value={this.state.friendEmail} onChangeText={(text) => this.setState({friendEmail: text})}></TextInput>
                                     <View style={styles.modalButtonBox}>
@@ -129,10 +132,9 @@ class FriendsScreen extends Component{
 
 const styles = StyleSheet.create({
     container: {
-      display:'flex',
+      flex: 1,
     },
     firstContainer: {
-        display: 'flex',
         justifyContent: 'flex-end',
         height: 150,
         //backgroundColor: 'green',
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
     menuBox:{
         display: 'flex',
         height: 100,
-        width: 380,
+        width: '95%',
         //backgroundColor: 'red',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -178,17 +180,17 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     secondContainer: {
-        paddingTop: 30,
-        height: 730,
+        //paddingTop: 30,
+        flex: 3,
         //backgroundColor: 'red',
     },
     modalContainer: {
-        display: 'flex',
+        flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        width: 400,
-        height: 800,
+        // width: 400,
+        // height: 800,
     },
     modal: {
         borderRadius: 10,
@@ -197,6 +199,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: 300,
         height: 250,
+    },
+    closeButton:{
+        flexDirection: 'row',
+        alignSelf: 'flex-end',
     },
     modalButtonBox:{
         flexDirection: 'row',

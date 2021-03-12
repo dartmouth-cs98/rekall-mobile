@@ -41,11 +41,11 @@ class Login extends Component {
             email: '', 
             password: ''
           })
+        })
+        .then(() => {
+          newVRCode(this.props.user.uid);
           this.props.navigation.navigate('Drawer', { screen: 'EXPLORE' })
         });
-      })
-      .then(() => {
-        newVRCode(this.props.user.uid);
       })
       .catch(error => this.setState({ 
         errorMessage: error.message,
@@ -104,11 +104,8 @@ class Login extends Component {
               Don't have account? Click here to signup
             </Text>
           </View>
-        
-        
-
         <View style = {styles.error}>
-        <Text>{this.state.errorMessage}</Text>
+          <Text>{this.state.errorMessage}</Text>
         </View>
       </View>
     );
@@ -137,15 +134,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: 100,
   },
-  
-  // container: {
-  //   flex: 1,
-  //   display: "flex",
-  //   flexDirection: "column",
-  //   justifyContent: "center",
-  //   padding: 35,
-  //   backgroundColor: '#fff'
-  // },
   inputContainer: {
     height: 250,
     //backgroundColor: 'blue',
@@ -192,6 +180,7 @@ const styles = StyleSheet.create({
   error: {
     color: '#ff0000',
     marginTop: 25,
+    alignSelf: 'center',
     textAlign: 'center'
   },
   preloader: {

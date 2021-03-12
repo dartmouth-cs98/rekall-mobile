@@ -10,6 +10,8 @@ import { getAlbums, getSharedAlbums } from '../actions/albumActions';
 import {Button} from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import axios from 'axios';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(["Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method."]); // Ignore log notification by message
 
 const API = 'https://rekall-server.herokuapp.com';
 
@@ -143,7 +145,7 @@ class MyAlbumRoute extends Component{
             colors={['#FFFFFF', '#D9D9D9']}
             style={{flex: 1}}>
                 <View style={styles.container}>
-                    <View style={styles.secondContainer}>
+                    {/* <View style={styles.secondContainer}> */}
                         <View style={styles.addToGalleryContainter}>
                             <DropDownPicker
                                         items={this.state.myAlbumObjs}
@@ -167,14 +169,14 @@ class MyAlbumRoute extends Component{
                             />            
                         </View>
                         <View style={styles.addButtonBox}>
-                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery()} >
+                            <Button mode='contained'  color="#F2F1F1" labelStyle={styles.buttonText} onPress={() => this.addToGallery("User")} >
                                 Add to Gallery
                             </Button>
                         </View>  
 
                         
                     </View>
-                </View>
+                {/* </View> */}
             </LinearGradient>
         );
     }
@@ -182,19 +184,23 @@ class MyAlbumRoute extends Component{
 
 const styles = StyleSheet.create({
     container: {
-      display:'flex',
+        flex: 1,
     },
     secondContainer: {
-        paddingTop: 0,
+        // paddingTop: 0,
+        flex:0,
         flexDirection: 'column',
         justifyContent: 'space-between',
     },
     addToGalleryContainter: {
-        height: 350,
+        //height: 350,
+        flex: 1,
     },
     addButtonBox: {
-        width: '50%',
+        //width: '50%',
+        flex: 0,
         alignSelf: 'center',
+        height: '20%',
     },
 });
 

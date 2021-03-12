@@ -18,14 +18,14 @@ class LoginScreen extends Component {
         <View style={styles.container}>
           <ImageBackground
             style={styles.image}
-            source={require('../assets/loginbg.png')}
+            source={require('../assets/rekall-logo.png')}
           >
-          <View style={styles.textBox}>
+          {/* <View style={styles.textBox}>
               <Text style={styles.mainText}>Relive</Text>
               <Text style={styles.mainText}>Reality.</Text>
-          </View>
+          </View> */}
           <View style={styles.buttonBox}>
-              <Button uppercase={false} labelStyle={styles.labelText1} style={styles.loginButton} color='#60B572' mode='contained' onPress={()=> this.openPage('Login')}>Login</Button>
+              <Button uppercase={false} labelStyle={styles.labelText1} style={styles.loginButton} color='#686868' mode='contained' onPress={()=> this.openPage('Login')}>Login</Button>
               <Button uppercase={false} labelStyle={styles.labelText2} style={styles.newAccountButton} color='white' mode='contained' onPress={()=> this.openPage('Signup')}>Create new account</Button>
           </View>
           </ImageBackground >
@@ -85,7 +85,7 @@ class LoginScreen extends Component {
   },
   labelText2: {
     fontFamily: 'AppleSDGothicNeo-Regular',
-    color: 'black',
+    color: '#686868',
     fontSize: 20,
     textAlign: 'center',
   },
@@ -95,6 +95,9 @@ class LoginScreen extends Component {
       justifyContent: 'center',
       borderRadius: 30,
       opacity: 0.93,
+      shadowOffset:{ width: 1, height: 3},
+      shadowColor: 'black',
+      shadowOpacity: 0.3,
   },
   newAccountButton:{
     width: 250,

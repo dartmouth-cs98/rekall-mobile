@@ -40,6 +40,10 @@ We are using React Native to create the mobile aspect of the VR experience, and 
 2. Login with user: rekall-cs98 pass: ashleysong0418
 3. Click into Rekall and begin using!
 
+### TestFlight configuration
+1. Download TestFlight on your mobile phone
+2. Click [this](https://testflight.apple.com/join/qrVpQTqQ) from your phone
+
 ### Pages
 * Explore
     * This page has an assortment of 360º YouTube videos that you can browse through and add to your albums.
@@ -52,9 +56,6 @@ We are using React Native to create the mobile aspect of the VR experience, and 
 * Profile
     * This page has your VR CODE, which you will need to log into the ReKall VR app!
     * Upload a profile picture here, change your name, and see your friends!
-
-## Detailed Documentation and Sources:
-TODO
 
 ## Authors
 Ashley Song, Ashley Francisco, Chris Cheng, Divya Kopalle, Eileen Xia
